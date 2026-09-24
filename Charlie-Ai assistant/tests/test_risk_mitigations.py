@@ -27,23 +27,36 @@ from licensing_server.services.payment_service import PaymentService
 
 from sqlalchemy.pool import StaticPool
 
+import os
+import tempfile
+
 class TestRiskMitigations(unittest.TestCase):
 
     def setUp(self):
-        # Ephemeral shared in-memory SQLite for multithreaded test isolation
+        # Ephemeral file-based SQLite with WAL mode for true multithreaded connection concurrency
+        self.temp_db = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+        self.temp_db.close()
+        self.db_path = self.temp_db.name.replace("\\", "/")
         self.engine = create_engine(
-            "sqlite://",
-            connect_args={"check_same_thread": False},
-            poolclass=StaticPool,
+            f"sqlite:///{self.db_path}",
+            connect_args={"check_same_thread": False, "timeout": 30},
             echo=False,
         )
+        with self.engine.connect() as conn:
+            conn.execute(text("PRAGMA journal_mode=WAL;"))
+            conn.commit()
         Base.metadata.create_all(bind=self.engine)
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=False)
         self.db = self.Session()
 
     def tearDown(self):
         self.db.close()
-        Base.metadata.drop_all(bind=self.engine)
+        self.engine.dispose()
+        if os.path.exists(self.db_path):
+            try:
+                os.remove(self.db_path)
+            except OSError:
+                pass
 
     # ── 1. Payment Webhook Tests ───────────────────────────────────────────────
 
@@ -196,7 +209,7 @@ class TestRiskMitigations(unittest.TestCase):
         user_id = f"usr_{uuid.uuid4().hex[:16]}"
         user = UserDB(
             id=user_id,
-            email="concurrent@charlie.ai",
+            email=f"{user_id}@charlie.ai",
             password_hash="hashed_pw",
             display_name="Concurrent Tester",
         )

@@ -96,16 +96,42 @@ async def razorpay_webhook(
     event_type = data.get("event", "")
     if event_type == "payment.captured":
         payload = data.get("payload", {}).get("payment", {}).get("entity", {})
-        notes = payload.get("notes", {})
+        notes = payload.get("notes", {}) or {}
         user_id = notes.get("user_id")
         plan = notes.get("plan")
+        order_id = payload.get("order_id", "")
+
+        # Resilient fallback: If notes are missing, retrieve user_id and plan from local order record
+        if (not user_id or not plan) and order_id:
+            from licensing_server.database import PaymentDB
+            order_record = db.query(PaymentDB).filter(PaymentDB.order_id == order_id).first()
+            if order_record:
+                user_id = user_id or str(order_record.user_id)
+                plan = plan or str(order_record.plan)
+
         if user_id and plan:
             payment_service.activate_subscription(
                 db, user_id, plan,
-                payload.get("order_id", ""),
+                order_id,
                 payload.get("id", ""),
                 payload.get("amount", 0),
             )
+        else:
+            import json
+            import logging
+            from datetime import datetime, timezone
+            sec_logger = logging.getLogger("licensing_server.payment")
+            sec_logger.error(
+                json.dumps({
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "level": "ERROR",
+                    "service": "jarvis-licensing-payment",
+                    "event": "PAYMENT_CAPTURED_MISSING_METADATA",
+                    "order_id": order_id,
+                    "payment_id": payload.get("id", ""),
+                })
+            )
+            return {"success": False, "error": "Missing user or plan metadata for captured payment."}
 
     return {"success": True, "message": "Webhook processed."}
 
