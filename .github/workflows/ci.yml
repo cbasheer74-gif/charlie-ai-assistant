@@ -25,9 +25,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install fastapi starlette httpx sqlalchemy cryptography pydantic pyjwt bcrypt
+        pip install fastapi starlette httpx sqlalchemy cryptography "pydantic[email]" pyjwt bcrypt email-validator python-multipart psutil
 
     - name: Run Core & Security Test Suites
-      working-directory: ./Charlie-Ai assistant
       run: |
+        cd "Charlie-Ai assistant"
+        export PYTHONPATH=.
         python -m unittest tests/test_observability_middleware.py tests/test_risk_mitigations.py tests/test_auth_rbac.py
