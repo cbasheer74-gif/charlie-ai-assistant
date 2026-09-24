@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  charlie-licensing:
+    build: .
+    container_name: charlie-licensing-server
+    restart: always
+    env_file:
+      - .env.production
+    ports:
+      - "8400:8400"
+    volumes:
+      - ./data:/app/data
+      - ./keys:/app/keys

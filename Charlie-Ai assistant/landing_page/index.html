@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHARLIE AI Desktop — The Autonomous Desktop AI Assistant</title>
+  <meta name="description"
+    content="CHARLIE is the next-generation autonomous desktop AI assistant. Control your PC, automate video creation in Filmora, switch neural voices, and run offline with complete privacy.">
+
+  <!-- Google Font: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css?v=8.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+</head>
+
+<body>
+
+  <!-- Fixed Ambient Background Canvas (Prevents scroll movement / jitter) -->
+  <div class="fixed-ambient-bg" aria-hidden="true"></div>
+
+  <!-- ======================================================================
+       Site Header & Navigation
+       ====================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand-logo" id="logo-link">
+        <div class="brand-symbol">
+          <img src="images/charlie-logo.png" alt="CHARLIE C Logo" class="brand-logo-img">
+        </div>
+        <span class="brand-name">CHARLIE</span>
+        <span class="version-badge"><span class="badge-dot"></span>v1.0 LIVE</span>
+      </a>
+
+      <nav class="main-nav">
+        <a href="#features" class="nav-link">Capabilities</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#app-showcase" class="nav-link">Workspace</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#testimonials" class="nav-link">Reviews</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="#downloads" class="nav-link">Download</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#signin" class="btn btn-ghost auth-open-btn" id="btn-header-signin" data-tab="signin">Sign In</a>
+        <a href="#signup" class="btn btn-secondary auth-open-btn" id="btn-header-signup" data-tab="signup">Sign Up</a>
+        <div class="user-profile-badge" id="header-user-profile" style="display: none;">
+          <span class="user-avatar" id="header-user-avatar">JD</span>
+          <span class="user-email" id="header-user-email">user@charlie.ai</span>
+          <button class="user-logout-btn" id="btn-header-logout" title="Sign Out">✕</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       Hero Section
+       ====================================================================== -->
+  <section class="hero-section" id="hero">
+    <div class="container">
+      <div class="hero-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-primary)" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+        <span>Commercial Release 2026 — Now Live on Windows &amp; macOS</span>
+      </div>
+
+      <h1 class="hero-title">
+        The Autonomous Desktop AI <br>
+        <span class="gradient-text">That Actually Executes.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Beyond web chat windows. CHARLIE autonomously controls your PC, automates 4K video editing in Wondershare
+        Filmora, switches between male and female neural voices, organizes spreadsheets, and runs 100% offline—with zero
+        cloud lock-in.
+      </p>
+
+      <div class="hero-cta-group" id="download">
+        <a href="downloads/CHARLIE-Setup.exe" download="CHARLIE-Setup.exe" class="btn btn-primary download-trigger-btn"
+          id="btn-hero-start" data-file="CHARLIE-Setup.exe">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download CHARLIE Setup (.exe)
+        </a>
+        <a href="#pricing" class="btn btn-secondary">
+          View Plans &amp; Pricing
+        </a>
+      </div>
+
+      <div class="os-compatibility">
+        <span class="os-tag">✓ Windows 10 &amp; 11 (64-bit)</span>
+        <span>•</span>
+        <span class="os-tag">✓ macOS Ventura / Sonoma (Apple Silicon &amp; Intel)</span>
+        <span>•</span>
+        <span class="os-tag">✓ Linux (Ubuntu / Fedora / Arch)</span>
+      </div>
+
+      <!-- Professional Desktop Preview HUD -->
+      <div class="hero-hud-preview">
+        <div class="hud-topbar">
+          <div class="hud-dots">
+            <span class="hud-dot dot-red"></span>
+            <span class="hud-dot dot-yellow"></span>
+            <span class="hud-dot dot-green"></span>
+          </div>
+          <span class="hud-title">CHARLIE Desktop Workspace · Realtime Execution Engine</span>
+          <span class="hud-status-badge">● Engine Ready</span>
+        </div>
+
+        <div class="hud-body">
+          <div class="hud-visualizer-box">
+            <div class="audio-avatar-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-primary)" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" y1="19" x2="12" y2="23" />
+                <line x1="8" y1="23" x2="16" y2="23" />
+              </svg>
+            </div>
+            <div class="wave-container">
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+            </div>
+            <div
+              style="margin-top: 12px; font-size: 12px; font-weight: 600; color: var(--cyan-primary); letter-spacing: 0.2px;">
+              Neural Audio Stream Active
+            </div>
+          </div>
+
+          <div class="hud-terminal-box">
+            <div class="term-line">
+              <span class="exec-badge">TASK</span> <span class="term-task">charlie "Import raw_camera.mp4, auto-cut
+                silence, apply LUT, and export 60s YouTube Short."</span>
+            </div>
+            <div class="term-line">
+              <span class="step-tag tag-success">COMPLETED</span> <span class="term-output">Filmora 14 Studio Pipeline
+                session hooked</span>
+            </div>
+            <div class="term-line">
+              <span class="step-tag tag-success">COMPLETED</span> <span class="term-output">Auto-reframe 9:16 &amp;
+                silence cuts (14 pauses removed)</span>
+            </div>
+            <div class="term-line">
+              <span class="step-tag tag-success">COMPLETED</span> <span class="term-output">Whisper dynamic subtitle
+                track synchronized</span>
+            </div>
+            <div class="term-line">
+              <span class="step-tag tag-success">COMPLETED</span> <span class="term-output">Hardware NVENC 4K rendered
+                in 3.82s → /exports/short.mp4</span>
+            </div>
+            <div class="term-line term-time">
+              Pipeline finished in 3.82s · 0 errors · System verified
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics Strip -->
+      <div class="metrics-strip">
+        <div class="metric-card">
+          <div class="metric-number">100%</div>
+          <div class="metric-label">Local Data Privacy</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">&lt; 120ms</div>
+          <div class="metric-label">Local Voice Synthesis</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">30+</div>
+          <div class="metric-label">Autonomous System Skills</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">₹2,999/yr</div>
+          <div class="metric-label">Annual Pro (Save ₹589)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Features Bento Grid (What We Provide To Users)
+       ====================================================================== -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Complete Ecosystem</span>
+        <h2 class="section-title">What CHARLIE Provides To You</h2>
+        <p class="section-subtitle">
+          Engineered from the ground up for desktop autonomy, creative production, and zero corporate surveillance.
+        </p>
+      </div>
+
+      <div class="bento-grid">
+        <!-- Feature 1: Video Studio Automation (Span 2) -->
+        <div class="bento-card bento-span-2">
+          <div class="bento-icon-wrapper icon-purple">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+              <line x1="7" y1="2" x2="7" y2="22" />
+              <line x1="17" y1="2" x2="17" y2="22" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <line x1="2" y1="7" x2="7" y2="7" />
+              <line x1="2" y1="17" x2="7" y2="17" />
+              <line x1="17" y1="17" x2="22" y2="17" />
+              <line x1="17" y1="7" x2="22" y2="7" />
+            </svg>
+          </div>
+          <h3 class="bento-title">Autonomous Filmora 14 &amp; FFmpeg Studio Automation</h3>
+          <p class="bento-desc">
+            The world's only assistant with deep native integration for Wondershare Filmora and FFmpeg. Speak natural
+            instructions to import footage, cut silences, apply colour grades, generate auto-subtitles, and render
+            vertical YouTube Shorts ready for publishing.
+          </p>
+          <div class="bento-tag-list">
+            <span class="bento-tag">Filmora 14 COM API</span>
+            <span class="bento-tag">FFmpeg GPU Rendering</span>
+            <span class="bento-tag">YouTube Shorts</span>
+            <span class="bento-tag">Auto-Captioning</span>
+          </div>
+        </div>
+
+        <!-- Feature 2: Dual Neural Voices -->
+        <div class="bento-card">
+          <div class="bento-icon-wrapper icon-cyan">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
+          </div>
+          <h3 class="bento-title">Dual Neural Voices &amp; Instant Switcher</h3>
+          <p class="bento-desc">
+            Toggle between Male and Female expressive AI personas with full emotional modulation. Custom-tailored audio
+            profiles bring genuine personality to your desktop.
+          </p>
+          <div class="bento-tag-list">
+            <span class="bento-tag">Male Voice</span>
+            <span class="bento-tag">Female Voice</span>
+            <span class="bento-tag">Zero Cloud Delay</span>
+          </div>
+        </div>
+
+        <!-- Feature 3: Full Desktop Autonomy -->
+        <div class="bento-card">
+          <div class="bento-icon-wrapper icon-emerald">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </div>
+          <h3 class="bento-title">Full Autonomous Computer Control</h3>
+          <p class="bento-desc">
+            Safe, verified OS automation. CHARLIE uses smart cursor navigation, window layout management, keyboard
+            execution, and dry-run confirmation guards to perform real work on your computer.
+          </p>
+          <div class="bento-tag-list">
+            <span class="bento-tag">Smart Cursor</span>
+            <span class="bento-tag">Multi-Monitor</span>
+            <span class="bento-tag">App Orchestration</span>
+          </div>
+        </div>
+
+        <!-- Feature 4: Coding & Multi-Agent Workflows (Span 2) -->
+        <div class="bento-card bento-span-2">
+          <div class="bento-icon-wrapper icon-indigo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </div>
+          <h3 class="bento-title">AI Coding Copilot &amp; Deep Research Agents</h3>
+          <p class="bento-desc">
+            Ask complex coding questions, automate unit tests, refactor files across whole repositories, or synthesize
+            deep internet research. Runs multi-agent planner graphs so complex projects complete without manual
+            intervention.
+          </p>
+          <div class="bento-tag-list">
+            <span class="bento-tag">AST Code Parser</span>
+            <span class="bento-tag">Terminal Execution</span>
+            <span class="bento-tag">Automated Testing</span>
+            <span class="bento-tag">Model Context Protocol (MCP)</span>
+          </div>
+        </div>
+
+        <!-- Feature 5: Personal Knowledge Graph -->
+        <div class="bento-card">
+          <div class="bento-icon-wrapper icon-gold">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+          </div>
+          <h3 class="bento-title">Personal Knowledge Graph</h3>
+          <p class="bento-desc">
+            Hierarchical memory that retains personal preferences, workflows, and projects across days and months—saved
+            100% locally on your disk.
+          </p>
+          <div class="bento-tag-list">
+            <span class="bento-tag">Semantic Vectors</span>
+            <span class="bento-tag">SQLite Hub</span>
+            <span class="bento-tag">Zero Cloud Snooping</span>
+          </div>
+        </div>
+
+        <!-- Feature 6: Google Suite & Spreadsheet Power -->
+        <div class="bento-card">
+          <div class="bento-icon-wrapper icon-cyan">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+          </div>
+          <h3 class="bento-title">Office &amp; Google Workspace Sync</h3>
+          <p class="bento-desc">
+            Direct integration with Excel, Google Sheets, Gmail, Calendar, and Drive. Summarize inboxes, schedule
+            events, and formulate complex financial spreadsheets with voice.
+          </p>
+          <div class="bento-tag-list">
+            <span class="bento-tag">Excel Formula Agent</span>
+            <span class="bento-tag">Gmail Sync</span>
+            <span class="bento-tag">Google Calendar</span>
+          </div>
+        </div>
+
+        <!-- Feature 7: Offline AI & BYOK Freedom -->
+        <div class="bento-card">
+          <div class="bento-icon-wrapper icon-emerald">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
+          <h3 class="bento-title">Offline Intelligence &amp; BYOK</h3>
+          <p class="bento-desc">
+            Internet disconnected? CHARLIE continues operating via local quantized models (Gemma / Llama / Whisper).
+            Bring Your Own Key for cloud access with zero vendor lock-in.
+          </p>
+          <div class="bento-tag-list">
+            <span class="bento-tag">100% Offline Capable</span>
+            <span class="bento-tag">Bring Your Own Key</span>
+            <span class="bento-tag">RSA-Signed Offline License</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       How It Works: Autonomous Engine Pipeline (3-Step Execution)
+       ====================================================================== -->
+  <section class="section how-it-works-section" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Engine Architecture</span>
+        <h2 class="section-title">How CHARLIE Executes Tasks Autonomously</h2>
+        <p class="section-subtitle">
+          From voice command to finished desktop execution in three deterministic, transparent stages.
+        </p>
+      </div>
+
+      <div class="pipeline-grid">
+        <!-- Step 1 -->
+        <div class="pipeline-card">
+          <div class="pipeline-step-badge">STAGE 01 · INPUT &amp; SPEECH</div>
+          <div class="pipeline-media-preview" style="height: 160px; max-height: 160px; overflow: hidden; border-radius: 8px;">
+            <img src="images/step1-input.jpg" alt="Voice & Intent Input Ingestion" loading="lazy" class="pipeline-img" style="width: 100%; height: 160px; object-fit: cover; display: block;">
+            <span class="pipeline-media-tag">Whisper v3 · Real-time Stream</span>
+          </div>
+          <div class="pipeline-icon-box">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-primary)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
+          </div>
+          <h3 class="pipeline-card-title">Intent &amp; Voice Ingestion</h3>
+          <p class="pipeline-card-desc">
+            Ultra-fast Whisper transcription (&lt;120ms) or hotkey prompt capture (<kbd>Ctrl</kbd> + <kbd>Space</kbd>).
+            Your natural intent is parsed locally into a structured semantic representation without cloud audio upload.
+          </p>
+          <div class="pipeline-tags">
+            <span>&lt;120ms Latency</span>
+            <span>Zero Audio Upload</span>
+            <span>Wake Word "Hey CHARLIE"</span>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="pipeline-card pipeline-card-featured">
+          <div class="pipeline-step-badge featured">STAGE 02 · CORE BRAIN</div>
+          <div class="pipeline-media-preview" style="height: 160px; max-height: 160px; overflow: hidden; border-radius: 8px;">
+            <img src="images/step2-orchestration.jpg" alt="Autonomous DAG Task Graph Decomposition" loading="lazy" class="pipeline-img" style="width: 100%; height: 160px; object-fit: cover; display: block;">
+            <span class="pipeline-media-tag">DAG Planner · Async Pool</span>
+          </div>
+          <div class="pipeline-icon-box icon-indigo">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-light)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="6" cy="6" r="3" />
+              <circle cx="18" cy="6" r="3" />
+              <circle cx="12" cy="18" r="3" />
+              <line x1="8.5" y1="7.5" x2="15.5" y2="7.5" />
+              <line x1="7.5" y1="8.5" x2="10.5" y2="15.5" />
+              <line x1="16.5" y1="8.5" x2="13.5" y2="15.5" />
+            </svg>
+          </div>
+          <h3 class="pipeline-card-title">Autonomous DAG Decomposition</h3>
+          <p class="pipeline-card-desc">
+            Instead of single-turn hallucinations, CHARLIE synthesizes a Directed Acyclic Graph (DAG). It resolves tool
+            requirements, dependencies, and parallel async worker routines with automatic self-correction loops.
+          </p>
+          <div class="pipeline-tags">
+            <span>TaskGraph Planner</span>
+            <span>Async Worker Pool</span>
+            <span>Self-Correction Tree</span>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="pipeline-card">
+          <div class="pipeline-step-badge">STAGE 03 · PRODUCTION DELIVERY</div>
+          <div class="pipeline-media-preview" style="height: 160px; max-height: 160px; overflow: hidden; border-radius: 8px;">
+            <img src="images/step3-output.jpg" alt="Sandboxed Local Execution and Production Delivery" loading="lazy" class="pipeline-img" style="width: 100%; height: 160px; object-fit: cover; display: block;">
+            <span class="pipeline-media-tag">Hardware NVENC · 4K 60FPS</span>
+          </div>
+          <div class="pipeline-icon-box icon-emerald">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-accent)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
+          <h3 class="pipeline-card-title">Sandboxed Local Execution</h3>
+          <p class="pipeline-card-desc">
+            Directly hooks Windows COM/APIs, FFmpeg, Python skills, and browsers. Verifies file integrity, runs test
+            diffs, and prompts for explicit user approval before any destructive action.
+          </p>
+          <div class="pipeline-tags">
+            <span>Native COM Hooks</span>
+            <span>Atomic Dry-Run</span>
+            <span>Safety Gate Prompt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Direct Competitor Comparison Matrix
+       ====================================================================== -->
+  <section class="section comparison-section" id="comparison">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Unmatched Capability</span>
+        <h2 class="section-title">How CHARLIE Compares To Other Assistants</h2>
+        <p class="section-subtitle">
+          See why professional creators, developers, and power users choose CHARLIE over cloud web-chatbots and legacy
+          voice assistants.
+        </p>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width: 32%;">Feature Capability</th>
+              <th class="col-charlie" style="width: 20%;">CHARLIE Desktop</th>
+              <th style="width: 16%;">Apple Siri</th>
+              <th style="width: 16%;">Windows Copilot</th>
+              <th style="width: 16%;">ChatGPT Plus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Real Desktop Autonomy & Mouse Control</strong></td>
+              <td class="col-charlie"><span class="check-green">✓ Full Autonomous Control</span></td>
+              <td><span class="cross-red">✕ App launch only</span></td>
+              <td><span class="cross-red">✕ Edge sandbox only</span></td>
+              <td><span class="cross-red">✕ Browser only</span></td>
+            </tr>
+            <tr>
+              <td><strong>Filmora 14 Video & FFmpeg Automation</strong></td>
+              <td class="col-charlie"><span class="check-green">✓ Native Studio API</span></td>
+              <td><span class="cross-red">✕ Unsupported</span></td>
+              <td><span class="cross-red">✕ Unsupported</span></td>
+              <td><span class="cross-red">✕ Unsupported</span></td>
+            </tr>
+            <tr>
+              <td><strong>Dual Voice Switcher (Male + Female)</strong></td>
+              <td class="col-charlie"><span class="check-green">✓ Instant In-App Switch</span></td>
+              <td><span class="cross-red">✕ OS settings restart</span></td>
+              <td><span class="cross-red">✕ Fixed single voice</span></td>
+              <td><span class="cross-red">✕ Mobile app only</span></td>
+            </tr>
+            <tr>
+              <td><strong>100% Offline AI Execution</strong></td>
+              <td class="col-charlie"><span class="check-green">✓ Local Models + TTS</span></td>
+              <td><span class="cross-red">✕ Very limited</span></td>
+              <td><span class="cross-red">✕ Cloud connection required</span></td>
+              <td><span class="cross-red">✕ Cloud connection required</span></td>
+            </tr>
+            <tr>
+              <td><strong>Local Data Ownership & Privacy</strong></td>
+              <td class="col-charlie"><span class="check-green">✓ 100% On-Disk Encrypted</span></td>
+              <td><span class="cross-red">✕ Apple telemetry</span></td>
+              <td><span class="cross-red">✕ Microsoft cloud telemetry</span></td>
+              <td><span class="cross-red">✕ OpenAI cloud storage</span></td>
+            </tr>
+            <tr>
+              <td><strong>Affordable Transparent Pricing</strong></td>
+              <td class="col-charlie"><span class="check-green">✓ From ₹149/mo · Pro ₹299/mo</span></td>
+              <td><span class="cross-red">N/A (Hardware bundled)</span></td>
+              <td><span class="cross-red">✕ $20/mo ($240/yr)</span></td>
+              <td><span class="cross-red">✕ $20/mo ($240/yr)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Multi-Agent Task Graph Execution</strong></td>
+              <td class="col-charlie"><span class="check-green">✓ Built-in DAG Planner</span></td>
+              <td><span class="cross-red">✕ Unsupported</span></td>
+              <td><span class="cross-red">✕ Single-turn prompt</span></td>
+              <td><span class="cross-red">✕ Chat window only</span></td>
+            </tr>
+            <tr>
+              <td><strong>Developer MCP & Custom Plugin Support</strong></td>
+              <td class="col-charlie"><span class="check-green">✓ Full MCP Ecosystem</span></td>
+              <td><span class="cross-red">✕ Closed sandbox</span></td>
+              <td><span class="cross-red">✕ Restricted plugins</span></td>
+              <td><span class="cross-red">✕ Cloud GPTs only</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Interactive Task Simulator
+       ====================================================================== -->
+  <section class="section" id="simulator">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Interactive Test Drive</span>
+        <h2 class="section-title">See CHARLIE In Action</h2>
+        <p class="section-subtitle">
+          Select a real-world task below to preview how CHARLIE executes multi-step workflows.
+        </p>
+      </div>
+
+      <div class="sim-container">
+        <div class="sim-tabs">
+          <button class="sim-tab active" data-demo="filmora">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+              <line x1="7" y1="2" x2="7" y2="22" />
+              <line x1="17" y1="2" x2="17" y2="22" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+            </svg>
+            Filmora Video Studio
+          </button>
+          <button class="sim-tab" data-demo="coding">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+            Codebase Refactoring
+          </button>
+          <button class="sim-tab" data-demo="voice">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+            </svg>
+            Dual Voice Switcher
+          </button>
+          <button class="sim-tab" data-demo="spreadsheet">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+            Smart Spreadsheet
+          </button>
+        </div>
+
+        <div class="sim-display">
+          <div style="margin-bottom: 12px; color: var(--cyan-primary); font-weight: 700;">
+            PROMPT: <span id="sim-command" style="color: #ffffff; font-weight: 400;">Loading...</span>
+          </div>
+          <div
+            style="margin-bottom: 14px; font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px;"
+            id="sim-status">
+            STATUS: PIPELINE READY
+          </div>
+          <div id="sim-logs">
+            <!-- Simulated logs dynamically inserted by script.js -->
+          </div>
+          <div
+            style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--emerald-accent); font-weight: 600;" id="sim-metric">Benchmark result</span>
+            <span style="color: var(--text-dim); font-size: 11px;">Validated on Intel i7 / Apple M-Series</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 1: Live Interactive Prompt Playground -->
+      <div class="playground-custom-box">
+        <div class="playground-custom-header">
+          <div>
+            <span class="playground-chip">⚡ Live Skill Dispatcher</span>
+            <h3 class="playground-title">Type Any Command To Test CHARLIE's Router</h3>
+            <p class="playground-desc">Try commands like <em>"Cut silent pauses from clip.mp4"</em>, <em>"Refactor login auth with JWT"</em>, or <em>"Audit Excel Q4 forecast"</em>.</p>
+          </div>
+          <div class="playground-latency-tag" id="playground-latency">Routing Latency: 0.04s</div>
+        </div>
+        <form class="playground-input-row" id="playground-form">
+          <div class="playground-input-wrap">
+            <span class="playground-prompt-prefix">charlie &gt;</span>
+            <input type="text" id="playground-input" class="playground-input" placeholder="Type instructions or click a preset..." autocomplete="off" value="Auto-cut 15 pauses from raw_podcast.mp4 and render vertical 9:16 Short">
+          </div>
+          <button type="submit" class="btn btn-primary playground-run-btn" id="playground-btn">
+            <span>Execute Test</span> &rarr;
+          </button>
+        </form>
+        <div class="playground-presets">
+          <span class="preset-label">Quick test presets:</span>
+          <button type="button" class="preset-pill" data-prompt="Auto-cut 15 pauses from raw_podcast.mp4 and render vertical 9:16 Short">🎬 Video Cut &amp; Short</button>
+          <button type="button" class="preset-pill" data-prompt="Scan src/routes for SQL injection and generate secure fix diff">🛡️ Security Code Audit</button>
+          <button type="button" class="preset-pill" data-prompt="Switch to Female neural voice and summarize high-priority tasks">🎙️ Voice Switch &amp; Brief</button>
+          <button type="button" class="preset-pill" data-prompt="Merge 3 CSV sheets into styled Excel with automated margin graph">📊 Excel Financial Model</button>
+        </div>
+        <div class="playground-result-card" id="playground-result" style="display: none;">
+          <div class="result-top">
+            <span class="result-badge" id="result-skill-badge">COM API · Video Pipeline</span>
+            <span class="result-speed" id="result-speed-badge">⚡ Dry-run Verified in 0.04s</span>
+          </div>
+          <div class="result-dag" id="result-dag-desc">DAG Decomposition: Ingest Media &rarr; Auto-Reframe 9:16 &rarr; Dynamic Captions &rarr; NVENC 4K Export</div>
+          <div class="result-steps" id="result-steps-list"></div>
+        </div>
+      </div>
+
+      <!-- Feature 2: Before vs After Workflow Comparison -->
+      <div class="comparison-showcase">
+        <div class="section-header" style="margin-bottom: 28px;">
+          <span class="section-badge">Productivity Multiplier</span>
+          <h3 style="font-size: 28px; font-weight: 800; color: #ffffff;">Manual Human Workflow vs CHARLIE Autonomous Pipeline</h3>
+          <p class="section-subtitle">Real benchmark comparing 1 video production cycle on Filmora 14 Studio.</p>
+        </div>
+        <div class="compare-cards-grid">
+          <!-- Manual Card -->
+          <div class="compare-side-card card-before">
+            <div class="compare-side-header">
+              <span class="compare-tag tag-before">Manual Human Editing</span>
+              <span class="compare-time time-before">⏳ ~45 Minutes</span>
+            </div>
+            <ul class="compare-list">
+              <li><span class="bullet-cross">✕</span> Manually listen through 15-minute raw file to flag audio pauses</li>
+              <li><span class="bullet-cross">✕</span> Make 30+ razor blade cuts manually on the video track</li>
+              <li><span class="bullet-cross">✕</span> Type and align word-by-word subtitle cards one by one</li>
+              <li><span class="bullet-cross">✕</span> Reframe crop box for 9:16 vertical TikTok/Shorts manually</li>
+              <li><span class="bullet-cross">✕</span> Wait for software export while PC slows to a crawl</li>
+            </ul>
+            <div class="compare-footer-stat before-stat">
+              <strong>Cost:</strong> High fatigue · 1 video per afternoon
+            </div>
+          </div>
+          <!-- CHARLIE Card -->
+          <div class="compare-side-card card-after">
+            <div class="compare-side-header">
+              <span class="compare-tag tag-after">CHARLIE Autonomous AI</span>
+              <span class="compare-time time-after">⚡ 3.82 Seconds</span>
+            </div>
+            <ul class="compare-list">
+              <li><span class="bullet-check">✓</span> 1 single spoken or typed command (<kbd>Ctrl</kbd> + <kbd>Space</kbd>)</li>
+              <li><span class="bullet-check">✓</span> AI Whisper silence detector cuts all dead pauses in 0.8s</li>
+              <li><span class="bullet-check">✓</span> Neural dynamic animated captions inserted automatically</li>
+              <li><span class="bullet-check">✓</span> Auto-reframe tracks center of face in vertical 9:16</li>
+              <li><span class="bullet-check">✓</span> Hardware NVENC GPU batch export finishes in under 4 seconds</li>
+            </ul>
+            <div class="compare-footer-stat after-stat">
+              <strong>Efficiency:</strong> 700× Faster · 20+ viral videos rendered per day
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Interactive Skill Directory (30+ Built-in Skills)
+       ====================================================================== -->
+  <section class="section skills-section" id="skills">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Skill Ecosystem</span>
+        <h2 class="section-title">30+ Autonomous Skills. One Command Away.</h2>
+        <p class="section-subtitle">
+          Filter through CHARLIE's built-in tool registry across media, engineering, browser, and OS automation.
+        </p>
+      </div>
+
+      <!-- Skill Filter Tabs -->
+      <div class="skill-filters-wrap">
+        <button class="skill-filter-btn active" data-filter="all">All Skills (30+)</button>
+        <button class="skill-filter-btn" data-filter="media">Media &amp; Video</button>
+        <button class="skill-filter-btn" data-filter="coding">Coding &amp; Terminal</button>
+        <button class="skill-filter-btn" data-filter="desktop">Desktop &amp; OS</button>
+        <button class="skill-filter-btn" data-filter="browser">Browser &amp; Web</button>
+        <button class="skill-filter-btn" data-filter="office">Office &amp; Data</button>
+      </div>
+
+      <!-- Skill Cards Grid -->
+      <div class="skills-catalog-grid" id="skills-catalog">
+        <!-- 1. Filmora Studio -->
+        <div class="skill-item-card" data-category="media">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill media">Media</span>
+            <span class="skill-driver-tag">COM API · FFmpeg</span>
+          </div>
+          <h4 class="skill-item-title">Filmora 14 Studio Pipeline</h4>
+          <p class="skill-item-desc">Autonomously opens Wondershare Filmora, loads footage, trims dead silences, applies
+            color LUTs, and renders video tracks.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Auto-cut silence and apply cinematic LUT to raw_take.mp4"</code>
+          </div>
+        </div>
+
+        <!-- 2. Video Reel Generator -->
+        <div class="skill-item-card" data-category="media">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill media">Media</span>
+            <span class="skill-driver-tag">Whisper · Reframe</span>
+          </div>
+          <h4 class="skill-item-title">Shorts &amp; Reels Generator</h4>
+          <p class="skill-item-desc">Reframes horizontal video to 9:16 aspect ratio, transcribes speech into
+            synchronized subtitle badges, and exports in 60s.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Generate 60-sec vertical Reel with animated dynamic subtitles"</code>
+          </div>
+        </div>
+
+        <!-- 3. Audio Master & Denoiser -->
+        <div class="skill-item-card" data-category="media">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill media">Media</span>
+            <span class="skill-driver-tag">DeepFilter · Pydub</span>
+          </div>
+          <h4 class="skill-item-title">Neural Audio Master</h4>
+          <p class="skill-item-desc">Removes air-conditioning hum, keyboard clicks, and reverb from recordings while
+            normalizing decibel levels for podcast distribution.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Clean background noise from interview.wav and master to -14 LUFS"</code>
+          </div>
+        </div>
+
+        <!-- 4. AST Code Refactorer -->
+        <div class="skill-item-card" data-category="coding">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill coding">Coding</span>
+            <span class="skill-driver-tag">Python AST · Pytest</span>
+          </div>
+          <h4 class="skill-item-title">Codebase AST Refactorer</h4>
+          <p class="skill-item-desc">Parses repo abstract syntax trees, identifies concurrency bottlenecks, generates
+            atomic code patches, and runs regression tests.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Locate async bottleneck in router.py and verify with pytest"</code>
+          </div>
+        </div>
+
+        <!-- 5. Git & PR Agent -->
+        <div class="skill-item-card" data-category="coding">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill coding">Coding</span>
+            <span class="skill-driver-tag">Git CLI · Diff</span>
+          </div>
+          <h4 class="skill-item-title">Git &amp; PR Assistant</h4>
+          <p class="skill-item-desc">Analyzes unstaged git diffs, writes Conventional Commits, creates pull request
+            summaries, and manages branching workflows.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Review diff, write atomic commit message, and stage changes"</code>
+          </div>
+        </div>
+
+        <!-- 6. Terminal Sandbox Isolator -->
+        <div class="skill-item-card" data-category="coding">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill coding">Coding</span>
+            <span class="skill-driver-tag">PowerShell · Bash</span>
+          </div>
+          <h4 class="skill-item-title">Sandboxed Shell Executor</h4>
+          <p class="skill-item-desc">Safely executes command-line scripts, captures standard output streams, and guards
+            against unauthorized elevated privilege escalation.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Run npm build, log output, and alert me if exit code is non-zero"</code>
+          </div>
+        </div>
+
+        <!-- 7. Smart Window Organizer -->
+        <div class="skill-item-card" data-category="desktop">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill desktop">Desktop</span>
+            <span class="skill-driver-tag">Win32 API · Displays</span>
+          </div>
+          <h4 class="skill-item-title">Smart Window Manager</h4>
+          <p class="skill-item-desc">Tiles applications across multiple displays, snaps IDE and browser side-by-side,
+            and minimizes background distractions with voice.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Arrange workspace: VS Code left, Chrome right on Monitor 1"</code>
+          </div>
+        </div>
+
+        <!-- 8. Bulk File Sanitizer -->
+        <div class="skill-item-card" data-category="desktop">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill desktop">Desktop</span>
+            <span class="skill-driver-tag">FileAgent · Hash</span>
+          </div>
+          <h4 class="skill-item-title">Bulk File Organizer</h4>
+          <p class="skill-item-desc">Scans directories, identifies duplicate files using cryptographic SHA hashes, and
+            reorganizes scattered assets by date or extension.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Deduplicate my Downloads folder and group documents by year"</code>
+          </div>
+        </div>
+
+        <!-- 9. System Health Doctor -->
+        <div class="skill-item-card" data-category="desktop">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill desktop">Desktop</span>
+            <span class="skill-driver-tag">PSUtil · Process</span>
+          </div>
+          <h4 class="skill-item-title">System Diagnostic Doctor</h4>
+          <p class="skill-item-desc">Monitors system memory spikes, CPU temperatures, identifies hanging processes, and
+            cleans temp caches to restore peak speed.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Check system performance and terminate zombie background tasks"</code>
+          </div>
+        </div>
+
+        <!-- 10. Browser DOM Navigator -->
+        <div class="skill-item-card" data-category="browser">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill browser">Browser</span>
+            <span class="skill-driver-tag">Playwright · Headless</span>
+          </div>
+          <h4 class="skill-item-title">Autonomous Web Navigator</h4>
+          <p class="skill-item-desc">Navigates web pages, bypasses paywalls, clicks buttons, extracts structured tables,
+            and downloads reports without leaving your desktop.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Navigate to portal, scrape quarterly balance sheet, save CSV"</code>
+          </div>
+        </div>
+
+        <!-- 11. Deep Research Synthesizer -->
+        <div class="skill-item-card" data-category="browser">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill browser">Browser</span>
+            <span class="skill-driver-tag">Crawler · Synthesizer</span>
+          </div>
+          <h4 class="skill-item-title">Deep Research Agent</h4>
+          <p class="skill-item-desc">Queries multiple search engines, summarizes academic papers, cross-checks facts
+            across 10+ sources, and generates citation briefings.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Conduct deep research on local LLM quantization and write briefing"</code>
+          </div>
+        </div>
+
+        <!-- 12. Excel Financial Modeler -->
+        <div class="skill-item-card" data-category="office">
+          <div class="skill-item-top">
+            <span class="skill-cat-pill office">Office</span>
+            <span class="skill-driver-tag">OpenPyXL · Sheets</span>
+          </div>
+          <h4 class="skill-item-title">Spreadsheet &amp; Data Modeler</h4>
+          <p class="skill-item-desc">Constructs complex multi-tab Excel workbooks, writes dynamic formulas (VLOOKUP,
+            XLOOKUP), and embeds clean data visualization charts.</p>
+          <div class="skill-cmd-preview">
+            <code>charlie "Create 12-month cashflow forecast in Excel with visual burn rate chart"</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Security & Privacy Blueprint
+       ====================================================================== -->
+  <section class="section security-section" id="security">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Security &amp; Privacy Blueprint</span>
+        <h2 class="section-title">Enterprise Security. Zero Cloud Telemetry.</h2>
+        <p class="section-subtitle">
+          Your thoughts, files, voice, and code never leave your computer unless you explicitly grant access.
+        </p>
+      </div>
+
+      <div class="security-grid">
+        <!-- Card 1 -->
+        <div class="security-card">
+          <div class="security-icon-box">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-primary)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <h3 class="security-card-title">Zero-Telemetry Guarantee</h3>
+          <p class="security-card-desc">
+            CHARLIE has zero tracking pixels, zero telemetry pings, and zero external diagnostic uploads. What you speak,
+            type, or edit stays on your machine permanently.
+          </p>
+          <ul class="security-feature-list">
+            <li><span>✓</span> No model training on your private files</li>
+            <li><span>✓</span> Air-gapped offline execution capable</li>
+            <li><span>✓</span> SQLite database stored 100% locally on disk</li>
+          </ul>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="security-card">
+          <div class="security-icon-box icon-indigo">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-light)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </div>
+          <h3 class="security-card-title">RSA-2048 Signed Offline Licensing</h3>
+          <p class="security-card-desc">
+            Licenses are verified using RSA-2048 asymmetric cryptographic signatures. Server signs your entitlement with
+            a private key; your device verifies with the embedded public key — no shared secrets.
+          </p>
+          <ul class="security-feature-list">
+            <li><span>✓</span> Server-side RSA signed entitlement tokens</li>
+            <li><span>✓</span> Privacy-safe device fingerprinting (no tracking)</li>
+            <li><span>✓</span> 1 Active PC at a time — transfer via account login</li>
+          </ul>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="security-card">
+          <div class="security-icon-box icon-emerald">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-accent)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <h3 class="security-card-title">Destructive Action Safety Gates</h3>
+          <p class="security-card-desc">
+            Any irreversible file deletion, disk formatting, or system-altering script requires explicit confirmation.
+            CHARLIE previews atomic diffs before executing changes.
+          </p>
+          <ul class="security-feature-list">
+            <li><span>✓</span> Visual diff approval before file modification</li>
+            <li><span>✓</span> Sandbox quarantine for unfamiliar scripts</li>
+            <li><span>✓</span> Immediate kill-switch via <kbd>Esc</kbd> anytime</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Hotkeys & Voice Cheat Sheet
+       ====================================================================== -->
+  <section class="section shortcuts-section" id="shortcuts">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Command Center</span>
+        <h2 class="section-title">Command Your PC at the Speed of Thought</h2>
+        <p class="section-subtitle">
+          Toggle between instant global keyboard shortcuts and natural neural voice commands.
+        </p>
+      </div>
+
+      <div class="shortcuts-grid">
+        <!-- Keyboard Shortcuts Column -->
+        <div class="shortcut-box">
+          <div class="shortcut-box-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-primary)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <line x1="6" y1="8" x2="6" y2="8" />
+              <line x1="10" y1="8" x2="10" y2="8" />
+              <line x1="14" y1="8" x2="14" y2="8" />
+              <line x1="18" y1="8" x2="18" y2="8" />
+              <line x1="6" y1="12" x2="6" y2="12" />
+              <line x1="18" y1="12" x2="18" y2="12" />
+              <line x1="8" y1="16" x2="16" y2="16" />
+            </svg>
+            <h3 class="shortcut-box-title">Keyboard Shortcuts</h3>
+          </div>
+          <div class="shortcut-list">
+            <div class="shortcut-row">
+              <div class="key-combo">
+                <kbd>Ctrl</kbd> + <kbd>Space</kbd>
+              </div>
+              <div class="key-desc">
+                <strong>Quick Command Bar</strong>
+                <span>Instant spotlight prompt for desktop commands</span>
+              </div>
+            </div>
+            <div class="shortcut-row">
+              <div class="key-combo">
+                <kbd>Alt</kbd> + <kbd>J</kbd>
+              </div>
+              <div class="key-desc">
+                <strong>Toggle Voice Listening</strong>
+                <span>Hands-free voice recognition without wake word</span>
+              </div>
+            </div>
+            <div class="shortcut-row">
+              <div class="key-combo">
+                <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd>
+              </div>
+              <div class="key-desc">
+                <strong>Video Studio Launcher</strong>
+                <span>Quick-launch Wondershare Filmora automation</span>
+              </div>
+            </div>
+            <div class="shortcut-row">
+              <div class="key-combo">
+                <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>K</kbd>
+              </div>
+              <div class="key-desc">
+                <strong>Knowledge Graph Inspector</strong>
+                <span>Search personal memory vectors and past context</span>
+              </div>
+            </div>
+            <div class="shortcut-row">
+              <div class="key-combo">
+                <kbd>Esc</kbd>
+              </div>
+              <div class="key-desc">
+                <strong>Instant Kill-Switch / Dismiss</strong>
+                <span>Aborts current running agent task immediately</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Voice Triggers Column -->
+        <div class="shortcut-box">
+          <div class="shortcut-box-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-light)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
+            <h3 class="shortcut-box-title">Natural Voice Commands</h3>
+          </div>
+          <div class="voice-cmd-list">
+            <div class="voice-cmd-row">
+              <div class="voice-speech-bubble">
+                "Hey CHARLIE, auto-cut my raw video in Filmora and add subtitles"
+              </div>
+              <span class="voice-action-tag">Video Studio</span>
+            </div>
+            <div class="voice-cmd-row">
+              <div class="voice-speech-bubble">
+                "Hey CHARLIE, organize my desktop downloads by project type"
+              </div>
+              <span class="voice-action-tag">File Agent</span>
+            </div>
+            <div class="voice-cmd-row">
+              <div class="voice-speech-bubble">
+                "Hey CHARLIE, summarize this research PDF and draft key takeaways"
+              </div>
+              <span class="voice-action-tag">Deep Research</span>
+            </div>
+            <div class="voice-cmd-row">
+              <div class="voice-speech-bubble">
+                "Hey CHARLIE, run unit tests and report any broken assertions"
+              </div>
+              <span class="voice-action-tag">Coding Copilot</span>
+            </div>
+            <div class="voice-cmd-row">
+              <div class="voice-speech-bubble">
+                "Hey CHARLIE, switch voice engine to female neural voice"
+              </div>
+              <span class="voice-action-tag">Voice Manager</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Pricing & Subscription Plans
+       ====================================================================== -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Production SaaS Pricing</span>
+        <h2 class="section-title">Transparent, Scalable AI Power</h2>
+        <p class="section-subtitle">
+          Predictable monthly credits, zero hidden lock-ins. Switch voices, automate PC tasks, and scale your creative studio with dedicated monthly allowances.
+        </p>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- 1. STARTER PLAN (FREE) -->
+        <div class="pricing-card" id="plan-starter">
+          <div class="plan-name">Starter</div>
+          <div class="plan-tagline">Explore CHARLIE Daily</div>
+          <div class="plan-price-wrap">
+            <span class="plan-price">FREE</span>
+            <span class="plan-cycle"> / forever</span>
+          </div>
+          <div style="font-size: 13px; color: var(--cyan-primary); font-weight: 600; margin-bottom: 12px;">15 Messages / Day</div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> 15 daily AI assistant messages</li>
+            <li><span class="plan-check">✓</span> Male neural voice assistant</li>
+            <li><span class="plan-check">✓</span> 1 active Windows device</li>
+            <li><span class="plan-check">✓</span> Basic app launcher &amp; file search</li>
+            <li><span class="plan-check">✓</span> Community forum support</li>
+            <li><span class="plan-check">✓</span> Zero credit card required</li>
+          </ul>
+          <a href="downloads/CHARLIE-Setup.exe" download="CHARLIE-Setup.exe"
+            class="btn btn-secondary download-trigger-btn" style="width: 100%;" data-file="CHARLIE-Setup.exe">Download Free</a>
+        </div>
+
+        <!-- 2. BASIC PLAN (₹149/mo) -->
+        <div class="pricing-card" id="plan-basic">
+          <div class="plan-name">Basic</div>
+          <div class="plan-tagline">Essential Personal Copilot</div>
+          <div class="plan-price-wrap">
+            <span class="plan-price">₹149</span>
+            <span class="plan-cycle"> / month</span>
+          </div>
+          <div style="font-size: 13px; color: var(--cyan-primary); font-weight: 600; margin-bottom: 12px;">500 Credits / Month</div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> 500 AI credits every month</li>
+            <li><span class="plan-check">✓</span> Male neural voice synthesis</li>
+            <li><span class="plan-check">✓</span> 1 active Windows device</li>
+            <li><span class="plan-check">✓</span> PC control &amp; file organizer</li>
+            <li><span class="plan-check">✓</span> Autonomous web research agent</li>
+            <li><span class="plan-check">✓</span> Standard email support</li>
+          </ul>
+          <a href="downloads/CHARLIE-Setup.exe" download="CHARLIE-Setup.exe"
+            class="btn btn-secondary download-trigger-btn" style="width: 100%;" data-file="CHARLIE-Setup.exe">Get Basic</a>
+        </div>
+
+        <!-- 3. PRO PLAN (₹299/mo - MOST POPULAR) -->
+        <div class="pricing-card pricing-popular pricing-pro" id="plan-pro">
+          <div class="pricing-badge badge-popular">MOST POPULAR</div>
+          <div class="plan-name">Pro</div>
+          <div class="plan-tagline">Creator &amp; Power User Choice</div>
+          <div class="plan-price-wrap">
+            <span class="plan-price">₹299</span>
+            <span class="plan-cycle"> / month</span>
+          </div>
+          <div style="font-size: 13px; color: var(--cyan-primary); font-weight: 600; margin-bottom: 12px;">1,500 Credits / Month</div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> 1,500 monthly AI credits</li>
+            <li><span class="plan-check">✓</span> Dual voice switching (Male + Female)</li>
+            <li><span class="plan-check">✓</span> 2 active Windows devices</li>
+            <li><span class="plan-check">✓</span> Advanced Knowledge Graph memory</li>
+            <li><span class="plan-check">✓</span> Office Excel / Word automation</li>
+            <li><span class="plan-check">✓</span> Priority email &amp; Discord support</li>
+          </ul>
+          <a href="downloads/CHARLIE-Setup.exe" download="CHARLIE-Setup.exe" class="btn btn-primary download-trigger-btn"
+            style="width: 100%;" data-file="CHARLIE-Setup.exe">Get Pro</a>
+        </div>
+
+        <!-- 4. PRO+ PLAN (₹599/mo - BEST VALUE) -->
+        <div class="pricing-card pricing-pro-plus" id="plan-pro-plus">
+          <div class="pricing-badge badge-power">BEST VALUE</div>
+          <div class="plan-name">Pro+</div>
+          <div class="plan-tagline">Full Autonomous Studio</div>
+          <div class="plan-price-wrap">
+            <span class="plan-price">₹599</span>
+            <span class="plan-cycle"> / month</span>
+          </div>
+          <div style="font-size: 13px; color: var(--emerald-accent); font-weight: 600; margin-bottom: 12px;">4,000 Credits / Month</div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> 4,000 monthly AI credits</li>
+            <li><span class="plan-check">✓</span> Autonomous PC &amp; mouse navigation</li>
+            <li><span class="plan-check">✓</span> Filmora 14 Studio &amp; FFmpeg pipeline</li>
+            <li><span class="plan-check">✓</span> YouTube Shorts auto-publish</li>
+            <li><span class="plan-check">✓</span> 5 active devices + Team sharing</li>
+            <li><span class="plan-check">✓</span> Developer MCP plugins &amp; priority queue</li>
+          </ul>
+          <a href="downloads/CHARLIE-Setup.exe" download="CHARLIE-Setup.exe"
+            class="btn btn-secondary download-trigger-btn" style="width: 100%;" data-file="CHARLIE-Setup.exe">Get Pro+</a>
+        </div>
+
+        <!-- 5. ANNUAL PRO (₹2,999/yr - EXACT ₹589 SAVING + VIP BONUSES) -->
+        <div class="pricing-card pricing-annual" id="plan-annual-pro">
+          <div class="pricing-badge badge-annual">SAVE ₹589/YEAR + VIP BONUSES</div>
+          <div class="plan-name gradient-cyan">Annual Pro</div>
+          <div class="plan-tagline" style="color: var(--cyan-primary);">Best Value · Exclusive Creator Pack</div>
+          <div class="plan-price-wrap">
+            <span class="plan-price" style="color: #ffffff;">₹2,999</span>
+            <span class="plan-cycle"> / year</span>
+          </div>
+          <div style="margin-top: -6px; margin-bottom: 10px; font-size: 13px;">
+            <span style="text-decoration: line-through; color: var(--text-muted);">₹3,588/yr</span>
+            <span style="color: var(--emerald-accent); font-weight: 700; margin-left: 6px;">Save ₹589/year (~16.4%)</span>
+          </div>
+          <div style="font-size: 12px; color: var(--emerald-accent); font-weight: 600; margin-bottom: 12px;">Effective ≈₹250/mo · 1,800 credits/mo (+300 Bonus/mo)</div>
+          <ul class="plan-features">
+            <li><span class="plan-check" style="color: var(--cyan-primary);">★</span> <span><strong>1,800 Credits/mo</strong><br><small style="color: var(--text-dim);">+300 bonus vs monthly Pro</small></span></li>
+            <li><span class="plan-check" style="color: var(--cyan-primary);">★</span> <span><strong>+500 Welcome Credits</strong><br><small style="color: var(--text-dim);">Instant onboarding bonus</small></span></li>
+            <li><span class="plan-check" style="color: var(--cyan-primary);">★</span> <span><strong>Credit Rollover</strong><br><small style="color: var(--text-dim);">Keep unused up to 2,000 cr</small></span></li>
+            <li><span class="plan-check" style="color: var(--cyan-primary);">★</span> <span><strong>3 Active PCs</strong><br><small style="color: var(--text-dim);">+1 extra PC vs monthly Pro</small></span></li>
+            <li><span class="plan-check" style="color: var(--cyan-primary);">★</span> <span><strong>Deep Research Agent</strong><br><small style="color: var(--text-dim);">Multi-source web synthesis</small></span></li>
+            <li><span class="plan-check" style="color: var(--cyan-primary);">★</span> <span><strong>Autonomous PC Hooks</strong><br><small style="color: var(--text-dim);">Shell sandbox &amp; mouse</small></span></li>
+            <li><span class="plan-check" style="color: var(--cyan-primary);">★</span> <span><strong>Dual Voice Switch</strong><br><small style="color: var(--text-dim);">Male &amp; Female neural voices</small></span></li>
+            <li><span class="plan-check" style="color: var(--cyan-primary);">★</span> <span><strong>1-on-1 VIP Support</strong><br><small style="color: var(--text-dim);">Priority Discord &amp; email</small></span></li>
+          </ul>
+          <a href="downloads/CHARLIE-Setup.exe" download="CHARLIE-Setup.exe" class="btn btn-primary download-trigger-btn"
+            style="width: 100%;" data-file="CHARLIE-Setup.exe">Get Annual Pro (Save ₹589)</a>
+        </div>
+      </div>
+
+      <!-- Comprehensive 34-Feature Comparison Matrix -->
+      <div style="margin-top: 60px;">
+        <div class="section-header" style="margin-bottom: 24px;">
+          <span class="section-badge">Full Specification</span>
+          <h3 class="section-title" style="font-size: 26px;">Detailed Plan Comparison</h3>
+          <p class="section-subtitle">34 rigorous criteria across core intelligence, automation, studio pipelines, and security.</p>
+        </div>
+        <div class="table-wrapper">
+          <table class="compare-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th style="width: 28%;">Feature / Capability</th>
+                <th style="width: 14%;">Starter (Free)</th>
+                <th style="width: 14%;">Basic (₹149/mo)</th>
+                <th class="col-charlie" style="width: 15%;">Pro (₹299/mo)</th>
+                <th style="width: 14%;">Pro+ (₹599/mo)</th>
+                <th style="width: 15%;">Annual Pro (₹2,999/yr)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Group 1: Allowance & Pricing -->
+              <tr style="background: rgba(255,255,255,0.02); font-weight: 700;"><td colspan="6" style="color: var(--cyan-primary); text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">1. Usage Allowance &amp; Pricing</td></tr>
+              <tr><td>Monthly / Base Price</td><td>₹0</td><td>₹149 / mo</td><td class="col-charlie">₹299 / mo</td><td>₹599 / mo</td><td>₹2,999 / yr (Save ₹589)</td></tr>
+              <tr><td>Monthly Credit Allocation</td><td>15 msgs / day</td><td>500 credits</td><td class="col-charlie">1,500 credits</td><td>4,000 credits</td><td><strong>1,800 credits / mo (+300 Bonus)</strong></td></tr>
+              <tr><td>Effective Monthly Rate</td><td>₹0</td><td>₹149 / mo</td><td class="col-charlie">₹299 / mo</td><td>₹599 / mo</td><td>≈₹250 / mo</td></tr>
+              <tr><td>Active Device Entitlements</td><td>1 PC</td><td>1 PC</td><td class="col-charlie">2 PCs</td><td>5 PCs</td><td><strong>3 PCs (+1 Extra)</strong></td></tr>
+              <tr><td>Welcome Bonus Credits</td><td>—</td><td>—</td><td class="col-charlie">—</td><td>—</td><td><span class="check-green">✓ +500 Credits</span></td></tr>
+              <tr><td>Credit Rollover (Unused)</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie"><span class="cross-red">✕</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓ Up to 2,000 cr</span></td></tr>
+              <tr><td>Add-on Credit Packs Access</td><td><span class="cross-red">✕</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+
+              <!-- Group 2: Core Assistant & Voice -->
+              <tr style="background: rgba(255,255,255,0.02); font-weight: 700;"><td colspan="6" style="color: var(--cyan-primary); text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">2. Voice &amp; Core Intelligence</td></tr>
+              <tr><td>Male Neural Voice Engine</td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Female Neural Voice Engine</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Instant Dual Voice Switching</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Local Whisper Transcription</td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Multi-turn Contextual Memory</td><td>Basic</td><td>Standard</td><td class="col-charlie">Advanced Graph</td><td>Deep Knowledge Graph</td><td>Advanced Graph</td></tr>
+              <tr><td>Offline Local Model Routing</td><td><span class="cross-red">✕</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+
+              <!-- Group 3: Desktop Automation -->
+              <tr style="background: rgba(255,255,255,0.02); font-weight: 700;"><td colspan="6" style="color: var(--cyan-primary); text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">3. Desktop Autonomy &amp; Tools</td></tr>
+              <tr><td>App Launching &amp; Window Snapping</td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Bulk File Organizer &amp; Hasher</td><td><span class="cross-red">✕</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Autonomous Mouse &amp; Keyboard Control</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie">Basic UI Hooks</td><td>Full Vision Autonomous</td><td>Basic UI Hooks</td></tr>
+              <tr><td>Terminal Sandbox &amp; Script Run</td><td><span class="cross-red">✕</span></td><td>Standard</td><td class="col-charlie">Advanced</td><td>Full Sandbox Root</td><td>Advanced</td></tr>
+              <tr><td>Autonomous Web Research Agent</td><td><span class="cross-red">✕</span></td><td>Basic Summary</td><td class="col-charlie">Multi-source Deep</td><td>Crawl + Extract + Export</td><td><strong>Deep Research &amp; Citations</strong></td></tr>
+              <tr><td>Playwright Browser Automation</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Excel / Sheets Automated Modeling</td><td><span class="cross-red">✕</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+
+              <!-- Group 4: Creative & Video Studio -->
+              <tr style="background: rgba(255,255,255,0.02); font-weight: 700;"><td colspan="6" style="color: var(--cyan-primary); text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">4. Creative &amp; Video Production</td></tr>
+              <tr><td>FFmpeg Video Pipeline Automation</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie">Basic Cuts</td><td>Hardware NVENC Studio</td><td>Basic Cuts</td></tr>
+              <tr><td>Filmora 14 Studio Automation</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie">Timeline Hook</td><td>Full Studio Automation</td><td>Timeline Hook</td></tr>
+              <tr><td>Auto-cut Silence &amp; Auto-Reframe 9:16</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie"><span class="cross-red">✕</span></td><td><span class="check-green">✓ Native</span></td><td><span class="cross-red">✕</span></td></tr>
+              <tr><td>Dynamic Subtitle Sync Generator</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie">Standard</td><td>Stylized Kinetic</td><td>Standard</td></tr>
+              <tr><td>YouTube Shorts Direct Auto-Publish</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie"><span class="cross-red">✕</span></td><td><span class="check-green">✓ Direct API</span></td><td><span class="cross-red">✕</span></td></tr>
+
+              <!-- Group 5: Developer & Extensibility -->
+              <tr style="background: rgba(255,255,255,0.02); font-weight: 700;"><td colspan="6" style="color: var(--cyan-primary); text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">5. Developer &amp; Advanced Architecture</td></tr>
+              <tr><td>Multi-Agent DAG Task Decomposition</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓ Complex DAG</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Custom Python Skill Plugin Loader</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Model Context Protocol (MCP) Tools</td><td><span class="cross-red">✕</span></td><td><span class="cross-red">✕</span></td><td class="col-charlie"><span class="cross-red">✕</span></td><td><span class="check-green">✓ Unlimited</span></td><td><span class="cross-red">✕</span></td></tr>
+              <tr><td>Local Custom LLM Endpoint Binding</td><td><span class="cross-red">✕</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Self-Correction Error Recovery</td><td><span class="cross-red">✕</span></td><td>Single Retry</td><td class="col-charlie">Multi-turn Loop</td><td>Full DAG Rollback</td><td>Multi-turn Loop</td></tr>
+
+              <!-- Group 6: Security, Licensing & Support -->
+              <tr style="background: rgba(255,255,255,0.02); font-weight: 700;"><td colspan="6" style="color: var(--cyan-primary); text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">6. Security, Licensing &amp; Support</td></tr>
+              <tr><td>Zero Cloud Telemetry Guarantee</td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>RSA-2048 Signed Offline Licensing</td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Encrypted Local Database (SQLite)</td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td class="col-charlie"><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td><td><span class="check-green">✓</span></td></tr>
+              <tr><td>Support Tier</td><td>Community</td><td>Standard Email</td><td class="col-charlie">Priority Email</td><td>Dedicated VIP</td><td><strong>VIP 1-on-1 Direct Support</strong></td></tr>
+              <tr><td>Inference Queue Priority</td><td>Standard</td><td>Standard</td><td class="col-charlie">High</td><td>Ultra Top Tier</td><td>High Priority</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Direct Download Center Section
+       ====================================================================== -->
+  <section class="section" id="downloads">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Distribution Hub</span>
+        <h2 class="section-title">Download CHARLIE Desktop</h2>
+        <p class="section-subtitle">
+          Choose your package. Ready to run on modern Windows 64-bit systems with full local AI capabilities.
+        </p>
+      </div>
+
+      <div class="download-grid">
+        <!-- Card 1: Windows Setup Installer (Recommended) -->
+        <div class="download-card download-card-featured">
+          <div class="download-badge-featured">RECOMMENDED · SECURE INSTALLER</div>
+          <div class="download-card-header">
+            <div class="os-icon-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-primary)" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="download-card-title">CHARLIE Setup for Windows</h3>
+              <span class="download-meta">v1.0 LIV · Installer .EXE · Windows 10/11 64-bit</span>
+            </div>
+          </div>
+          <p class="download-card-desc">
+            Professional Windows installer with Start Menu, desktop shortcut, auto-updates, and clean uninstaller.
+            Source code is compiled and protected — no raw Python files exposed.
+          </p>
+          <ul class="download-features-list">
+            <li><span>✓</span> One-click install — no admin rights required</li>
+            <li><span>✓</span> RSA-signed entitlement &amp; device activation</li>
+            <li><span>✓</span> Compiled binary — source code protected</li>
+            <li><span>✓</span> Auto Start Menu &amp; desktop shortcuts</li>
+          </ul>
+          <a href="downloads/CHARLIE-Setup.exe" download="CHARLIE-Setup.exe" class="btn btn-primary download-trigger-btn"
+            style="width: 100%;" data-file="CHARLIE-Setup.exe">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download CHARLIE-Setup.exe (151 MB)
+          </a>
+          <div
+            style="margin-top: 10px; font-size: 11px; color: var(--text-muted); font-family: monospace; word-break: break-all;">
+            SHA-256: dc660decad27081289f44423b19940e09f4c35a353a457703b090f21d7ef2aa2
+          </div>
+          <span class="download-foot-note">Windows 10 / 11 · 64-bit · Official Signed Installer</span>
+        </div>
+
+        <!-- Card 2: macOS / Linux / Python Source -->
+        <div class="download-card">
+          <div class="download-card-header">
+            <div class="os-icon-box"
+              style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.3);">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-accent)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="download-card-title">macOS / Linux (Developer)</h3>
+              <span class="download-meta">Python 3.10+ · Terminal · Apple Silicon &amp; Intel</span>
+            </div>
+          </div>
+          <p class="download-card-desc">
+            Run CHARLIE from source on macOS (M1–M4) or Linux with full hardware acceleration. Requires Python
+            environment setup.
+          </p>
+          <div class="code-snippet-box">
+            <code>pip install -r requirements.txt<br>python main.py</code>
+          </div>
+          <a href="#requirements" class="btn btn-secondary" style="width: 100%;">
+            View System Requirements ↓
+          </a>
+          <span class="download-foot-note">Cross-platform Python engine</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       System Requirements & Hardware Compatibility Section
+       ====================================================================== -->
+  <section class="section requirements-section" id="requirements">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">System Compatibility</span>
+        <h2 class="section-title">Hardware &amp; Software Requirements</h2>
+        <p class="section-subtitle">
+          Engineered for high performance with minimal overhead. Check what is required to run CHARLIE Desktop on your
+          machine.
+        </p>
+      </div>
+
+      <!-- Live Client Hardware Detection Banner -->
+      <div class="compat-detection-card">
+        <div class="compat-detection-left">
+          <div class="compat-indicator-pulse"></div>
+          <div>
+            <div class="compat-detection-title" id="client-os-detect">Detecting your system configuration...</div>
+            <div class="compat-detection-sub" id="client-os-status">Checking operating system &amp; runtime support...
+            </div>
+          </div>
+        </div>
+        <div class="compat-detection-right">
+          <span class="compat-status-pill ready" id="client-os-badge">✓ Compatible</span>
+        </div>
+      </div>
+
+      <!-- Side-by-Side Minimum vs Recommended Specs -->
+      <div class="spec-grid">
+        <!-- Card 1: Minimum Specs -->
+        <div class="spec-card">
+          <div class="spec-card-header">
+            <div>
+              <span class="spec-tier-badge">Baseline Run</span>
+              <h3 class="spec-card-title">Minimum Specifications</h3>
+              <p class="spec-card-desc">Essential specifications to run CHARLIE with standard desktop automation and
+                cloud-assisted routing.</p>
+            </div>
+          </div>
+          <div class="spec-table">
+            <div class="spec-row">
+              <span class="spec-label">Operating System</span>
+              <span class="spec-val">Windows 10 / 11 (64-bit), macOS 12+ (Apple Silicon &amp; Intel), Ubuntu
+                22.04+</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">System RAM</span>
+              <span class="spec-val highlight">8 GB RAM</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Storage (Disk)</span>
+              <span class="spec-val highlight">2 GB Free SSD Space</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Processor (CPU)</span>
+              <span class="spec-val">Intel Core i3 / AMD Ryzen 3 or Apple M1 (4 Cores, 2.0 GHz+)</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Graphics (GPU)</span>
+              <span class="spec-val">Integrated Graphics (Intel UHD 620+ / Radeon Vega / Apple Silicon)</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Audio Hardware</span>
+              <span class="spec-val">Standard built-in or USB microphone &amp; stereo audio output</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Runtime</span>
+              <span class="spec-val">Zero setup needed for <code>.EXE Installer</code> (Standalone Windows setup)</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Network</span>
+              <span class="spec-val">5 Mbps broadband for cloud web search &amp; license verification</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Recommended Specs (Optimal for 4K Editing & Local LLMs) -->
+        <div class="spec-card spec-card-featured">
+          <div class="spec-badge-featured">RECOMMENDED · MAXIMUM SPEED</div>
+          <div class="spec-card-header">
+            <div>
+              <span class="spec-tier-badge pro">Pro Workstation</span>
+              <h3 class="spec-card-title">Recommended Configuration</h3>
+              <p class="spec-card-desc">Optimized for autonomous 4K Wondershare Filmora rendering, real-time whisper
+                transcription, and offline neural execution.</p>
+            </div>
+          </div>
+          <div class="spec-table">
+            <div class="spec-row">
+              <span class="spec-label">Operating System</span>
+              <span class="spec-val">Windows 11 Pro 64-bit (Build 22621+) or macOS Sonoma 14+</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">System RAM</span>
+              <span class="spec-val highlight pro">16 GB – 32 GB High-Speed DDR5 / Unified RAM</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Storage (Disk)</span>
+              <span class="spec-val highlight pro">10 GB+ High-Speed NVMe SSD (for video cache &amp; weights)</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Processor (CPU)</span>
+              <span class="spec-val">Intel Core i7/i9 (12th Gen+), AMD Ryzen 7/9 (5000+), Apple M2/M3/M4</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Graphics (GPU)</span>
+              <span class="spec-val">NVIDIA GeForce RTX 3060/4070+ (8 GB+ VRAM) or Apple Metal 3</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Audio Hardware</span>
+              <span class="spec-val">Directional condenser mic with hardware noise cancellation + low-latency
+                monitor</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Python Tools (Dev)</span>
+              <span class="spec-val">Python 3.11+, Git, FFmpeg 6.0+ (Included in full zip bundle)</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Network</span>
+              <span class="spec-val">50 Mbps+ low-latency connection (or 100% full offline mode)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3: Interactive Hardware Performance Calculator -->
+      <div class="hardware-calc-wrapper" id="calculator">
+        <div class="hardware-calc-header">
+          <span class="section-badge">Interactive Estimator</span>
+          <h3 class="hardware-calc-title">Hardware Performance &amp; Frame Rate Calculator</h3>
+          <p class="hardware-calc-desc">Select your system's hardware specs below to see estimated real-time FPS, transcription latency, and video export speeds with CHARLIE.</p>
+        </div>
+        <div class="hardware-calc-box">
+          <div class="calc-controls-grid">
+            <div class="calc-control-group">
+              <label for="calc-ram" class="calc-label">System RAM Capacity</label>
+              <select id="calc-ram" class="calc-select">
+                <option value="8">8 GB RAM (Baseline)</option>
+                <option value="16" selected>16 GB DDR4/DDR5 (Standard)</option>
+                <option value="32">32 GB DDR5 (Power User)</option>
+                <option value="64">64 GB+ (Studio Workstation)</option>
+              </select>
+            </div>
+            <div class="calc-control-group">
+              <label for="calc-gpu" class="calc-label">Graphics Acceleration (GPU)</label>
+              <select id="calc-gpu" class="calc-select">
+                <option value="integrated">Intel Iris / AMD Integrated</option>
+                <option value="gtx">GTX 1650 / RTX 2060 (4-6 GB)</option>
+                <option value="rtx30" selected>RTX 3060 / 4060 (8 GB+ VRAM)</option>
+                <option value="rtx40">RTX 4070 / 4080 / 4090 (12-24 GB)</option>
+                <option value="apple">Apple Silicon M2 / M3 / M4</option>
+              </select>
+            </div>
+            <div class="calc-control-group">
+              <label for="calc-storage" class="calc-label">Disk Storage Medium</label>
+              <select id="calc-storage" class="calc-select">
+                <option value="hdd">Mechanical Hard Drive (HDD)</option>
+                <option value="sata">SATA III SSD (500 MB/s)</option>
+                <option value="nvme" selected>NVMe M.2 SSD (3,500 - 7,000 MB/s)</option>
+              </select>
+            </div>
+            <div class="calc-control-group">
+              <label for="calc-workload" class="calc-label">Primary Workload Mode</label>
+              <select id="calc-workload" class="calc-select">
+                <option value="video" selected>Filmora 14 4K Video Auto-Cut</option>
+                <option value="voice">Ultra-Low-Latency Voice Persona</option>
+                <option value="coding">Full Repository Codebase Copilot</option>
+                <option value="offline">100% Offline Local Model Inference</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="calc-metrics-dashboard">
+            <div class="calc-metric-card">
+              <div class="calc-metric-label">Speech &amp; Transcription Latency</div>
+              <div class="calc-metric-val" id="calc-res-latency">118 ms</div>
+              <div class="calc-metric-sub" id="calc-res-latency-sub">Real-time conversational flow</div>
+            </div>
+            <div class="calc-metric-card highlight-cyan">
+              <div class="calc-metric-label">Estimated HUD &amp; Avatar FPS</div>
+              <div class="calc-metric-val" id="calc-res-fps">136.5 FPS</div>
+              <div class="calc-metric-sub" id="calc-res-fps-sub">Smooth high-refresh motion</div>
+            </div>
+            <div class="calc-metric-card">
+              <div class="calc-metric-label">60s 4K Video Export Time</div>
+              <div class="calc-metric-val" id="calc-res-render">3.8 s</div>
+              <div class="calc-metric-sub" id="calc-res-render-sub">Hardware NVENC accelerated</div>
+            </div>
+            <div class="calc-metric-card">
+              <div class="calc-metric-label">Offline Autonomy Level</div>
+              <div class="calc-metric-val highlight-green" id="calc-res-tier">100% Native</div>
+              <div class="calc-metric-sub" id="calc-res-tier-sub">All models fit in local memory</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Required Software & Integration Tools -->
+      <div class="tools-overview-wrapper">
+        <h3 class="tools-overview-title">Required Software Tools &amp; Supported Integrations</h3>
+        <p class="tools-overview-subtitle">CHARLIE works out of the box with zero configuration, but pairs with these
+          industry tools for expanded superpowers.</p>
+
+        <div class="tools-grid">
+          <!-- Tool 1: Python Engine -->
+          <div class="tool-card">
+            <div class="tool-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-primary)" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+            </div>
+            <h4 class="tool-name">Python 3.10+ Runtime</h4>
+            <span class="tool-status-tag included">Pre-Bundled in Windows Package</span>
+            <p class="tool-desc">
+              Standalone executable bundles everything. If running from GitHub source, install Python 3.10 - 3.12 with
+              <code>pip</code> and standard virtual environments.
+            </p>
+          </div>
+
+          <!-- Tool 2: Wondershare Filmora -->
+          <div class="tool-card">
+            <div class="tool-icon-box"
+              style="background: rgba(99, 102, 241, 0.12); border-color: rgba(99, 102, 241, 0.3);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-light)" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+                <line x1="7" y1="2" x2="7" y2="22" />
+                <line x1="17" y1="2" x2="17" y2="22" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <line x1="2" y1="7" x2="7" y2="7" />
+                <line x1="2" y1="17" x2="7" y2="17" />
+                <line x1="17" y1="17" x2="22" y2="17" />
+                <line x1="17" y1="7" x2="22" y2="7" />
+              </svg>
+            </div>
+            <h4 class="tool-name">Wondershare Filmora</h4>
+            <span class="tool-status-tag optional">Supported: Filmora 12 / 13 / 14</span>
+            <p class="tool-desc">
+              Install Filmora on your PC if you want CHARLIE to autonomously slice silences, insert subtitles, generate
+              transitions, and export 9:16 Shorts automatically.
+            </p>
+          </div>
+
+          <!-- Tool 3: Media Processing (FFmpeg) -->
+          <div class="tool-card">
+            <div class="tool-icon-box"
+              style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.3);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-accent)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="23 7 16 12 23 17 23 7" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+              </svg>
+            </div>
+            <h4 class="tool-name">FFmpeg Engine</h4>
+            <span class="tool-status-tag included">Pre-Packaged with CHARLIE</span>
+            <p class="tool-desc">
+              High-speed audio splitting, video muxing, and frame extraction are powered by an internal FFmpeg build
+              embedded right inside the zip distribution.
+            </p>
+          </div>
+
+          <!-- Tool 4: Terminal & Automation Tools -->
+          <div class="tool-card">
+            <div class="tool-icon-box"
+              style="background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.3);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold-accent)" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="4 17 10 11 4 5" />
+                <line x1="12" y1="19" x2="20" y2="19" />
+              </svg>
+            </div>
+            <h4 class="tool-name">PowerShell &amp; System Shell</h4>
+            <span class="tool-status-tag standard">Native OS Default</span>
+            <p class="tool-desc">
+              Uses built-in Windows PowerShell / Command Prompt or Bash/Zsh on macOS and Linux to launch apps, manage
+              files, and automate system scripts safely.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Feature 4: Creator Social Proof & Testimonials Showcase
+       ====================================================================== -->
+  <section class="section testimonials-section" id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Proven Results</span>
+        <h2 class="section-title">Loved by High-Volume Creators &amp; Engineers</h2>
+        <p class="section-subtitle">
+          Over 12,000 hours saved across YouTube creators, full-stack engineers, and digital agencies.
+        </p>
+      </div>
+
+      <div class="testimonials-grid">
+        <!-- Review 1: Priya -->
+        <div class="testimonial-card">
+          <div class="creator-card-media" style="width: 100%; height: 180px; max-height: 180px; border-radius: 12px; overflow: hidden; margin-bottom: 16px; position: relative; background: #080c16;">
+            <img src="images/creator-priya.jpg" alt="Priya Sharma - YouTube Tech Creator" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;">
+            <span class="creator-media-badge" style="position: absolute; bottom: 8px; left: 8px; font-size: 11px; font-weight: 700; color: #00F5FF; background: rgba(8, 12, 22, 0.88); border: 1px solid rgba(0, 245, 255, 0.3); padding: 3px 8px; border-radius: 4px; backdrop-filter: blur(8px);">Filmora 14 Studio · 420K Subs</span>
+          </div>
+          <div class="testi-header">
+            <div>
+              <h4 class="testi-name">Priya Sharma</h4>
+              <p class="testi-role">YouTube Tech Creator &amp; Video Editor</p>
+            </div>
+          </div>
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-body">
+            "Automating Filmora 14 directly from speech is magic. I drop raw footage, say 'Auto-cut pauses and render vertical Short', and 4 seconds later it's ready with dynamic animated captions. Working across dual monitors has never been this effortless."
+          </p>
+          <div class="testi-meta-tag">
+            <span>⚡ 14hrs/week saved</span>
+            <span>Filmora 14 4K NVENC</span>
+            <span>Auto Silence Cut</span>
+          </div>
+        </div>
+
+        <!-- Review 2: David -->
+        <div class="testimonial-card featured-testimonial">
+          <div class="testi-featured-badge">PRO SUBSCRIBER · CODEBASE COPILOT</div>
+          <div class="creator-card-media" style="width: 100%; height: 180px; max-height: 180px; border-radius: 12px; overflow: hidden; margin-bottom: 16px; position: relative; background: #080c16;">
+            <img src="images/creator-david.jpg" alt="David Kovacs - Senior Systems Architect" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;">
+            <span class="creator-media-badge" style="position: absolute; bottom: 8px; left: 8px; font-size: 11px; font-weight: 700; color: #818cf8; background: rgba(8, 12, 22, 0.88); border: 1px solid rgba(99, 102, 241, 0.3); padding: 3px 8px; border-radius: 4px; backdrop-filter: blur(8px);">CloudScale · AST Copilot</span>
+          </div>
+          <div class="testi-header">
+            <div>
+              <h4 class="testi-name">David Kovacs</h4>
+              <p class="testi-role">Senior Systems Architect &amp; AI Engineer</p>
+            </div>
+          </div>
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-body">
+            "Unlike cloud web-bots that hallucinate, CHARLIE runs deterministic AST code verification and dry-runs diffs locally across my triple-monitor setup. The 100% on-disk encryption guarantees enterprise code never leaves my workstation."
+          </p>
+          <div class="testi-meta-tag">
+            <span>🛡️ 100% Local Privacy</span>
+            <span>TaskGraph AST Verifier</span>
+            <span>Triple-Monitor Rig</span>
+          </div>
+        </div>
+
+        <!-- Review 3: Marcus -->
+        <div class="testimonial-card">
+          <div class="creator-card-media" style="width: 100%; height: 180px; max-height: 180px; border-radius: 12px; overflow: hidden; margin-bottom: 16px; position: relative; background: #080c14;">
+            <img src="images/creator-marcus.jpg" alt="Marcus Lindqvist - Agency Founder" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;">
+            <span class="creator-media-badge" style="position: absolute; bottom: 8px; left: 8px; font-size: 11px; font-weight: 700; color: #fbbf24; background: rgba(8, 12, 22, 0.88); border: 1px solid rgba(251, 191, 36, 0.3); padding: 3px 8px; border-radius: 4px; backdrop-filter: blur(8px);">Kinetic Media · Broadcast Studio</span>
+          </div>
+          <div class="testi-header">
+            <div>
+              <h4 class="testi-name">Marcus Lindqvist</h4>
+              <p class="testi-role">Agency Founder &amp; Media Producer</p>
+            </div>
+          </div>
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-body">
+            "The offline dual-voice switcher paired with Whisper v3 feels like a physical JARVIS console at my broadcast desk. It automatically cuts soundbites, masters audio tracks, and prepares episode notes in seconds without any audio upload."
+          </p>
+          <div class="testi-meta-tag">
+            <span>🎙️ Studio Mic Control</span>
+            <span>Dual Neural Personas</span>
+            <span>&lt;120ms Local Audio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Metrics Ticker -->
+      <div class="trust-ticker-strip">
+        <div class="trust-ticker-item">
+          <strong>4.9 / 5.0</strong>
+          <span>Average User Rating</span>
+        </div>
+        <div class="trust-ticker-sep">•</div>
+        <div class="trust-ticker-item">
+          <strong>740,000+</strong>
+          <span>Autonomous Tasks Executed</span>
+        </div>
+        <div class="trust-ticker-sep">•</div>
+        <div class="trust-ticker-item">
+          <strong>0 Bytes</strong>
+          <span>Telemetry Audio Uploaded</span>
+        </div>
+        <div class="trust-ticker-sep">•</div>
+        <div class="trust-ticker-item">
+          <strong>99.98%</strong>
+          <span>Offline Reliability</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Frequently Asked Questions (FAQ Accordion)
+       ====================================================================== -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Clear Answers</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">
+          Everything you need to know about licensing, safety, and system capabilities.
+        </p>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How does the 10-minute daily Starter plan work?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Starter gives you 10 active minutes of real assistant interaction every day (speaking, processing tasks, and
+            automating workflows). Idle desktop time does not deplete your timer. Once the 10 active minutes conclude,
+            CHARLIE pauses interactive commands and invites you to subscribe or return tomorrow when the allowance
+            resets.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>What happens if my subscription expires? Are my files or memories deleted?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Never. Your personal memories, Knowledge Graph, created files, and conversation history are 100% stored on
+            your local computer and remain completely intact. An expired plan simply returns to the free Starter tier
+            without any data loss.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How does the Lifetime ₹999 license work?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            The Lifetime license gives you permanent access to Advanced application capabilities—including autonomous PC
+            control, Filmora 14 video editing, dual voices, and custom plugins—with no recurring monthly subscription
+            fee ever. It includes RSA-2048 signed offline licensing for disconnected use. One active PC at a time —
+            transfer your license to a new computer instantly via your account login.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Can CHARLIE work without an internet connection?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Yes. CHARLIE includes local offline AI routing using on-device quantized models and local speech synthesis.
+            While cloud connectivity enables web search and cloud vision models, core desktop control, memory, and
+            automation work offline seamlessly.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How does Filmora 14 video automation work?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            CHARLIE interfaces directly with Wondershare Filmora 14's COM/automation pipeline and FFmpeg. You can
+            instruct CHARLIE to import video clips, slice silences, apply LUTs, generate synchronized subtitle tracks,
+            and render vertical 9:16 YouTube Shorts or TikToks automatically.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Autonomous Desktop App Showcase (One Hero Screenshot + Context)
+       ====================================================================== -->
+  <section class="section app-showcase-section" id="app-showcase">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Real Desktop Application Interface</span>
+        <h2 class="section-title">Photorealistic Neural Avatar &amp; Desktop Workspace</h2>
+        <p class="section-subtitle">
+          Interactive circular HUD with real-time lip-sync visemes, dual neural personas, integrated voice conversation, and offline desktop automation.
+        </p>
+      </div>
+
+      <!-- Dual Personas Side-by-Side Windows Mockup -->
+      <div class="showcase-dual-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 1040px; margin: 0 auto 40px auto;">
+        
+        <!-- Male Persona Window -->
+        <div class="showcase-window" style="margin: 0; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0, 245, 255, 0.25); background: #080c14; box-shadow: 0 15px 40px -10px rgba(0,0,0,0.8);">
+          <div class="showcase-window-header" style="padding: 10px 14px;">
+            <div class="showcase-window-controls">
+              <span class="showcase-dot dot-close"></span>
+              <span class="showcase-dot dot-minimize"></span>
+              <span class="showcase-dot dot-maximize"></span>
+            </div>
+            <div class="showcase-window-title" style="font-size: 11px;">
+              CHARLIE (Male Neural Persona)
+            </div>
+            <div class="showcase-window-status" style="font-size: 10px; padding: 2px 8px;">
+              <span class="status-pulse-dot"></span>
+              ONLINE
+            </div>
+          </div>
+          <div class="showcase-media-container" style="position: relative; width: 100%; height: 280px; max-height: 280px; overflow: hidden; background: #060911; display: flex; justify-content: center; align-items: center;">
+            <img src="images/hud-male-real.png" alt="CHARLIE Male Neural Avatar HUD Interface" class="showcase-hero-img" loading="lazy" style="width: 100%; height: 280px; max-height: 280px; object-fit: contain; display: block;">
+            <div class="showcase-glow-backdrop"></div>
+          </div>
+        </div>
+
+        <!-- Female Persona Window -->
+        <div class="showcase-window" style="margin: 0; border-radius: 12px; overflow: hidden; border: 1px solid rgba(168, 85, 247, 0.3); background: #080c14; box-shadow: 0 15px 40px -10px rgba(0,0,0,0.8);">
+          <div class="showcase-window-header" style="padding: 10px 14px;">
+            <div class="showcase-window-controls">
+              <span class="showcase-dot dot-close"></span>
+              <span class="showcase-dot dot-minimize"></span>
+              <span class="showcase-dot dot-maximize"></span>
+            </div>
+            <div class="showcase-window-title" style="font-size: 11px;">
+              CHARLOTTE (Female Neural Persona)
+            </div>
+            <div class="showcase-window-status" style="font-size: 10px; padding: 2px 8px; color: var(--purple-accent); background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.3);">
+              <span class="status-pulse-dot" style="background: var(--purple-accent); box-shadow: 0 0 8px var(--purple-accent);"></span>
+              ONLINE
+            </div>
+          </div>
+          <div class="showcase-media-container" style="position: relative; width: 100%; height: 280px; max-height: 280px; overflow: hidden; background: #060911; display: flex; justify-content: center; align-items: center;">
+            <img src="images/hud-female-real.png" alt="CHARLIE Female Neural Avatar HUD Interface" class="showcase-hero-img" loading="lazy" style="width: 100%; height: 280px; max-height: 280px; object-fit: contain; display: block;">
+            <div class="showcase-glow-backdrop"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Professional Breakdown Content Below Image -->
+      <div class="showcase-meta-grid">
+        <div class="showcase-meta-card">
+          <div class="showcase-meta-icon icon-cyan">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+          </div>
+          <h3 class="showcase-meta-title">Photorealistic Digital Human HUD</h3>
+          <p class="showcase-meta-desc">
+            The circular centerpiece renders a high-fidelity neural assistant with smooth landmark deformation, real-time viseme lip-sync, and dynamic orbital audio telemetry rings.
+          </p>
+          <div class="showcase-meta-tags">
+            <span>16-Viseme Morph Rig</span>
+            <span>Circular Voice HUD</span>
+          </div>
+        </div>
+
+        <div class="showcase-meta-card">
+          <div class="showcase-meta-icon icon-indigo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </div>
+          <h3 class="showcase-meta-title">Direct Voice &amp; Chat Workspace</h3>
+          <p class="showcase-meta-desc">
+            Seamlessly switch between natural voice conversation and multi-modal text chat. Drop local files, issue mouse/keyboard commands, and automate desktop applications.
+          </p>
+          <div class="showcase-meta-tags">
+            <span>&lt;120ms Whisper v3</span>
+            <span>Multi-Modal Input</span>
+          </div>
+        </div>
+
+        <div class="showcase-meta-card">
+          <div class="showcase-meta-icon icon-emerald">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
+          <h3 class="showcase-meta-title">100% Offline Local Privacy</h3>
+          <p class="showcase-meta-desc">
+            All neural models, speech recognition, and AST verification run locally on your GPU. Zero telemetry audio upload guarantees your data stays completely private.
+          </p>
+          <div class="showcase-meta-tags">
+            <span>On-Disk Encryption</span>
+            <span>Zero Cloud Leak</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Pre-Footer Grand Call to Action
+       ====================================================================== -->
+  <section class="section cta-section" id="get-started">
+    <div class="container">
+      <div class="cta-banner">
+        <div class="cta-content">
+          <span class="section-badge">Deploy Desktop Autonomy</span>
+          <h2 class="cta-title">Upgrade Your Computer to CHARLIE Today</h2>
+          <p class="cta-desc">
+            Experience real mouse and keyboard automation, Filmora 4K studio pipeline, dual neural voices, and offline
+            intelligence. Start 100% free or sign up for cloud synchronization.
+          </p>
+          <div class="cta-actions">
+            <a href="downloads/CHARLIE-Setup.exe" download="CHARLIE-Setup.exe"
+              class="btn btn-primary download-trigger-btn" data-file="CHARLIE-Setup.exe">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download CHARLIE-Setup.exe
+            </a>
+            <a href="#signup" class="btn btn-secondary auth-open-btn" data-tab="signup">
+              Create Free Account
+            </a>
+          </div>
+          <div class="cta-guarantee">
+            <span>✓ No credit card required</span>
+            <span>•</span>
+            <span>✓ 100% Private Local Storage</span>
+            <span>•</span>
+            <span>✓ RSA-Signed License</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Site Footer
+       ====================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-col">
+          <div class="brand-logo" style="margin-bottom: 14px;">
+            <div class="brand-symbol">
+              <img src="images/charlie-logo.png" alt="CHARLIE C Logo" class="brand-logo-img" style="width: 32px; height: 32px; border-radius: 8px;">
+            </div>
+            <span class="brand-name" style="font-size: 19px;">CHARLIE</span>
+          </div>
+          <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted); max-width: 320px;">
+            The autonomous desktop AI assistant engineered for privacy, creator automation, and direct computer
+            execution.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Product</h5>
+          <ul class="footer-links">
+            <li><a href="#features">Capabilities</a></li>
+            <li><a href="#comparison">Competitor Comparison</a></li>
+            <li><a href="#pricing">Pricing & Plans</a></li>
+            <li><a href="#simulator">Interactive Demo</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Integrations</h5>
+          <ul class="footer-links">
+            <li><a href="#features">Wondershare Filmora 14</a></li>
+            <li><a href="#features">FFmpeg Studio</a></li>
+            <li><a href="#features">Google Workspace</a></li>
+            <li><a href="#features">Model Context Protocol (MCP)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platforms & Security</h5>
+          <ul class="footer-links">
+            <li><a href="#downloads">Windows Setup (.exe)</a></li>
+            <li><a href="security.html">Security Architecture</a></li>
+            <li><a href="#requirements">System Requirements</a></li>
+            <li><a href="contact.html">Support & Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Legal & Compliance</h5>
+          <ul class="footer-links">
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="refund.html">Refund & Cancellation</a></li>
+            <li><a href="eula.html">Software EULA</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 CHARLIE AI Desktop Assistant. Anees Chaudhary. All rights reserved.</div>
+        <div style="display: flex; gap: 20px;">
+          <a href="terms.html" style="color: inherit; text-decoration: none;">Terms</a>
+          <span>•</span>
+          <a href="privacy.html" style="color: inherit; text-decoration: none;">Privacy</a>
+          <span>•</span>
+          <a href="refund.html" style="color: inherit; text-decoration: none;">Refunds</a>
+          <span>•</span>
+          <a href="security.html" style="color: inherit; text-decoration: none;">Security</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ======================================================================
+       Professional Software Download Modal
+       ====================================================================== -->
+  <div class="download-modal-backdrop" id="download-modal" aria-hidden="true">
+    <div class="download-modal-dialog">
+      <div class="download-modal-header">
+        <div class="download-header-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.401H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.951-1.799" />
+          </svg>
+          <span>Windows Edition</span>
+        </div>
+        <button class="modal-close-btn" id="modal-close-btn" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="download-modal-body">
+        <div class="download-app-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+        </div>
+
+        <h3 class="modal-heading">Your download has started</h3>
+        <p class="modal-subtext" id="modal-filename-display">
+          Downloading <strong>CHARLIE-Setup.exe</strong> (151 MB)
+        </p>
+
+        <div class="modal-progress-container">
+          <div class="modal-progress-bar" id="modal-progress-fill"></div>
+        </div>
+        <div class="modal-status-text" id="modal-status-text">Preparing installation package...</div>
+
+        <!-- 3-Step Setup Instructions -->
+        <div class="setup-steps-box">
+          <div class="setup-step-item">
+            <div class="step-num">1</div>
+            <div class="step-desc">
+              <strong>Run the installer</strong>
+              <span>Double-click <code>CHARLIE-Setup.exe</code> and follow the setup wizard.</span>
+            </div>
+          </div>
+          <div class="setup-step-item">
+            <div class="step-num">2</div>
+            <div class="step-desc">
+              <strong>Sign in &amp; Activate</strong>
+              <span>Log in with your CHARLIE account to activate your license on this PC.</span>
+            </div>
+          </div>
+          <div class="setup-step-item">
+            <div class="step-num">3</div>
+            <div class="step-desc">
+              <strong>Ready to use</strong>
+              <span>Press <kbd>Ctrl</kbd> + <kbd>Space</kbd> or say <em>"Hey CHARLIE"</em> to start.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fallback Manual Download Links -->
+        <div class="modal-fallback-links">
+          <span>Problems with the download?</span>
+          <div class="fallback-btn-group">
+            <a href="downloads/CHARLIE-Setup.exe" download="CHARLIE-Setup.exe" class="fallback-link" id="fallback-exe">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+              Direct Installer (.exe)
+            </a>
+          </div>
+        </div>
+
+        <div class="modal-action-row">
+          <button class="btn btn-primary" id="modal-got-it-btn" style="width: 100%;">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Interactive Authentication Modal (Sign In / Sign Up)
+       ====================================================================== -->
+  <div class="auth-modal-backdrop" id="auth-modal" aria-hidden="true">
+    <div class="auth-modal-dialog">
+      <div class="auth-modal-header">
+        <div class="auth-brand">
+          <svg width="26" height="26" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="auth-logo-g" x1="5.5" y1="8.5" x2="27" y2="31.5" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#00F5FF" />
+                <stop offset="35%" stop-color="#00D2FF" />
+                <stop offset="70%" stop-color="#2563EB" />
+                <stop offset="100%" stop-color="#8B5CF6" />
+              </linearGradient>
+              <linearGradient id="auth-logo-spark" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FFFFFF" />
+                <stop offset="60%" stop-color="#00F5FF" />
+                <stop offset="100%" stop-color="#0099FF" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 23 8.5 C 24.38 8.5 25.5 9.62 25.5 11 C 25.5 12.38 24.38 13.5 23 13.5 H 17 C 13.41 13.5 10.5 16.41 10.5 20 C 10.5 23.59 13.41 26.5 17 26.5 H 23 C 24.38 26.5 25.5 27.62 25.5 29 C 25.5 30.38 24.38 31.5 23 31.5 H 17 C 10.65 31.5 5.5 26.35 5.5 20 C 5.5 13.65 10.65 8.5 17 8.5 H 23 Z"
+              fill="url(#auth-logo-g)" />
+            <circle cx="26" cy="7" r="2.4" fill="url(#auth-logo-spark)" />
+          </svg>
+          <span class="auth-brand-title">CHARLIE Workspace</span>
+        </div>
+        <button class="modal-close-btn" id="auth-close-btn" aria-label="Close">✕</button>
+      </div>
+
+      <div class="auth-modal-body">
+        <!-- Auth Tabs: Sign In vs Sign Up -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tab-btn-signin" data-tab="signin">Sign In</button>
+          <button class="auth-tab" id="tab-btn-signup" data-tab="signup">Create Account</button>
+        </div>
+
+        <h3 class="auth-heading" id="auth-heading">Welcome Back to CHARLIE</h3>
+        <p class="auth-subheading" id="auth-subheading">Sync your licenses, custom agents, and preferences across
+          devices.</p>
+
+        <!-- Social OAuth Provider Buttons -->
+        <div class="social-auth-grid">
+          <!-- Google OAuth -->
+          <button type="button" class="btn-social-auth" id="btn-auth-google" data-provider="Google">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+              <path fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+
+          <!-- GitHub OAuth -->
+          <button type="button" class="btn-social-auth" id="btn-auth-github" data-provider="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+            </svg>
+            <span>Continue with GitHub</span>
+          </button>
+
+          <!-- ChatGPT / OpenAI OAuth -->
+          <button type="button" class="btn-social-auth" id="btn-auth-chatgpt" data-provider="ChatGPT">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--emerald-accent)">
+              <path
+                d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1683a.071.071 0 0 1 .038.052v5.5826a4.5045 4.5045 0 0 1-4.4945 4.4947zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1683a.0757.0757 0 0 1-.071 0l-4.8303-2.7866A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.6669zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1635a.0804.0804 0 0 1-.038-.0567V6.0748a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.4598a.7948.7948 0 0 0-.3927.6813l-.0048 6.7219zm1.3484-2.3182l3.3543-1.9366 3.3544 1.9366v3.8732l-3.3544 1.9366-3.3543-1.9366z" />
+            </svg>
+            <span>Continue with ChatGPT</span>
+          </button>
+        </div>
+
+        <div class="auth-divider">
+          <span>or continue with email</span>
+        </div>
+
+        <!-- Email & Password Form -->
+        <form class="auth-form" id="auth-form">
+          <div class="form-group" id="group-name" style="display: none;">
+            <label for="auth-name">Full Name</label>
+            <input type="text" id="auth-name" placeholder="John Doe" autocomplete="name">
+          </div>
+
+          <div class="form-group">
+            <label for="auth-email">Email Address</label>
+            <input type="email" id="auth-email" placeholder="name@domain.com" required autocomplete="email">
+          </div>
+
+          <div class="form-group">
+            <div class="label-row">
+              <label for="auth-password">Password</label>
+              <a href="#forgot" class="forgot-link" id="link-forgot-pw">Forgot?</a>
+            </div>
+            <div class="password-input-wrap">
+              <input type="password" id="auth-password" placeholder="••••••••••••" required
+                autocomplete="current-password">
+              <button type="button" class="pw-toggle-btn" id="pw-toggle"
+                aria-label="Toggle password visibility">👁</button>
+            </div>
+          </div>
+
+          <div class="form-row-remember">
+            <label class="checkbox-label">
+              <input type="checkbox" id="auth-remember" checked>
+              <span>Keep me signed in on this computer</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-submit-auth" id="btn-submit-auth">
+            Sign In to CHARLIE
+          </button>
+        </form>
+
+        <div class="auth-footer-terms">
+          By signing in, you agree to CHARLIE's <a href="terms.html">Terms of Service</a> and <a
+            href="privacy.html">Privacy Policy</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

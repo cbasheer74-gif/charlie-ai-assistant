@@ -1,0 +1,15 @@
+[Unit]
+Description=CHARLIE Commercial Licensing Server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/charlie-licensing
+EnvironmentFile=/opt/charlie-licensing/.env.production
+ExecStart=/usr/local/bin/uvicorn app:app --host 0.0.0.0 --port 8400 --workers 2
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

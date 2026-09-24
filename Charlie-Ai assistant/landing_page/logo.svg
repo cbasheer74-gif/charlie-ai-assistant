@@ -1,0 +1,22 @@
+<svg width='512' height='512' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <defs>
+    <linearGradient id='ch-logo-grad' x1='5.5' y1='8.5' x2='27' y2='31.5' gradientUnits='userSpaceOnUse'>
+      <stop offset='0%' stop-color='#00F5FF'/>
+      <stop offset='35%' stop-color='#00D2FF'/>
+      <stop offset='70%' stop-color='#2563EB'/>
+      <stop offset='100%' stop-color='#8B5CF6'/>
+    </linearGradient>
+    <linearGradient id='ch-logo-spark' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='#FFFFFF'/>
+      <stop offset='60%' stop-color='#00F5FF'/>
+      <stop offset='100%' stop-color='#0099FF'/>
+    </linearGradient>
+    <filter id='ch-logo-glow' x='-30%' y='-30%' width='160%' height='160%'>
+      <feDropShadow dx='0' dy='1.5' stdDeviation='2.2' flood-color='#00E5FF' flood-opacity='0.45'/>
+    </filter>
+  </defs>
+  <g filter='url(#ch-logo-glow)'>
+    <path d='M 23 8.5 C 24.38 8.5 25.5 9.62 25.5 11 C 25.5 12.38 24.38 13.5 23 13.5 H 17 C 13.41 13.5 10.5 16.41 10.5 20 C 10.5 23.59 13.41 26.5 17 26.5 H 23 C 24.38 26.5 25.5 27.62 25.5 29 C 25.5 30.38 24.38 31.5 23 31.5 H 17 C 10.65 31.5 5.5 26.35 5.5 20 C 5.5 13.65 10.65 8.5 17 8.5 H 23 Z' fill='url(#ch-logo-grad)'/>
+    <circle cx='26' cy='7' r='2.4' fill='url(#ch-logo-spark)'/>
+  </g>
+</svg>

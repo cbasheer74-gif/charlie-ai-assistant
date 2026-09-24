@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In &middot; CHARLIE Workspace</title>
+  <meta name="description" content="Sign in to your CHARLIE Workspace. Synchronize your models, custom skills, and cryptographic licenses across devices.">
+
+  <!-- Google Font: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px;
+      background: #06080D;
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(0, 229, 255, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.1) 0%, transparent 45%);
+    }
+
+    .auth-page-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .back-home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: color var(--transition-fast);
+    }
+
+    .back-home-link:hover {
+      color: var(--cyan-primary);
+    }
+
+    .auth-page-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 40px 0;
+    }
+
+    .auth-card-standalone {
+      background: #0B0F19;
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 45px rgba(0, 229, 255, 0.14);
+      padding: 36px 36px 40px;
+    }
+
+    .auth-card-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .auth-card-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+
+    .auth-card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .auth-page-bottom {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="auth-page-top">
+    <a href="index.html" class="brand-logo">
+      <div class="brand-symbol">
+        <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="p-logo-grad" x1="5.5" y1="8.5" x2="27" y2="31.5" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#00F5FF"/>
+              <stop offset="35%" stop-color="#00D2FF"/>
+              <stop offset="70%" stop-color="#2563EB"/>
+              <stop offset="100%" stop-color="#8B5CF6"/>
+            </linearGradient>
+            <linearGradient id="p-logo-spark" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#FFFFFF"/>
+              <stop offset="60%" stop-color="#00F5FF"/>
+              <stop offset="100%" stop-color="#0099FF"/>
+            </linearGradient>
+            <filter id="p-logo-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#00E5FF" flood-opacity="0.45"/>
+            </filter>
+          </defs>
+          <g filter="url(#p-logo-glow)">
+            <path
+              d="M 23 8.5 C 24.38 8.5 25.5 9.62 25.5 11 C 25.5 12.38 24.38 13.5 23 13.5 H 17 C 13.41 13.5 10.5 16.41 10.5 20 C 10.5 23.59 13.41 26.5 17 26.5 H 23 C 24.38 26.5 25.5 27.62 25.5 29 C 25.5 30.38 24.38 31.5 23 31.5 H 17 C 10.65 31.5 5.5 26.35 5.5 20 C 5.5 13.65 10.65 8.5 17 8.5 H 23 Z"
+              fill="url(#p-logo-grad)"/>
+            <circle cx="26" cy="7" r="2.4" fill="url(#p-logo-spark)"/>
+          </g>
+        </svg>
+      </div>
+      <span class="brand-name">CHARLIE</span>
+      <span class="version-badge"><span class="badge-dot"></span>v1.0 LIV</span>
+    </a>
+
+    <a href="index.html" class="back-home-link">
+      &larr; Back to Overview
+    </a>
+  </div>
+
+  <!-- Center Card -->
+  <div class="auth-page-center">
+    <div class="auth-card-standalone">
+      <div class="auth-card-header">
+        <h1 class="auth-card-title" id="page-auth-heading">Sign In to CHARLIE</h1>
+        <p class="auth-card-desc" id="page-auth-desc">Enter your credentials to synchronize licenses and desktop workflows.</p>
+      </div>
+
+      <!-- Auth Tab Toggle -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="page-tab-signin" data-tab="signin">Sign In</button>
+        <button class="auth-tab" id="page-tab-signup" data-tab="signup">Create Account</button>
+      </div>
+
+      <!-- OAuth Social Providers -->
+      <div class="social-auth-grid">
+        <!-- Google OAuth -->
+        <button type="button" class="btn-social-auth" id="p-auth-google" data-provider="Google">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+
+        <!-- GitHub OAuth -->
+        <button type="button" class="btn-social-auth" id="p-auth-github" data-provider="GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          <span>Continue with GitHub</span>
+        </button>
+
+        <!-- ChatGPT / OpenAI OAuth -->
+        <button type="button" class="btn-social-auth" id="p-auth-chatgpt" data-provider="ChatGPT">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--emerald-accent)">
+            <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1683a.071.071 0 0 1 .038.052v5.5826a4.5045 4.5045 0 0 1-4.4945 4.4947zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1683a.0757.0757 0 0 1-.071 0l-4.8303-2.7866A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.6669zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1635a.0804.0804 0 0 1-.038-.0567V6.0748a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.4598a.7948.7948 0 0 0-.3927.6813l-.0048 6.7219zm1.3484-2.3182l3.3543-1.9366 3.3544 1.9366v3.8732l-3.3544 1.9366-3.3543-1.9366z"/>
+          </svg>
+          <span>Continue with ChatGPT</span>
+        </button>
+      </div>
+
+      <div class="auth-divider">
+        <span>or continue with email</span>
+      </div>
+
+      <!-- Form -->
+      <form class="auth-form" id="page-auth-form">
+        <div class="form-group" id="p-group-name" style="display: none;">
+          <label for="p-auth-name">Full Name</label>
+          <input type="text" id="p-auth-name" placeholder="John Doe">
+        </div>
+
+        <div class="form-group">
+          <label for="p-auth-email">Email Address</label>
+          <input type="email" id="p-auth-email" placeholder="name@domain.com" required>
+        </div>
+
+        <div class="form-group">
+          <div class="label-row">
+            <label for="p-auth-password">Password</label>
+            <a href="#" class="forgot-link">Forgot?</a>
+          </div>
+          <div class="password-input-wrap">
+            <input type="password" id="p-auth-password" placeholder="••••••••••••" required>
+            <button type="button" class="pw-toggle-btn" id="p-pw-toggle">👁</button>
+          </div>
+        </div>
+
+        <div class="form-row-remember">
+          <label class="checkbox-label">
+            <input type="checkbox" id="p-auth-remember" checked>
+            <span>Remember this device for 30 days</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-submit-auth" id="p-btn-submit">
+          Sign In to CHARLIE
+        </button>
+      </form>
+
+      <div class="auth-footer-terms">
+        By continuing, you agree to CHARLIE's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="auth-page-bottom">
+    &copy; 2026 CHARLIE Desktop Assistant. Encrypted Local Auth.
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // Tab switching logic for standalone page
+    const tabSignIn = document.getElementById('page-tab-signin');
+    const tabSignUp = document.getElementById('page-tab-signup');
+    const groupName = document.getElementById('p-group-name');
+    const heading = document.getElementById('page-auth-heading');
+    const desc = document.getElementById('page-auth-desc');
+    const submitBtn = document.getElementById('p-btn-submit');
+    const form = document.getElementById('page-auth-form');
+    const pwInput = document.getElementById('p-auth-password');
+    const pwToggle = document.getElementById('p-pw-toggle');
+
+    function switchTab(mode) {
+      if (mode === 'signup') {
+        tabSignUp.classList.add('active');
+        tabSignIn.classList.remove('active');
+        groupName.style.display = 'flex';
+        heading.textContent = 'Create CHARLIE Account';
+        desc.textContent = 'Get 10 min daily access or activate your commercial license.';
+        submitBtn.textContent = 'Create Free Account';
+      } else {
+        tabSignIn.classList.add('active');
+        tabSignUp.classList.remove('active');
+        groupName.style.display = 'none';
+        heading.textContent = 'Sign In to CHARLIE';
+        desc.textContent = 'Enter your credentials to synchronize licenses and desktop workflows.';
+        submitBtn.textContent = 'Sign In to CHARLIE';
+      }
+    }
+
+    tabSignIn.addEventListener('click', () => switchTab('signin'));
+    tabSignUp.addEventListener('click', () => switchTab('signup'));
+
+    pwToggle.addEventListener('click', () => {
+      pwInput.type = pwInput.type === 'password' ? 'text' : 'password';
+    });
+
+    function showToast(msg) {
+      const c = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = 'toast-message';
+      t.innerHTML = `<span>✓</span> <span>${msg}</span>`;
+      c.appendChild(t);
+      setTimeout(() => t.remove(), 4000);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('p-auth-email').value;
+      localStorage.setItem('charlie_auth_user', JSON.stringify({ email: email, name: email.split('@')[0] }));
+      showToast('Authenticated! Redirecting to CHARLIE workspace...');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1000);
+    });
+
+    document.querySelectorAll('.btn-social-auth').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const prov = btn.getAttribute('data-provider');
+        localStorage.setItem('charlie_auth_user', JSON.stringify({ email: `user@${prov.toLowerCase()}.com`, name: `${prov} User` }));
+        showToast(`Connected via ${prov}! Redirecting...`);
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1000);
+      });
+    });
+  </script>
+</body>
+</html>
