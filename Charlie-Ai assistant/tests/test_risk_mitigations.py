@@ -18,10 +18,13 @@ from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
+from fastapi import HTTPException
 from engine.commercial.entitlement_verifier import EntitlementVerifier
 from licensing_server.config import config
-from licensing_server.database import Base, UserDB, SubscriptionDB, PlanTier, SubscriptionStatus
+from licensing_server.database import Base, UserDB, SubscriptionDB, PaymentDB, PlanTier, SubscriptionStatus
+from licensing_server.middleware.rate_limiter import RateLimiter
 from licensing_server.services.entitlement_signer import EntitlementSigner
+from licensing_server.services.license_service import LicenseService
 from licensing_server.services.payment_service import PaymentService
 
 
@@ -235,6 +238,123 @@ class TestRiskMitigations(unittest.TestCase):
         self.assertEqual(len(results), 5)
         for _, exists in results:
             self.assertTrue(exists)
+
+    # ── 4. Rate-Limiting & Idempotency Tests ────────────────────────────────────
+
+    def test_rate_limiter_blocks_and_logs_429(self):
+        """RateLimiter raises 429 when max requests exceeded within window."""
+        limiter = RateLimiter()
+        key = f"test_client_{uuid.uuid4().hex[:8]}"
+
+        # First 3 requests should pass
+        for _ in range(3):
+            limiter.check(key, max_requests=3, window_seconds=60)
+
+        # 4th request must raise 429
+        with self.assertRaises(HTTPException) as ctx:
+            limiter.check(key, max_requests=3, window_seconds=60)
+
+        self.assertEqual(ctx.exception.status_code, 429)
+        self.assertIn("Rate limit exceeded", ctx.exception.detail)
+
+    def test_payment_activation_idempotent_replay(self):
+        """Replayed payment webhook does not duplicate PaymentDB records or corrupt state."""
+        user_id = f"usr_{uuid.uuid4().hex[:16]}"
+        user = UserDB(
+            id=user_id,
+            email=f"{user_id}@charlie.ai",
+            password_hash="hashed_pw",
+            display_name="Idempotent Tester",
+        )
+        self.db.add(user)
+        self.db.commit()
+
+        payment_service = PaymentService()
+        order_id = f"order_{uuid.uuid4().hex[:14]}"
+        payment_id = f"pay_{uuid.uuid4().hex[:14]}"
+
+        # First activation
+        ok1, msg1 = payment_service.activate_subscription(
+            self.db, user_id=user_id, plan="PRO", order_id=order_id, payment_id=payment_id, amount_paise=19900
+        )
+        self.assertTrue(ok1)
+        self.assertIn("Subscription activated: PRO", msg1)
+
+        # Verify only 1 PaymentDB row
+        count1 = self.db.query(PaymentDB).filter(PaymentDB.payment_id == payment_id).count()
+        self.assertEqual(count1, 1)
+
+        # Second replayed activation
+        ok2, msg2 = payment_service.activate_subscription(
+            self.db, user_id=user_id, plan="PRO", order_id=order_id, payment_id=payment_id, amount_paise=19900
+        )
+        self.assertTrue(ok2)
+        self.assertIn("already verified (idempotent replay)", msg2)
+
+        # Verify still exactly 1 PaymentDB row
+        count2 = self.db.query(PaymentDB).filter(PaymentDB.payment_id == payment_id).count()
+        self.assertEqual(count2, 1)
+
+    def test_device_activation_and_conflict_enforcement(self):
+        """Device activation enforces one-active-PC policy and detects clone attempts."""
+        user_id = f"usr_{uuid.uuid4().hex[:16]}"
+        user = UserDB(
+            id=user_id,
+            email=f"{user_id}@charlie.ai",
+            password_hash="hashed_pw",
+            display_name="Device Tester",
+        )
+        sub = SubscriptionDB(
+            id=f"sub_{uuid.uuid4().hex[:16]}",
+            user_id=user_id,
+            plan=PlanTier.PRO.value,
+            status=SubscriptionStatus.ACTIVE.value,
+            device_limit=1,
+        )
+        self.db.add(user)
+        self.db.add(sub)
+        self.db.commit()
+
+        signer = EntitlementSigner()
+        license_service = LicenseService(signer)
+
+        # 1. Activate PC Alpha -> succeeds
+        ok_a, msg_a, ent_a = license_service.activate_device(
+            self.db,
+            user_id=user_id,
+            device_id="PC-ALPHA-001",
+            fingerprint_hash="fingerprint_hash_pc_alpha_123456",
+            device_public_key="pubkey_pc_alpha",
+            device_name="Alpha Laptop",
+        )
+        self.assertTrue(ok_a)
+        self.assertIsNotNone(ent_a)
+        self.assertEqual(ent_a["plan"], "PRO")
+
+        # 2. Activate PC Beta without transfer -> rejected with DEVICE_CONFLICT
+        ok_b, msg_b, data_b = license_service.activate_device(
+            self.db,
+            user_id=user_id,
+            device_id="PC-BETA-002",
+            fingerprint_hash="fingerprint_hash_pc_beta_123456",
+            device_public_key="pubkey_pc_beta",
+            device_name="Beta Desktop",
+        )
+        self.assertFalse(ok_b)
+        self.assertEqual(msg_b, "DEVICE_CONFLICT")
+        self.assertEqual(data_b["active_device_id"], "PC-ALPHA-001")
+
+        # 3. Clone attempt: Same device ID with altered fingerprint -> rejected
+        ok_clone, msg_clone, _ = license_service.activate_device(
+            self.db,
+            user_id=user_id,
+            device_id="PC-ALPHA-001",
+            fingerprint_hash="altered_fake_fingerprint_hash",
+            device_public_key="pubkey_pc_alpha",
+            device_name="Alpha Clone",
+        )
+        self.assertFalse(ok_clone)
+        self.assertIn("Possible clone detected", msg_clone)
 
 
 if __name__ == "__main__":
