@@ -866,7 +866,7 @@ function initHardwareCalculator() {
     } else if (workload === 'coding') {
       resRenderSub.textContent = 'Multi-agent AST dry-run';
     } else if (workload === 'offline') {
-      tierText = '100% Disconnected Air-Gapped';
+      tierText = 'Local-First Architecture';
     }
 
     if (resLatency) resLatency.textContent = `${latency} ms`;
@@ -1020,8 +1020,8 @@ function initFeatureHub() {
       status: 'AST VERIFIED'
     },
     privacy: {
-      title: 'CHARLIE // SECURITY // AIR_GAPPED_PERIMETER',
-      status: '0.00 KB/s LEAK'
+      title: 'CHARLIE // SECURITY // LOCAL_FIRST_PERIMETER',
+      status: 'LOCAL-FIRST ACTIVE'
     }
   };
 
@@ -1323,7 +1323,7 @@ function initFeatureHub() {
         btnIsolation.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Isolation Locked';
         btnIsolation.className = 'btn btn-sm btn-secondary';
         if (privStatus) {
-          privStatus.textContent = '0.00 KB/s OUTGOING (AIR-GAPPED)';
+          privStatus.textContent = 'LOCAL-FIRST • CLOUD AI WHEN CONFIGURED';
           privStatus.style.color = 'var(--emerald-accent)';
         }
       } else {
