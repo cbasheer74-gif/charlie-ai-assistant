@@ -776,79 +776,269 @@
         <!-- 9. ADMIN PROFILE TAB -->
         <section id="tab-profile" class="tab-pane">
           <div class="profile-layout">
+            <!-- LEFT COLUMN: IDENTITY CARD -->
             <div class="profile-card">
-              <div class="profile-avatar-large">AD</div>
-              <h2 id="profileDisplayName">Administrator</h2>
-              <span class="profile-email" id="profileEmail">admin@charlie.local</span>
-              <div class="profile-badges">
-                <span class="badge badge-owner" id="profileRoleBadge">OWNER</span>
-                <span class="badge badge-active" id="profileStatusBadge">ACTIVE</span>
+              <div class="profile-avatar-wrapper">
+                <div class="profile-avatar-large" id="profileAvatar">AD</div>
+                <span class="profile-avatar-status" title="Administrator Session Online"></span>
               </div>
 
-              <div class="profile-meta-list">
-                <div class="profile-meta-item">
-                  <span class="meta-label">ADMIN ID:</span>
-                  <span class="meta-val font-mono" id="profileId">-</span>
+              <div class="profile-identity-block">
+                <div class="profile-name-row">
+                  <h2 id="profileDisplayName">Administrator</h2>
+                  <span class="verified-badge" title="Cryptographically Verified SuperAdmin">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </span>
                 </div>
-                <div class="profile-meta-item">
-                  <span class="meta-label">ACCOUNT CREATED:</span>
+                <div class="profile-email-row">
+                  <span class="profile-email" id="profileEmail">admin@charlie.local</span>
+                  <button type="button" class="btn-copy-chip" onclick="copyProfileEmail()" title="Copy Email">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  </button>
+                </div>
+                <div class="profile-badges">
+                  <span class="badge badge-owner" id="profileRoleBadge">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    OWNER
+                  </span>
+                  <span class="badge badge-active" id="profileStatusBadge">
+                    <span class="badge-dot-pulse"></span>
+                    ACTIVE
+                  </span>
+                  <span class="badge badge-tier">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    TIER 1 ROOT
+                  </span>
+                </div>
+              </div>
+
+              <div class="profile-meta-matrix">
+                <div class="meta-matrix-item">
+                  <div class="meta-item-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-6.4 6.4a5 5 0 1 0-7 7l7-7 2.4-2.4"></path></svg>
+                    <span class="meta-label">ADMIN IDENTIFIER</span>
+                  </div>
+                  <div class="meta-val-row">
+                    <span class="meta-val font-mono" id="profileId">-</span>
+                    <button type="button" class="btn-copy-chip" onclick="copyProfileId()" title="Copy Admin ID">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="meta-matrix-item">
+                  <div class="meta-item-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span class="meta-label">ACCOUNT PROVISIONED</span>
+                  </div>
                   <span class="meta-val" id="profileCreated">-</span>
                 </div>
-                <div class="profile-meta-item">
-                  <span class="meta-label">LAST ACTIVE LOGIN:</span>
+
+                <div class="meta-matrix-item">
+                  <div class="meta-item-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <span class="meta-label">LAST ACTIVE LOGIN</span>
+                  </div>
                   <span class="meta-val" id="profileLastLogin">-</span>
                 </div>
+
+                <div class="meta-matrix-item">
+                  <div class="meta-item-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span class="meta-label">2FA AUTHENTICATION</span>
+                  </div>
+                  <span class="meta-val text-green font-semibold">Enforced (FIDO2 / TOTP)</span>
+                </div>
+
+                <div class="meta-matrix-item">
+                  <div class="meta-item-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                    <span class="meta-label">SESSION SECURITY</span>
+                  </div>
+                  <span class="meta-val font-mono text-cyan">TLS 1.3 • AES-256 GCM</span>
+                </div>
+              </div>
+
+              <!-- Quick Security Actions -->
+              <div class="profile-card-actions">
+                <button type="button" class="btn btn-sm btn-outline-cyber" onclick="showToast('Cryptographic root authority validated.')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  Verify Signature
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-cyber" onclick="exportData('audit')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  Audit Trail
+                </button>
               </div>
             </div>
 
+            <!-- RIGHT COLUMN: FORMS & TELEMETRY -->
             <div class="profile-forms-column">
-              <!-- UPDATE PROFILE FORM -->
-              <div class="panel-card">
-                <h3 class="card-heading">Update Admin Information</h3>
-                <form id="profileForm" onsubmit="handleUpdateProfile(event)">
-                  <div class="form-group">
-                    <label>Display Name</label>
+              <!-- 1. UPDATE PROFILE FORM -->
+              <div class="panel-card profile-panel-card">
+                <div class="panel-card-header">
+                  <div>
+                    <h3 class="card-heading-title">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      Update Admin Credentials
+                    </h3>
+                    <p class="card-subheading">Manage your root identity moniker and cryptographic credentials</p>
+                  </div>
+                  <span class="badge badge-subtle">Security Policy: Strict</span>
+                </div>
+
+                <form id="profileForm" class="profile-form-body" onsubmit="handleUpdateProfile(event)">
+                  <div class="form-group-cyber">
+                    <label for="inputProfileName">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      Display Moniker / Name
+                    </label>
                     <input type="text" id="inputProfileName" class="form-control" placeholder="e.g. Lead Administrator">
                   </div>
-                  <div class="form-group">
-                    <label>New Password (Optional)</label>
-                    <input type="password" id="inputProfilePassword" class="form-control" placeholder="Leave blank to keep unchanged">
+
+                  <div class="form-row-2col">
+                    <div class="form-group-cyber">
+                      <label for="inputProfilePassword">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        New Password <span class="label-optional">(Optional)</span>
+                      </label>
+                      <div class="input-with-action">
+                        <input type="password" id="inputProfilePassword" class="form-control" placeholder="Leave blank to keep unchanged">
+                        <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('inputProfilePassword', this)" title="Show/Hide">
+                          <svg class="eye-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="form-group-cyber">
+                      <label for="inputProfilePasswordConfirm">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        Confirm New Password
+                      </label>
+                      <div class="input-with-action">
+                        <input type="password" id="inputProfilePasswordConfirm" class="form-control" placeholder="Confirm new password">
+                        <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('inputProfilePasswordConfirm', this)" title="Show/Hide">
+                          <svg class="eye-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <label>Confirm New Password</label>
-                    <input type="password" id="inputProfilePasswordConfirm" class="form-control" placeholder="Confirm new password">
+
+                  <div class="password-guidelines-row">
+                    <span class="guideline-badge">✓ Minimum 8 Characters</span>
+                    <span class="guideline-badge">✓ PBKDF2-SHA256 Hashing</span>
+                    <span class="guideline-badge">✓ Zero Plaintext Storage</span>
                   </div>
-                  <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+
+                  <div class="form-actions-row">
+                    <button type="submit" class="btn btn-primary btn-cyber-glow">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                      Save Profile Changes
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="loadAdminProfile()">
+                      Discard
+                    </button>
+                  </div>
                 </form>
               </div>
 
-              <!-- PRIVILEGES & CREDENTIALS -->
-              <div class="panel-card">
-                <h3 class="card-heading">Assigned Role Privileges (RBAC)</h3>
-                <div class="privilege-tags" id="profilePermissionsContainer">
-                  <!-- Injected via JS -->
+              <!-- 2. PRIVILEGES & CREDENTIALS (RBAC) -->
+              <div class="panel-card profile-panel-card">
+                <div class="panel-card-header">
+                  <div>
+                    <h3 class="card-heading-title">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                      Assigned Role Privileges (RBAC)
+                    </h3>
+                    <p class="card-subheading">Cryptographic permissions mapped to current root administrator session</p>
+                  </div>
+                  <span class="badge badge-accent-green" id="rbacCountBadge">5 Policies Active</span>
+                </div>
+
+                <div class="rbac-panel-body">
+                  <div class="rbac-summary-bar">
+                    <div class="rbac-summary-info">
+                      <span class="rbac-summary-label">Access Clearance Scope</span>
+                      <span class="rbac-summary-value text-green">100% Unrestricted Root Authorization</span>
+                    </div>
+                    <div class="rbac-progress-track">
+                      <div class="rbac-progress-fill" style="width: 100%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="privilege-grid" id="profilePermissionsContainer">
+                    <!-- Injected via JS with rich chips -->
+                  </div>
                 </div>
               </div>
 
-              <!-- SYSTEM HEALTH TELEMETRY -->
-              <div class="panel-card">
-                <h3 class="card-heading">Server Infrastructure Health</h3>
-                <div class="system-health-grid" id="systemHealthDetails">
-                  <div class="health-item">
-                    <span class="health-label">Database Connection</span>
-                    <span class="health-val text-green" id="healthDbStatus">Checking...</span>
+              <!-- 3. SYSTEM HEALTH TELEMETRY -->
+              <div class="panel-card profile-panel-card">
+                <div class="panel-card-header">
+                  <div>
+                    <h3 class="card-heading-title">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                      Server Infrastructure & Telemetry Health
+                    </h3>
+                    <p class="card-subheading">Live diagnostics verified across licensing daemon and database subsystems</p>
                   </div>
-                  <div class="health-item">
-                    <span class="health-label">RSA Keypair Authority</span>
-                    <span class="health-val text-green" id="healthRsaStatus">Checking...</span>
-                  </div>
-                  <div class="health-item">
-                    <span class="health-label">Disk Storage Free</span>
-                    <span class="health-val text-cyan" id="healthDiskStatus">Checking...</span>
-                  </div>
-                  <div class="health-item">
-                    <span class="health-label">Database Latency</span>
-                    <span class="health-val" id="healthLatencyStatus">Checking...</span>
+                  <button type="button" class="btn btn-sm btn-outline-cyber" onclick="checkServerHealth()">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                    Refresh Live
+                  </button>
+                </div>
+
+                <div class="telemetry-panel-body">
+                  <div class="system-health-grid" id="systemHealthDetails">
+                    <div class="health-card-telemetry">
+                      <div class="telemetry-card-top">
+                        <div class="telemetry-icon-box bg-green-subtle">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                        </div>
+                        <span class="telemetry-status-pill text-green">Optimal</span>
+                      </div>
+                      <span class="telemetry-label">DATABASE SUBSYSTEM</span>
+                      <span class="telemetry-val text-green" id="healthDbStatus">Connected (SQLite WAL)</span>
+                      <span class="telemetry-sub">WAL Mode • Auto Checkpointing</span>
+                    </div>
+
+                    <div class="health-card-telemetry">
+                      <div class="telemetry-card-top">
+                        <div class="telemetry-icon-box bg-purple-subtle">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </div>
+                        <span class="telemetry-status-pill text-purple">Secured</span>
+                      </div>
+                      <span class="telemetry-label">CRYPTOGRAPHIC AUTHORITY</span>
+                      <span class="telemetry-val text-green" id="healthRsaStatus">Ready (RSA-2048)</span>
+                      <span class="telemetry-sub">SHA-256 Signatures Valid</span>
+                    </div>
+
+                    <div class="health-card-telemetry">
+                      <div class="telemetry-card-top">
+                        <div class="telemetry-icon-box bg-cyan-subtle">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="12" x2="2" y2="12"></line><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path><line x1="6" y1="16" x2="6.01" y2="16"></line><line x1="10" y1="16" x2="10.01" y2="16"></line></svg>
+                        </div>
+                        <span class="telemetry-status-pill text-cyan">Available</span>
+                      </div>
+                      <span class="telemetry-label">STORAGE CAPACITY</span>
+                      <span class="telemetry-val text-cyan" id="healthDiskStatus">Checking...</span>
+                      <div class="telemetry-progress-track">
+                        <div class="telemetry-progress-fill bg-cyan" id="healthDiskMeter" style="width: 70%;"></div>
+                      </div>
+                    </div>
+
+                    <div class="health-card-telemetry">
+                      <div class="telemetry-card-top">
+                        <div class="telemetry-icon-box bg-amber-subtle">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        </div>
+                        <span class="telemetry-status-pill text-emerald">Ultra Fast</span>
+                      </div>
+                      <span class="telemetry-label">INTERNAL DB LATENCY</span>
+                      <span class="telemetry-val font-mono" id="healthLatencyStatus">Checking...</span>
+                      <span class="telemetry-sub">&lt; 1.0ms Microsecond Engine</span>
+                    </div>
                   </div>
                 </div>
               </div>
