@@ -23,3 +23,5 @@ scratch/
 .venv311/
 release/*.exe
 **/release/*.exe
+**/landing_page/downloads/
+landing_page/downloads/

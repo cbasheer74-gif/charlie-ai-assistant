@@ -446,7 +446,7 @@ function initAuthModal() {
     });
   }
 
-  const AUTH_API_BASE = window.location.origin.includes('8400') ? window.location.origin : 'http://localhost:8400';
+  const AUTH_API_BASE = (window.CharlieConfig && window.CharlieConfig.apiBaseUrl) ? window.CharlieConfig.apiBaseUrl : (window.location.origin.includes('8400') ? window.location.origin : 'https://api.charlie.ai');
 
   // Social OAuth click handlers
   document.querySelectorAll('.btn-social-auth').forEach(btn => {
@@ -493,6 +493,15 @@ function initAuthModal() {
       if (submitBtn) {
         submitBtn.textContent = isSignUp ? 'Creating Account...' : 'Authenticating...';
         submitBtn.disabled = true;
+      }
+
+      if (window.CharlieConfig && !window.CharlieConfig.isBackendLive) {
+        showToast('Online account creation & cloud sync are launching soon. Download the standalone desktop release below.');
+        if (submitBtn) {
+          submitBtn.textContent = isSignUp ? 'Create Free Account' : 'Sign In to CHARLIE';
+          submitBtn.disabled = false;
+        }
+        return;
       }
 
       try {
@@ -633,6 +642,13 @@ function initSkillDirectoryFilter() {
    Commercial Pricing Checkout Integration
    -------------------------------------------------------------------------- */
 async function initiateCheckout(plan) {
+  if (window.CharlieConfig && !window.CharlieConfig.isBackendLive) {
+    showToast(`Online subscription checkout for ${plan} is opening soon with our payment gateway. You can use the free standalone desktop release today!`);
+    const heroBtn = document.getElementById('btn-hero-start');
+    if (heroBtn) heroBtn.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+
   const token = localStorage.getItem('charlie_access_token');
   const user = localStorage.getItem('charlie_auth_user');
 

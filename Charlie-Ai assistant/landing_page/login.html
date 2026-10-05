@@ -508,8 +508,9 @@
 
   <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px;"></div>
 
+  <script src="config.js?v=1.0"></script>
   <script>
-    const API_BASE = window.location.origin.includes('8400') ? window.location.origin : 'http://localhost:8400';
+    const API_BASE = (window.CharlieConfig && window.CharlieConfig.apiBaseUrl) ? window.CharlieConfig.apiBaseUrl : (window.location.origin.includes('8400') ? window.location.origin : 'https://api.charlie.ai');
     let currentAuthMode = 'signin';
 
     function showToast(msg, isError = false) {
@@ -625,6 +626,15 @@
         }
 
         // Login or Register
+        if (window.CharlieConfig && !window.CharlieConfig.isBackendLive) {
+          showToast('Online account portal & licensing are launching soon. Standalone desktop releases can be downloaded from the homepage.', true);
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = currentAuthMode === 'signup' ? 'Create Free Account' : 'Sign In to CHARLIE';
+          }
+          return;
+        }
+
         const isRegister = currentAuthMode === 'signup';
         const endpoint = isRegister ? '/auth/register' : '/auth/login';
         const payload = isRegister 
