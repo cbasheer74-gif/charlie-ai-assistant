@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Master Developer Platform Architecture
+CHARLIE Phase 12: Master Developer Platform Architecture
 Unifies Plugin Registry, Tool SDK, Connector Ecosystem, MCP Gateway, Custom Agent Builder,
 and Developer Console.
 """
@@ -27,11 +27,11 @@ from .registry import ExtensionHealthManager, PluginRegistry
 from .security import CredentialBindingManager, ExtensionSandbox, PluginSecurityScanner
 from .tool_resolver import ToolResolver
 
-logger = logging.getLogger("jarvis.platform.core")
+logger = logging.getLogger("charlie.platform.core")
 
 
 class DeveloperPlatform:
-    """Master Developer Platform integrating extensible capabilities into JARVIS."""
+    """Master Developer Platform integrating extensible capabilities into CHARLIE."""
 
     def __init__(self, tool_registry: Optional[Any] = None, security_core: Optional[Any] = None):
         self.tool_registry = tool_registry

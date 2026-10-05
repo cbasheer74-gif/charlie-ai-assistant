@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Response Cache & File Context Invalidation
+CHARLIE Phase 11: Response Cache & File Context Invalidation
 Caches deterministic and stable model transformations, invalidating on file changes or TTL expiry.
 """
 
@@ -10,7 +10,7 @@ import logging
 import time
 from typing import Any, Dict, Optional, Tuple
 
-logger = logging.getLogger("jarvis.ai.cache")
+logger = logging.getLogger("charlie.ai.cache")
 
 
 class ResponseCache:

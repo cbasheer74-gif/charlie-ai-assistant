@@ -1,4 +1,4 @@
-"""engine/security/models.py — Data Models, Enums, and Security Tokens for JARVIS Phase 9."""
+"""engine/security/models.py — Data Models, Enums, and Security Tokens for CHARLIE."""
 
 from __future__ import annotations
 

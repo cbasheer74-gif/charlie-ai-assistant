@@ -1,5 +1,5 @@
 """
-JARVIS Phase 14: Packaging, Installer Building, and Environment Validation
+CHARLIE Phase 14: Packaging, Installer Building, and Environment Validation
 Handles production build generation, Windows 10/11 environment validation,
 Inno Setup configuration generation, and clean uninstallation.
 """
@@ -85,7 +85,7 @@ class EnvironmentValidator:
 
         # 1. OS validation
         if os_name != "Windows":
-            warnings.append(f"Non-Windows OS detected ({os_name}). JARVIS is optimized for Windows 10/11.")
+            warnings.append(f"Non-Windows OS detected ({os_name}). CHARLIE is optimized for Windows 10/11.")
 
         # 2. Architecture validation
         if arch not in ("AMD64", "x86_64"):
@@ -183,7 +183,7 @@ class UninstallManager:
         self.paths = path_manager or DeploymentPathManager()
 
     def uninstall(self, preserve_user_data: bool = True) -> Dict[str, Any]:
-        """Uninstalls JARVIS. Preserves user data by default unless explicitly wiped."""
+        """Uninstalls CHARLIE. Preserves user data by default unless explicitly wiped."""
         cleaned_items = ["STARTUP_REGISTRY_CLEARED", "BACKGROUND_SERVICES_UNREGISTERED"]
 
         if not preserve_user_data:

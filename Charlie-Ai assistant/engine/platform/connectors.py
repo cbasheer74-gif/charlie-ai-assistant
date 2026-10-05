@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Connectors & OpenAPI Importer
+CHARLIE Phase 12: Connectors & OpenAPI Importer
 Built-in adapters for GitHub, Slack, Database, and automated OpenAPI scaffold generator.
 """
 
@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from .models import ToolContract, ToolExecutionResult
 from .sdk import BaseConnector
 
-logger = logging.getLogger("jarvis.platform.connectors")
+logger = logging.getLogger("charlie.platform.connectors")
 
 
 class GitHubConnector(BaseConnector):

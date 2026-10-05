@@ -1,5 +1,5 @@
 """
-JARVIS Phase 15: Launch Operations Platform Models
+CHARLIE Phase 15: Launch Operations Platform Models
 Defines core data structures, enums, and records for UAT, pilot programs,
 bug triage, incident management, launch readiness, and v1.0 go-live.
 """

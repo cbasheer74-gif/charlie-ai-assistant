@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "name": "Charlie-Main",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "C:\\Python314\\python.exe",
+    "python.analysis.extraPaths": [
+      "C:\\Users\\aney\\AppData\\Roaming\\Python\\Python314\\site-packages",
+      "C:\\Users\\aney\\AppData\\Roaming\\Python\\Python314\\site-packages\\win32",
+      "C:\\Users\\aney\\AppData\\Roaming\\Python\\Python314\\site-packages\\win32\\lib",
+      "C:\\Python314\\Lib\\site-packages",
+      "${workspaceFolder}",
+      "${workspaceFolder}/Charlie-Ai assistant"
+    ]
+  }
+}

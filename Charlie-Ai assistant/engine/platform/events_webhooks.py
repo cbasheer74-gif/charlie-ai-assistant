@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Event Bus, Webhook Gateway & Automation Builder
+CHARLIE Phase 12: Event Bus, Webhook Gateway & Automation Builder
 Enforces pub/sub event distribution, replay-safe webhook verification, and safe conditional automations.
 """
 
@@ -13,7 +13,7 @@ from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
 from .models import AutomationRule, EventMessage, WebhookPayload
 
-logger = logging.getLogger("jarvis.platform.events")
+logger = logging.getLogger("charlie.platform.events")
 
 
 class EventBus:

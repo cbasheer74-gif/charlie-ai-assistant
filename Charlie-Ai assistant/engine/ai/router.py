@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Model Router, Routing Policies & Vision Router
+CHARLIE Phase 11: Model Router, Routing Policies & Vision Router
 Routes tasks to the optimal local or cloud model based on capability, privacy, complexity, and cost.
 """
 
@@ -21,7 +21,7 @@ from .models import (
 )
 from .registry import ModelRegistry
 
-logger = logging.getLogger("jarvis.ai.router")
+logger = logging.getLogger("charlie.ai.router")
 
 
 class VisionRouter:

@@ -32,9 +32,44 @@ class BargeInManager:
         self.tts_manager = tts_manager
         self._interruption_history: List[BargeInEvent] = []
         self._on_emergency_stop: Optional[Callable[[], None]] = None
+        self._instant_barge_in_cb: Optional[Callable[[], None]] = None
+
+        try:
+            from engine.voice.conversational_intelligence import get_voice_suite
+            self.suite = get_voice_suite()
+            self.suite.barge_in.on_barge_in = self._on_instant_acoustic_barge_in
+        except Exception:
+            self.suite = None
+
+    def _on_instant_acoustic_barge_in(self) -> None:
+        """Immediately halts TTS output on sub-50ms acoustic frame energy detection."""
+        if self.tts_manager.is_speaking():
+            self.tts_manager.stop()
+            event = BargeInEvent(
+                trigger_word="[ACOUSTIC_ENERGY_VAD]",
+                timestamp=time.time(),
+            )
+            self._interruption_history.append(event)
+            if self._instant_barge_in_cb:
+                try:
+                    self._instant_barge_in_cb()
+                except Exception:
+                    pass
+
+    def set_instant_barge_in_callback(self, cb: Callable[[], None]) -> None:
+        self._instant_barge_in_cb = cb
+
+    def process_acoustic_frame(self, energy: float) -> bool:
+        """Evaluates live acoustic energy for sub-50ms barge-in while CHARLIE is speaking."""
+        if not self.tts_manager.is_speaking():
+            return False
+        if self.suite is not None:
+            return self.suite.barge_in.process_frame(energy=energy, is_ai_speaking=True)
+        return False
 
     def set_emergency_stop_callback(self, cb: Callable[[], None]) -> None:
         self._on_emergency_stop = cb
+
 
     def check_for_interruption(self, transcript_text: str) -> Optional[InterruptScope]:
         """Checks if user's spoken input triggers an immediate barge-in or stop."""

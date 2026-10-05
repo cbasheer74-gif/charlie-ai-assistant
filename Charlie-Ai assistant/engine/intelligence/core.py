@@ -39,7 +39,7 @@ from engine.intelligence.self_improvement import (
 
 
 class IntelligenceCore:
-    """Central Intelligence coordinator for JARVIS Phase 8."""
+    """Central Intelligence coordinator for CHARLIE Phase 8."""
 
     def __init__(self, db_path: Optional[Path] = None):
         self.graph = PersonalKnowledgeGraph(db_path=db_path)

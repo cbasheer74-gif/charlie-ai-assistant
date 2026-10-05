@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Master AI Orchestration Layer
+CHARLIE Phase 11: Master AI Orchestration Layer
 Unified ModelIntelligenceLayer connecting Task Profiler, Privacy, Router, Budget, Cache,
 Offline Engine, and Verification.
 """
@@ -29,15 +29,15 @@ from .models import (
 from .offline import OfflineAIManager
 from .performance import ModelPerformanceTracker
 from .profiler import TaskProfiler
-from .providers import CloudProvider, LocalProvider
+from .providers import CloudProvider, LocalProvider, GroqProvider
 from .registry import CapabilityRegistry, ModelRegistry, ProviderRegistry
 from .router import ModelRouter, VisionRouter
 
-logger = logging.getLogger("jarvis.ai.core")
+logger = logging.getLogger("charlie.ai.core")
 
 
 class ModelIntelligenceLayer:
-    """Master Multi-Model Intelligence Layer for JARVIS."""
+    """Master Multi-Model Intelligence Layer for CHARLIE."""
 
     def __init__(self):
         # 1. Registries & Hardware
@@ -49,8 +49,10 @@ class ModelIntelligenceLayer:
         # 2. Providers
         self.local_provider = LocalProvider()
         self.cloud_provider = CloudProvider()
+        self.groq_provider = GroqProvider()
         self.provider_registry.register_provider("ollama", self.local_provider)
         self.provider_registry.register_provider("openai_compatible", self.cloud_provider)
+        self.provider_registry.register_provider("groq", self.groq_provider)
 
         # 3. Profilers & Routers
         self.task_profiler = TaskProfiler()

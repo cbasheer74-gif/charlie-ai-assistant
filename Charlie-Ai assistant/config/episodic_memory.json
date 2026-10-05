@@ -1,0 +1,461 @@
+[
+  {
+    "id": "ep_1790347755_1",
+    "timestamp": 1790347755.3917136,
+    "summary": "Finished licensing server testing and deployed v1.0",
+    "tags": [
+      "licensing",
+      "release"
+    ],
+    "entities": [],
+    "importance": 8,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790359114_2",
+    "timestamp": 1790359114.0223434,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790359114_3",
+    "timestamp": 1790359114.0585744,
+    "summary": "User requested: as-salamu alaykum wa rahmatullahi wa barakatuh",
+    "tags": [
+      "general_query"
+    ],
+    "entities": [],
+    "importance": 3,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790359182_4",
+    "timestamp": 1790359182.8262463,
+    "summary": "User requested: ZynPay Backend bhi start karo",
+    "tags": [
+      "general_query"
+    ],
+    "entities": [],
+    "importance": 3,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790360109_5",
+    "timestamp": 1790360109.184741,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790360481_6",
+    "timestamp": 1790360481.3587518,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790360481_7",
+    "timestamp": 1790360481.5356615,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790360552_8",
+    "timestamp": 1790360552.5136974,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790360552_9",
+    "timestamp": 1790360552.650018,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790415919_10",
+    "timestamp": 1790415919.0516248,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790415919_11",
+    "timestamp": 1790415919.115135,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790429771_12",
+    "timestamp": 1790429771.3446157,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790429771_13",
+    "timestamp": 1790429771.4150276,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790429861_14",
+    "timestamp": 1790429861.687077,
+    "summary": "User requested: ZynPay Backend bhi start karo",
+    "tags": [
+      "general_query"
+    ],
+    "entities": [],
+    "importance": 3,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790430354_15",
+    "timestamp": 1790430354.064587,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790430354_16",
+    "timestamp": 1790430354.1344423,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790430421_17",
+    "timestamp": 1790430421.7179654,
+    "summary": "User requested: ZynPay Backend bhi start karo",
+    "tags": [
+      "general_query"
+    ],
+    "entities": [],
+    "importance": 3,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790432355_18",
+    "timestamp": 1790432355.476144,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790432355_19",
+    "timestamp": 1790432355.5390959,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790432426_20",
+    "timestamp": 1790432426.6999953,
+    "summary": "User requested: ZynPay Backend bhi start karo",
+    "tags": [
+      "general_query"
+    ],
+    "entities": [],
+    "importance": 3,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790433698_21",
+    "timestamp": 1790433698.6896656,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790433698_22",
+    "timestamp": 1790433698.7403228,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790433735_23",
+    "timestamp": 1790433735.6844735,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790433735_24",
+    "timestamp": 1790433735.751064,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790433809_25",
+    "timestamp": 1790433809.390666,
+    "summary": "User requested: ZynPay Backend bhi start karo",
+    "tags": [
+      "general_query"
+    ],
+    "entities": [],
+    "importance": 3,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790434025_26",
+    "timestamp": 1790434025.794631,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790434025_27",
+    "timestamp": 1790434025.8280232,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790434079_28",
+    "timestamp": 1790434079.8705494,
+    "summary": "User requested: ZynPay Backend bhi start karo",
+    "tags": [
+      "general_query"
+    ],
+    "entities": [],
+    "importance": 3,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790435162_29",
+    "timestamp": 1790435162.7926114,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790435162_30",
+    "timestamp": 1790435162.8261085,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790435228_31",
+    "timestamp": 1790435228.2890878,
+    "summary": "User requested: ZynPay Backend bhi start karo",
+    "tags": [
+      "general_query"
+    ],
+    "entities": [],
+    "importance": 3,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790581485_32",
+    "timestamp": 1790581485.332411,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1790581486_33",
+    "timestamp": 1790581486.1669743,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1791027567_34",
+    "timestamp": 1791027567.7463245,
+    "summary": "Tested Charlie audio pipeline and voice routing",
+    "tags": [
+      "audio",
+      "test_suite"
+    ],
+    "entities": [],
+    "importance": 7,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1791027569_35",
+    "timestamp": 1791027569.1496305,
+    "summary": "Executed writing_polish: Polish text from clipboard with executive/professional tone",
+    "tags": [
+      "writing_polish",
+      "disambiguated"
+    ],
+    "entities": [],
+    "importance": 6,
+    "outcome": "success",
+    "details": {}
+  },
+  {
+    "id": "ep_1791027632_36",
+    "timestamp": 1791027632.915423,
+    "summary": "User requested: ZynPay Backend bhi start karo",
+    "tags": [
+      "general_query"
+    ],
+    "entities": [],
+    "importance": 3,
+    "outcome": "success",
+    "details": {}
+  }
+]

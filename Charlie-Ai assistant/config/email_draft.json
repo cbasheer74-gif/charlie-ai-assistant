@@ -1,0 +1,7 @@
+{
+  "to": "test@example.com",
+  "subject": "Test Subject",
+  "body": "[INSTRUCTION FOR CHARLIE: Write a professional, clear, and respectful email body based on this brief: 'Quick status update'. Include a greeting, clear message, and a polite closing. Return ONLY the email body text, no extra commentary.]",
+  "tone": "professional",
+  "created": "2026-10-03T17:09:27.561415"
+}

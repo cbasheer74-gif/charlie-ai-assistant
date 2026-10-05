@@ -42,6 +42,14 @@ class TransferDeviceRequest(BaseModel):
     confirm: bool = Field(default=True)
 
 
+class CompletePairRequest(BaseModel):
+    pairing_code: str = Field(..., min_length=6, max_length=12)
+    client_device_id: str = Field(..., min_length=3)
+    client_device_name: str = Field(..., min_length=1, max_length=100)
+    client_device_type: Optional[str] = Field(default="MOBILE_ANDROID")
+    client_public_key: Optional[str] = Field(default="")
+
+
 class CustomerTicketRequest(BaseModel):
     subject: str = Field(..., min_length=3, max_length=255)
     message: str = Field(..., min_length=5)
@@ -156,7 +164,128 @@ def transfer_my_device(
     return {"status": "ok", "message": "License slot cleared for transfer. Log in on your new machine."}
 
 
+# ── Companion Pairing (Phase 10) ─────────────────────────────────────────────
+
+_ephemeral_pairings: Dict[str, Dict[str, Any]] = {}
+
+
+@router.post("/devices/pair/start")
+def start_companion_pairing(
+    user: UserDB = Depends(get_current_user),
+):
+    """Generate ephemeral 6-digit numeric pairing code (300s TTL) for mobile companion."""
+    import secrets
+    import time
+    code = f"{secrets.randbelow(900000) + 100000}"
+    session_id = f"pair_{secrets.token_hex(6)}"
+    expires_at = time.time() + 300.0
+
+    # Prune expired sessions
+    now = time.time()
+    for c in list(_ephemeral_pairings.keys()):
+        if _ephemeral_pairings[c].get("expires_at", 0) < now:
+            _ephemeral_pairings.pop(c, None)
+
+    _ephemeral_pairings[code] = {
+        "session_id": session_id,
+        "user_id": str(user.id),
+        "expires_at": expires_at,
+        "created_at": now,
+    }
+
+    return {
+        "status": "ok",
+        "pairing_code": code,
+        "session_id": session_id,
+        "expires_in_seconds": 300,
+        "qr_payload": {
+            "session_id": session_id,
+            "pairing_code": code,
+            "user_id": str(user.id),
+            "expires_at": int(expires_at),
+            "rendezvous": "local_or_relay",
+        },
+    }
+
+
+@router.post("/devices/pair/complete")
+def complete_companion_pairing(
+    req: CompletePairRequest,
+    user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Validate ephemeral pairing code and register companion device."""
+    import time
+    pair_code = req.pairing_code.strip()
+    session = _ephemeral_pairings.get(pair_code)
+
+    if not session:
+        raise HTTPException(status_code=400, detail="Invalid or expired pairing code.")
+
+    if time.time() > session["expires_at"]:
+        _ephemeral_pairings.pop(pair_code, None)
+        raise HTTPException(status_code=400, detail="Pairing code expired.")
+
+    if session["user_id"] != str(user.id):
+        raise HTTPException(status_code=403, detail="Pairing session belongs to another user.")
+
+    _ephemeral_pairings.pop(pair_code, None)
+
+    dev_id = f"dev_{req.client_device_id[:16]}"
+    existing = db.query(DeviceDB).filter(DeviceDB.device_hardware_hash == req.client_device_id).first()
+    if not existing:
+        dev = DeviceDB(
+            id=dev_id,
+            user_id=user.id,
+            device_name=req.client_device_name,
+            os_type=req.client_device_type or "Mobile",
+            app_version="1.0.0",
+            device_hardware_hash=req.client_device_id,
+            status=DeviceStatusEnum.ACTIVE.value,
+        )
+        db.add(dev)
+    else:
+        existing.status = DeviceStatusEnum.ACTIVE.value
+        existing.device_name = req.client_device_name
+    db.commit()
+
+    return {
+        "status": "ok",
+        "message": f"Device {req.client_device_name} successfully paired.",
+        "device_id": dev_id,
+    }
+
+
+# ── Credits & Usage (Token Add-Ons) ──────────────────────────────────────────
+
+@router.get("/credits")
+def get_my_credits(
+    user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Fetch live AI credit balance and consumption for authenticated user."""
+    from licensing_server.services.credit_service import CreditService
+    credit_service = CreditService()
+    sub_plan = user.subscription.plan if user.subscription else "STARTER"
+    wallet = credit_service.get_or_create_wallet(db, str(user.id), sub_plan)
+    sub_credits = wallet.subscription_credits or 0
+    purchased_credits = wallet.purchased_credits or 0
+    used = wallet.credits_used or 0
+    available = max(0, (sub_credits + purchased_credits) - used)
+
+    return {
+        "subscription_credits": sub_credits,
+        "purchased_credits": purchased_credits,
+        "credits_used": used,
+        "total_available": available,
+        "daily_messages_used": wallet.daily_messages_used or 0,
+        "plan_tier": wallet.plan_tier,
+        "billing_cycle_end": wallet.billing_cycle_end.isoformat() if wallet.billing_cycle_end else None,
+    }
+
+
 # ── Payments ─────────────────────────────────────────────────────────────────
+
 
 @router.get("/payments")
 def get_my_payments(

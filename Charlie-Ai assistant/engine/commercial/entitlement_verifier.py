@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
 
-logger = logging.getLogger("jarvis.commercial.entitlement_verifier")
+logger = logging.getLogger("charlie.commercial.entitlement_verifier")
 
 # ── IMPORTANT ─────────────────────────────────────────────────────────────────
 # This key is populated at build time from licensing_server/keys/entitlement_verify.pub
@@ -147,11 +147,13 @@ class EntitlementVerifier:
         """Check if entitlement is bound to current device."""
         return payload.device_id == current_device_id
 
-    def is_expired(self, payload: EntitlementPayload) -> bool:
-        """Check if entitlement has passed its expiry time."""
+    def is_expired(self, payload: EntitlementPayload, grace_seconds: int = 0) -> bool:
+        """Check if entitlement has passed its expiry time plus optional grace period."""
         try:
+            from datetime import timedelta
             exp = datetime.fromisoformat(payload.expires_at)
-            return datetime.now(timezone.utc) > exp
+            limit = exp + timedelta(seconds=grace_seconds) if grace_seconds > 0 else exp
+            return datetime.now(timezone.utc) > limit
         except Exception:
             return True  # If we can't parse, treat as expired
 
@@ -163,8 +165,8 @@ class EntitlementVerifier:
         except Exception:
             return True
 
-    def full_verify(self, token: str, current_device_id: str) -> Tuple[bool, str, Optional[EntitlementPayload]]:
-        """Complete verification: signature + device match + expiry.
+    def full_verify(self, token: str, current_device_id: str, grace_seconds: int = 0) -> Tuple[bool, str, Optional[EntitlementPayload]]:
+        """Complete verification: signature + device match + expiry with optional grace period.
 
         Returns (is_valid, reason, payload_or_None).
         """
@@ -175,7 +177,7 @@ class EntitlementVerifier:
         if not self.is_device_match(payload, current_device_id):
             return False, f"Device mismatch: entitlement bound to {payload.device_id}, current is {current_device_id}.", payload
 
-        if self.is_expired(payload):
+        if self.is_expired(payload, grace_seconds=grace_seconds):
             return False, "Entitlement expired. Online revalidation required.", payload
 
         return True, "Valid entitlement.", payload

@@ -1,5 +1,5 @@
 """
-JARVIS Phase 10: Multi-Device Models & Envelopes
+CHARLIE Phase 10: Multi-Device Models & Envelopes
 Defines device identities, permissions, trust states, protocol message formats.
 """
 

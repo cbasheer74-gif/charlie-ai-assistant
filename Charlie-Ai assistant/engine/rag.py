@@ -23,15 +23,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from engine.semantic import cosine_similarity, local_dense_embedding
+from core.app_paths import get_rag_db_path, migrate_rag_db_if_needed
 
 
-def _app_dir() -> Path:
-    if getattr(sys, "frozen", False):
-        return Path(sys.executable).parent
-    return Path(__file__).resolve().parent.parent
-
-
-_DEFAULT_DB = _app_dir() / "memory" / "rag_store.sqlite3"
+_DEFAULT_DB = get_rag_db_path()
 
 _TEXT_EXTS = {
     ".txt", ".md", ".rst", ".log", ".py", ".js", ".ts", ".tsx", ".jsx",
@@ -149,7 +144,11 @@ class LocalRAG:
     """Thread-safe, local vector + BM25 document search engine."""
 
     def __init__(self, db_path: Optional[Path | str] = None) -> None:
-        self.db_path = Path(db_path) if db_path else _DEFAULT_DB
+        if db_path:
+            self.db_path = Path(db_path)
+        else:
+            migrate_rag_db_if_needed(_DEFAULT_DB)
+            self.db_path = _DEFAULT_DB
         self._lock = threading.Lock()
         self._init_db()
 
@@ -405,6 +404,104 @@ class LocalRAG:
 
             scored.sort(key=lambda x: x[0], reverse=True)
             return [item[1] for item in scored[:top_k]]
+
+    def search_context(self, query: str, top_k: int = 4, max_chars: int = 3500) -> str:
+        """Retrieve top chunks and format them into an LLM context block with citations."""
+        results = self.search(query, top_k=top_k)
+        if not results:
+            return ""
+
+        blocks: List[str] = ["[RETRIEVED DOCUMENT KNOWLEDGE]"]
+        total_len = len(blocks[0])
+
+        for item in results:
+            header = f"\n--- Source: {item['filename']} (Relevance: {item['score']}) ---"
+            snippet = str(item.get("snippet", "")).strip()
+            chunk_text = f"{header}\n{snippet}"
+
+            if total_len + len(chunk_text) > max_chars:
+                avail = max_chars - total_len - len(header) - 10
+                if avail > 100:
+                    blocks.append(f"{header}\n{snippet[:avail]}... [truncated]")
+                break
+
+            blocks.append(chunk_text)
+            total_len += len(chunk_text)
+
+        return "\n".join(blocks) if len(blocks) > 1 else ""
+
+    def late_bind_search_context(
+        self,
+        final_prompt: str,
+        top_k: int = 3,
+        max_chars: int = 2500,
+        dedup_ttl_sec: float = 2.0,
+    ) -> str:
+        """Re-rank and inject RAG context at prompt-dispatch time, not at user-input time.
+
+        Problem it solves:
+          search_context(raw_message) is called early, before attachments, screen
+          context, and memory enrichment are appended to the prompt. If the user
+          refines their question mid-flight, the RAG results can be stale.
+
+        This method is called with the *fully assembled* prompt string, just before
+        it is sent to the LLM. The query used for retrieval is the last user-turn
+        sentence extracted from the prompt, so the context always matches what the
+        LLM will actually see.
+
+        Dedup cache:
+          Identical query hashes within `dedup_ttl_sec` seconds return the cached
+          result. Prevents double DB hits on rapid resends.
+
+        Args:
+            final_prompt:  The complete prompt string after all enrichment.
+            top_k:         Number of chunks to retrieve.
+            max_chars:     Max total characters of RAG context to inject.
+            dedup_ttl_sec: Seconds to cache identical query results.
+
+        Returns:
+            Formatted RAG context string, or "" if nothing relevant found.
+        """
+        import hashlib
+        import time
+
+        # --- 1. Extract the most meaningful query fragment from the prompt ----
+        # Use last non-empty line that looks like a question/statement from the user.
+        lines = [ln.strip() for ln in final_prompt.splitlines() if ln.strip()]
+        # Skip meta-header lines (RETRIEVED..., ---Source..., [RELEVANT...])
+        user_lines = [
+            ln for ln in lines
+            if not ln.startswith("[") and not ln.startswith("---")
+            and not ln.startswith("(") and len(ln) > 8
+        ]
+        # Use last 200 chars of the last user sentence as retrieval query
+        query_text = user_lines[-1][-200:] if user_lines else final_prompt[-200:]
+        query_text = query_text.strip()
+        if not query_text:
+            return ""
+
+        # --- 2. Dedup cache check --------------------------------------------
+        q_hash = hashlib.md5(query_text.encode("utf-8", errors="ignore")).hexdigest()
+        now = time.monotonic()
+        if not hasattr(self, "_late_bind_cache"):
+            self._late_bind_cache: dict = {}  # {hash: (timestamp, result_str)}
+        cached = self._late_bind_cache.get(q_hash)
+        if cached is not None:
+            ts, result = cached
+            if now - ts < dedup_ttl_sec:
+                return result
+
+        # --- 3. Re-query with final prompt query -----------------------------
+        result = self.search_context(query_text, top_k=top_k, max_chars=max_chars)
+
+        # Evict stale entries and store
+        self._late_bind_cache = {
+            k: v for k, v in self._late_bind_cache.items()
+            if now - v[0] < dedup_ttl_sec * 10
+        }
+        self._late_bind_cache[q_hash] = (now, result)
+        return result
+
 
     def get_status(self) -> Dict[str, Any]:
         """Return knowledge base status and stats."""

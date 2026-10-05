@@ -69,3 +69,29 @@ class VoiceActivityDetector:
                     self._is_speaking = False
 
         return is_voice, utterance_complete, energy
+
+    def set_silence_timeout(self, timeout_sec: float) -> None:
+        """Dynamically tunes silence timeout for adaptive turn-taking."""
+        self.silence_timeout_sec = max(0.25, min(2.5, float(timeout_sec)))
+
+    def adapt_timeout(self, partial_transcript: str, speaking_rate_wpm: float = 140.0) -> float:
+        """Adapts silence timeout dynamically using conversational intelligence."""
+        try:
+            from engine.voice.conversational_intelligence import get_voice_suite
+            timeout = get_voice_suite().turn_taking.evaluate_silence_timeout(
+                partial_transcript=partial_transcript,
+                speaking_rate_wpm=speaking_rate_wpm,
+            )
+            self.set_silence_timeout(timeout)
+            return timeout
+        except Exception:
+            return self.silence_timeout_sec
+
+    def check_backchannel(self, is_voice: bool):
+        """Evaluates live speech stream for opportunistic backchannel affirmations."""
+        try:
+            from engine.voice.conversational_intelligence import get_voice_suite
+            return get_voice_suite().backchannel.on_speech_frame(is_voice)
+        except Exception:
+            return None
+

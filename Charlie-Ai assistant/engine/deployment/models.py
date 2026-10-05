@@ -1,5 +1,5 @@
 """
-JARVIS Phase 14: Deployment Platform Models
+CHARLIE Phase 14: Deployment Platform Models
 Defines core data structures, enums, and manifests for production deployment,
 runtime management, auto-update, installer, and user onboarding.
 """
@@ -165,7 +165,7 @@ class DiagnosticBundle:
 @dataclass
 class ServiceConfig:
     port: int = 3008
-    ipc_pipe_name: str = "JARVIS_IPC_PIPE"
+    ipc_pipe_name: str = "CHARLIE_IPC_PIPE"
     auth_token: str = ""
     log_level: str = "INFO"
     data_dir: str = ""

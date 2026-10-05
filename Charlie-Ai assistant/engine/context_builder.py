@@ -1,4 +1,4 @@
-"""engine/context_builder.py — Dynamic Context Builder for JARVIS.
+"""engine/context_builder.py — Dynamic Context Builder for CHARLIE.
 
 Constructs context dynamically before dispatching complex requests to the LLM:
 Active Project + Relevant Memories + Checkpoint State + Procedures + Computer State.
@@ -6,16 +6,23 @@ Active Project + Relevant Memories + Checkpoint State + Procedures + Computer St
 
 from __future__ import annotations
 
+import time
 from typing import Any, Dict, List, Optional
 
 from engine.memory_manager import MemoryManager
 
 
 class ContextBuilder:
-    """Assembles rich, relevant, and deduplicated context for agent execution."""
+    """Assembles rich, relevant, and deduplicated context for agent execution with TTL caching."""
 
-    def __init__(self, memory_manager: MemoryManager):
+    def __init__(self, memory_manager: MemoryManager, cache_ttl_sec: float = 45.0):
         self.memory = memory_manager
+        self.cache_ttl = cache_ttl_sec
+        self._cache: Dict[str, tuple[float, str]] = {}
+
+    def invalidate_cache(self) -> None:
+        """Clear cached context assemblies."""
+        self._cache.clear()
 
     def build_context(
         self,
@@ -23,7 +30,16 @@ class ContextBuilder:
         active_project: Optional[str] = None,
         available_tools: Optional[List[str]] = None,
     ) -> str:
-        """Assemble structured context for the current turn."""
+        """Assemble structured context for the current turn with fast caching."""
+        cache_key = f"{user_request.strip()}::{active_project or ''}"
+        now = time.monotonic()
+
+        cached = self._cache.get(cache_key)
+        if cached is not None:
+            timestamp, content = cached
+            if now - timestamp < self.cache_ttl:
+                return content
+
         parts: List[str] = []
 
         # 1. Project Context
@@ -68,4 +84,24 @@ class ContextBuilder:
         if err and err.get("successful_fix"):
             parts.append(f"[KNOWN ERROR SOLUTION]\nIssue: {err.get('error_signature')}\nFix: {err.get('successful_fix')}")
 
-        return "\n\n".join(parts)
+        # 6. RAG Document Knowledge Base — late-bind: query the assembled context
+        # so retrieval matches the final LLM input, not just the raw user_request.
+        try:
+            from engine.rag import get_rag
+            _rag_query_base = "\n\n".join(parts) if parts else user_request
+            rag_context = get_rag().late_bind_search_context(
+                _rag_query_base, top_k=2, max_chars=1800
+            )
+            if rag_context:
+                parts.append(rag_context)
+        except Exception:
+            pass
+
+        assembled = "\n\n".join(parts)
+
+        # LRU eviction guard
+        if len(self._cache) > 64:
+            self._cache.pop(next(iter(self._cache)))
+        self._cache[cache_key] = (now, assembled)
+
+        return assembled

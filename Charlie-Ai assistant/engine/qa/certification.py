@@ -1,5 +1,5 @@
 """
-JARVIS Phase 13: Quality Gates, Regression Engine & Production Certification
+CHARLIE Phase 13: Quality Gates, Regression Engine & Production Certification
 Evaluates critical gates, detects performance regressions, and generates the Release Readiness Report.
 """
 
@@ -20,7 +20,7 @@ from .models import (
     ReleaseReadinessReport,
 )
 
-logger = logging.getLogger("jarvis.qa.certification")
+logger = logging.getLogger("charlie.qa.certification")
 
 
 class QualityGateManager:
@@ -94,13 +94,15 @@ class ProductionCertificationEngine:
 
     def generate_certification_report(
         self,
-        jarvis_version: str = "1.0.0",
+        charlie_version: str = "1.0.0",
         build_id: str = "build_prod_rc1",
         environment: str = "Windows 10 AMD64",
         scenarios_passed: int = 15,
         total_scenarios: int = 15,
+        jarvis_version: Optional[str] = None,
     ) -> ReleaseReadinessReport:
         """Evaluates complete system readiness and outputs immutable report."""
+        ver = jarvis_version or charlie_version
         gates_ok, blockers = self.gate_manager.evaluate_gates()
         all_gates = self.gate_manager.list_gates()
         passed_gates = sum(1 for g in all_gates if g.status == QualityGateStatus.PASS)
@@ -120,7 +122,7 @@ class ProductionCertificationEngine:
 
         report = ReleaseReadinessReport(
             report_id=f"cert_{int(time.time()*1000)}",
-            jarvis_version=jarvis_version,
+            charlie_version=ver,
             build_id=build_id,
             environment=environment,
             release_decision=decision,

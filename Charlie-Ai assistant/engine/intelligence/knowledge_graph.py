@@ -23,7 +23,12 @@ class PersonalKnowledgeGraph:
 
     def __init__(self, db_path: Optional[Path] = None):
         if db_path is None:
-            db_dir = Path.home() / ".jarvis"
+            legacy_dir = Path.home() / ".jarvis"
+            charlie_dir = Path.home() / ".charlie"
+            if (legacy_dir / "knowledge_graph.db").exists() and not (charlie_dir / "knowledge_graph.db").exists():
+                db_dir = legacy_dir
+            else:
+                db_dir = charlie_dir
             db_dir.mkdir(parents=True, exist_ok=True)
             self.db_path = db_dir / "knowledge_graph.db"
         else:
@@ -156,6 +161,35 @@ class PersonalKnowledgeGraph:
             conn.commit()
         return entity
 
+    def upsert_entity(self, entity: Entity) -> Entity:
+        """Insert or replace an Entity into the knowledge graph."""
+        aliases_list = list(entity.aliases) if entity.aliases else []
+        meta_dict = entity.metadata or {}
+        type_val = entity.type.value if hasattr(entity.type, "value") else str(entity.type)
+        with self._get_conn() as conn:
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO kg_entities
+                (id, type, canonical_name, aliases_json, metadata_json, confidence, source, created_at, updated_at, last_verified_at, expiry)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    entity.id,
+                    type_val,
+                    entity.canonical_name,
+                    json.dumps(aliases_list),
+                    json.dumps(meta_dict),
+                    entity.confidence,
+                    entity.source,
+                    entity.created_at,
+                    entity.updated_at,
+                    entity.last_verified_at,
+                    entity.expiry,
+                ),
+            )
+            conn.commit()
+        return entity
+
     def get_entity(self, entity_id: str) -> Optional[Entity]:
         with self._get_conn() as conn:
             row = conn.execute("SELECT * FROM kg_entities WHERE id = ?", (entity_id,)).fetchone()
@@ -238,6 +272,37 @@ class PersonalKnowledgeGraph:
                     1 if rel.is_superseded else 0,
                     rel.superseded_by,
                     json.dumps(rel.metadata),
+                ),
+            )
+            conn.commit()
+        return rel
+
+    def upsert_relationship(self, rel: Relationship) -> Optional[Relationship]:
+        """Insert or replace a Relationship into kg_relations."""
+        if self.is_correction_recorded(rel.source_id, rel.target_id, rel.relation_type):
+            return None
+        rel_type_val = rel.relation_type.value if hasattr(rel.relation_type, "value") else str(rel.relation_type)
+        with self._get_conn() as conn:
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO kg_relations
+                (id, source_id, target_id, relation_type, source_provenance, confidence, created_at, valid_from, valid_to, is_active, is_superseded, superseded_by, metadata_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    rel.id,
+                    rel.source_id,
+                    rel.target_id,
+                    rel_type_val,
+                    rel.source_provenance,
+                    rel.confidence,
+                    rel.created_at,
+                    rel.valid_from,
+                    rel.valid_to,
+                    1 if rel.is_active else 0,
+                    1 if rel.is_superseded else 0,
+                    rel.superseded_by,
+                    json.dumps(rel.metadata or {}),
                 ),
             )
             conn.commit()

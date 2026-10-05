@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "modules_count": 7,
+  "hashes": {
+    "engine/commercial/feature_gate.py": "a8b136eab3986404202401172e56f5205a0196650dbf326fdb8c8f9a926dcaf1",
+    "engine/commercial/entitlement_verifier.py": "bfde0fb3d288731154143e996f4e3991cf5f1f1fc8e2d55c564fdc101a9fe64a",
+    "engine/commercial/licensing_client.py": "2d5179f873c31ebdf61d3421ecd329c98c11307c91feff232fd1b9aec96599cb",
+    "engine/commercial/device_identity.py": "847c37917d6ca0c40684c8d5e4b1c06fe41014a323927af40d544c994d9ec638",
+    "engine/commercial/core.py": "3e1d5221e9fbd06339532108114bae81ada49d246933517abce14f42d77209eb",
+    "engine/commercial/license_manager.py": "cd56de0ab59e2dd351d93d6f9da9688d7ce28af1637e812bd2b4c0deeaf5fbea",
+    "engine/security/core.py": "c2ef214700d434f752d6f41497c6002cd4aa99ec37236ee90b591fd0c9b50909"
+  }
+}

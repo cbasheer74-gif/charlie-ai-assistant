@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server Error (500) &middot; CHARLIE Desktop</title>
+  <meta name="description" content="An unexpected server error occurred.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 32px 20px;
+      background: #06080D;
+      background-image: 
+        radial-gradient(circle at 50% 25%, rgba(239, 68, 68, 0.1) 0%, transparent 60%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #E2E8F0;
+    }
+    .status-container {
+      max-width: 580px;
+      margin: 60px auto;
+      text-align: center;
+    }
+    .error-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 88px;
+      font-weight: 800;
+      color: #EF4444;
+      line-height: 1;
+      margin-bottom: 16px;
+      letter-spacing: -0.05em;
+      text-shadow: 0 0 35px rgba(239, 68, 68, 0.4);
+    }
+    h1 { font-size: 26px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px; }
+    p.lead { font-size: 15px; color: #94A3B8; line-height: 1.6; margin-bottom: 32px; }
+    .correlation-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #94A3B8;
+      margin-bottom: 32px;
+    }
+    .btn-retry {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #00E5FF;
+      color: #06080D;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width: 860px; margin: 0 auto; width: 100%;">
+    <a href="index.html" style="color: #00E5FF; text-decoration: none; font-weight: 700; font-size: 18px;">CHARLIE Desktop</a>
+  </div>
+
+  <main class="status-container">
+    <div class="error-code">500</div>
+    <h1>Unexpected Server Interruption</h1>
+    <p class="lead">The licensing or account server encountered an unexpected condition. Technical telemetry has been safely recorded by our automated monitoring systems.</p>
+
+    <div class="correlation-box">
+      Incident Correlation ID: <span id="corr-id" style="color:#00E5FF;">ERR-2026-CH</span>
+    </div>
+
+    <div style="display:flex; gap: 12px; justify-content: center;">
+      <button class="btn-retry" onclick="window.location.reload();">Retry Request</button>
+      <a href="contact.html" style="display:inline-flex; align-items:center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #E2E8F0; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-size: 14px; font-weight: 600;">Contact Support</a>
+    </div>
+  </main>
+
+  <footer style="text-align: center; color: #64748B; font-size: 13px;">
+    &copy; 2026 CHARLIE Desktop Assistant
+  </footer>
+
+  <script>
+    document.getElementById('corr-id').innerText = 'REQ-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+  </script>
+</body>
+</html>

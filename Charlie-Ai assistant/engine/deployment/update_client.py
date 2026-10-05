@@ -17,11 +17,11 @@ from typing import Any, Dict, Optional, Tuple
 
 from engine.deployment.paths import DeploymentPathManager
 
-logger = logging.getLogger("jarvis.deployment.update_client")
+logger = logging.getLogger("charlie.deployment.update_client")
 
 
 class UpdateClient:
-    """Communicates with the official JARVIS release server for updates."""
+    """Communicates with the official CHARLIE release server for updates."""
 
     def __init__(
         self,
@@ -51,7 +51,7 @@ class UpdateClient:
         url = f"{self.base_url}/updates/check?{query_str}"
 
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": f"JARVIS-Desktop/{current_version}"})
+            req = urllib.request.Request(url, headers={"User-Agent": f"CHARLIE-Desktop/{current_version}"})
             with urllib.request.urlopen(req, timeout=self.timeout) as resp:
                 if resp.status == 200:
                     data = json.loads(resp.read().decode("utf-8"))
@@ -71,10 +71,10 @@ class UpdateClient:
         target_version: str,
         expected_size: int = 0,
     ) -> Tuple[bool, str, Optional[Path]]:
-        """Downloads release package into local quarantine directory in AppData/JARVIS/updates/."""
+        """Downloads release package into local quarantine directory in AppData/CHARLIE/updates/."""
         updates_dir = self.paths.get_sub_dir("updates")
-        target_file = updates_dir / f"JARVIS_Setup_{target_version}.bin"
-        temp_file = updates_dir / f"JARVIS_Setup_{target_version}.part"
+        target_file = updates_dir / f"CHARLIE_Setup_{target_version}.bin"
+        temp_file = updates_dir / f"CHARLIE_Setup_{target_version}.part"
 
         # Check if URL is local file path (for testing or offline bundle)
         if download_url.startswith("file://") or os.path.exists(download_url):
@@ -85,7 +85,7 @@ class UpdateClient:
                 return True, "LOCAL_FILE_COPIED", target_file
 
         try:
-            req = urllib.request.Request(download_url, headers={"User-Agent": "JARVIS-Updater/1.0"})
+            req = urllib.request.Request(download_url, headers={"User-Agent": "CHARLIE-Updater/1.0"})
             with urllib.request.urlopen(req, timeout=30) as resp, open(temp_file, "wb") as out:
                 shutil_copy = resp.read()
                 out.write(shutil_copy)
@@ -122,7 +122,7 @@ class UpdateClient:
             req = urllib.request.Request(
                 url,
                 data=json.dumps(payload).encode("utf-8"),
-                headers={"Content-Type": "application/json", "User-Agent": "JARVIS-Updater/1.0"},
+                headers={"Content-Type": "application/json", "User-Agent": "CHARLIE-Updater/1.0"},
                 method="POST",
             )
             with urllib.request.urlopen(req, timeout=self.timeout) as resp:

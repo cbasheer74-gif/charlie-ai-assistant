@@ -139,6 +139,7 @@ class PlanDefinition:
     annual_saving_inr: Optional[int] = None
     annual_saving_pct: Optional[float] = None
     effective_monthly_inr: Optional[float] = None
+    allowance: Optional[str] = None
 
 
 @dataclass

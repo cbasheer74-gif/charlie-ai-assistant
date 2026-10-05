@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Multi-Model AI Enums and Dataclasses
+CHARLIE Phase 11: Multi-Model AI Enums and Dataclasses
 Defines deployment types, model capabilities, complexity/privacy tiers, routing policies, and task profiles.
 """
 

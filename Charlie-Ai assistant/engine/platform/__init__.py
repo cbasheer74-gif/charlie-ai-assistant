@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Developer Platform Package
+CHARLIE Phase 12: Developer Platform Package
 Exposes DeveloperPlatform, SDKs, registries, connectors, MCP gateway, and agent builder.
 """
 

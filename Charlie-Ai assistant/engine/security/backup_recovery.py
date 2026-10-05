@@ -14,11 +14,13 @@ from engine.security.models import BackupRecord
 
 
 class BackupManager:
-    """Manages verified snapshots of JARVIS databases, knowledge graph, and configuration (Section 41 & 45)."""
+    """Manages verified snapshots of CHARLIE databases, knowledge graph, and configuration (Section 41 & 45)."""
 
     def __init__(self, backup_dir: Optional[Path] = None):
         if backup_dir is None:
-            self.backup_dir = Path.home() / ".jarvis" / "backups"
+            legacy_dir = Path.home() / ".jarvis" / "backups"
+            default_dir = Path.home() / ".charlie" / "backups"
+            self.backup_dir = legacy_dir if legacy_dir.exists() and not default_dir.exists() else default_dir
         else:
             self.backup_dir = Path(backup_dir)
         try:

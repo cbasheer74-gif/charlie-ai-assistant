@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin_panel/
+Disallow: /downloads/
+
+Sitemap: https://charlie.ai/sitemap.xml

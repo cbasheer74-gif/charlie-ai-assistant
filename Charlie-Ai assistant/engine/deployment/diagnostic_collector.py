@@ -201,7 +201,7 @@ class HealthSnapshotManager:
         return health
 
     def diagnose_self(self, context_overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """User command: 'Jarvis diagnose yourself'. Returns structured data and clear natural language summary."""
+        """User command: 'Charlie diagnose yourself'. Returns structured data and clear natural language summary."""
         statuses = self.check_subsystems(context_overrides)
         summary_lines = []
         has_degraded = False

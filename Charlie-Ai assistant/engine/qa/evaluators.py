@@ -1,5 +1,5 @@
 """
-JARVIS Phase 13: Subsystem Evaluators & Chaos Testing
+CHARLIE Phase 13: Subsystem Evaluators & Chaos Testing
 Evaluates individual capabilities against measurable acceptance criteria and injects controlled faults.
 """
 
@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .models import CertificationStatus
 
-logger = logging.getLogger("jarvis.qa.evaluators")
+logger = logging.getLogger("charlie.qa.evaluators")
 
 
 class MemoryEvaluationEngine:

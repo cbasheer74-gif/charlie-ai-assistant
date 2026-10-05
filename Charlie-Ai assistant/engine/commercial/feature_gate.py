@@ -12,7 +12,7 @@ from .entitlement_manager import EntitlementManager
 from .models import Entitlement, GateResult, GateStatus, PlanTier, SubscriptionStatus, UserAccount
 from .plan_registry import PlanRegistry
 
-logger = logging.getLogger("jarvis.commercial.feature_gate")
+logger = logging.getLogger("charlie.commercial.feature_gate")
 
 
 class FeatureGate:

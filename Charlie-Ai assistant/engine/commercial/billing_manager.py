@@ -13,7 +13,7 @@ from .models import PaymentReceipt, PlanTier, SubscriptionStatus, UserAccount
 from .payment_provider import PaymentProvider
 from .plan_registry import PlanRegistry
 
-logger = logging.getLogger("jarvis.commercial.billing")
+logger = logging.getLogger("charlie.commercial.billing")
 
 
 class GracePeriodManager:

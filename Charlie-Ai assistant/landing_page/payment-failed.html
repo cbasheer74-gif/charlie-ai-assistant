@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Incomplete &middot; CHARLIE Workspace</title>
+  <meta name="description" content="Your payment could not be processed. Review troubleshooting steps or retry.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 32px 20px;
+      background: #06080D;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(239, 68, 68, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.08) 0%, transparent 50%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #E2E8F0;
+    }
+    .status-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #0B0F19;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 45px rgba(239, 68, 68, 0.1);
+      text-align: center;
+    }
+    .fail-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.15);
+      border: 2px solid #EF4444;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: #EF4444;
+    }
+    h1 { font-size: 28px; font-weight: 800; color: #FFFFFF; margin-bottom: 10px; }
+    p.lead { font-size: 15px; color: #94A3B8; line-height: 1.6; margin-bottom: 24px; }
+    .trouble-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: left;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .trouble-card h3 { font-size: 14px; color: #EF4444; margin-top: 0; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .trouble-card ul { padding-left: 20px; margin: 0; color: #CBD5E1; }
+    .trouble-card li { margin-bottom: 6px; }
+    .actions-grid { display: flex; flex-direction: column; gap: 12px; }
+    .btn-retry {
+      background: #EF4444;
+      color: #FFFFFF;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .btn-retry:hover { background: #DC2626; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.35); }
+    .btn-help {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #E2E8F0;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .btn-help:hover { background: rgba(255, 255, 255, 0.09); }
+    .nav-bar { display: flex; justify-content: space-between; align-items: center; max-width: 860px; margin: 0 auto; width: 100%; }
+    .brand-link { color: #00E5FF; text-decoration: none; font-weight: 700; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <div class="nav-bar">
+    <a href="index.html" class="brand-link">CHARLIE Desktop</a>
+    <a href="index.html" style="color: #94A3B8; text-decoration: none; font-size: 14px;">Home</a>
+  </div>
+
+  <main class="status-container">
+    <div class="fail-icon-wrap">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </div>
+
+    <h1>Payment Incomplete</h1>
+    <p class="lead">Your payment was declined or interrupted by the gateway. No funds were debited, or any pending authorization hold will automatically lapse.</p>
+
+    <div class="trouble-card">
+      <h3>Common Solutions</h3>
+      <ul>
+        <li>Verify card international/online transaction limits with your issuing bank.</li>
+        <li>For UPI payments, ensure your banking application has authorized the mandate prompt within the allotted time.</li>
+        <li>Try an alternate payment method (e.g., NetBanking, Card, or direct UPI QR).</li>
+      </ul>
+    </div>
+
+    <div class="actions-grid">
+      <a href="index.html#pricing" class="btn-retry">Retry Checkout &rarr;</a>
+      <a href="contact.html" class="btn-help">Contact Billing Support</a>
+    </div>
+  </main>
+
+  <footer style="text-align: center; color: #64748B; font-size: 13px;">
+    &copy; 2026 CHARLIE Desktop Assistant &bull; Secure Payment Processing
+  </footer>
+</body>
+</html>

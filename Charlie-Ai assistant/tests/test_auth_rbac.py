@@ -41,7 +41,10 @@ class TestAuthRBAC(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         app.dependency_overrides.clear()
+        if hasattr(cls, "client"):
+            cls.client.close()
         Base.metadata.drop_all(bind=cls.engine)
+        cls.engine.dispose()
 
     def test_01_user_registration_and_hash(self):
         """Registering user stores salted bcrypt hash, never plaintext."""

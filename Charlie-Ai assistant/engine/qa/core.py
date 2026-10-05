@@ -1,5 +1,5 @@
 """
-JARVIS Phase 13: Master Quality & Certification Platform
+CHARLIE Phase 13: Master Quality & Certification Platform
 Coordinates distributed observability, empirical evidence recording, golden scenarios,
 evaluators, chaos testing, quality gates, and release certification.
 """
@@ -29,11 +29,11 @@ from .models import (
 from .observability import MetricsManager, ObservabilityEngine, TraceManager
 from .scenarios import GoldenScenarioRunner
 
-logger = logging.getLogger("jarvis.qa.core")
+logger = logging.getLogger("charlie.qa.core")
 
 
 class QualityPlatform:
-    """Master Quality & Production Certification Platform for JARVIS."""
+    """Master Quality & Production Certification Platform for CHARLIE."""
 
     def __init__(self, db_path: str = "qa_evidence.db"):
         self.evidence_registry = EvidenceRegistry(db_path=db_path)

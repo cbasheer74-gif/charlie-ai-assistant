@@ -34,7 +34,7 @@ from engine.deployment.models import (
 )
 from engine.deployment.paths import DeploymentPathManager
 
-logger = logging.getLogger("jarvis.deployment.update_rollback")
+logger = logging.getLogger("charlie.deployment.update_rollback")
 
 
 class ReleaseChannelManager:
@@ -375,7 +375,7 @@ class UpdateManager:
         signature_b64: str,
         expected_sha256: str,
     ) -> Dict[str, Any]:
-        """Stages package to AppData/JARVIS/updates/ and validates both RSA signature and SHA-256."""
+        """Stages package to AppData/CHARLIE/updates/ and validates both RSA signature and SHA-256."""
         # 1. Cryptographic RSA Signature check on manifest
         sig_ok, sig_reason = self.sig_verifier.verify_manifest(manifest_dict, signature_b64)
         if not sig_ok:
@@ -384,7 +384,7 @@ class UpdateManager:
         # 2. Write package to temporary quarantine
         updates_dir = self.paths.get_sub_dir("updates")
         ver = manifest_dict.get("version", "unknown")
-        staged_path = updates_dir / f"JARVIS_Update_{ver}.bin"
+        staged_path = updates_dir / f"CHARLIE_Update_{ver}.bin"
         staged_path.write_bytes(package_bytes)
 
         # 3. Checksum verification

@@ -66,4 +66,8 @@ __all__ = [
     "TaskProfile",
     "RoutingDecision",
     "TokenUsageRecord",
+    "ONNXRuntimeManager",
+    "get_onnx_manager",
 ]
+
+from .onnx_runtime import ONNXRuntimeManager, get_onnx_manager

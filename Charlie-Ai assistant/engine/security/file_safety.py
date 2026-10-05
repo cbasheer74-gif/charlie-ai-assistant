@@ -27,7 +27,9 @@ class FileSafetyEngine:
 
     def __init__(self, quarantine_dir: Optional[Path] = None):
         if quarantine_dir is None:
-            self.quarantine_dir = Path.home() / ".jarvis" / "JARVIS_QUARANTINE"
+            legacy_dir = Path.home() / ".jarvis" / "JARVIS_QUARANTINE"
+            default_dir = Path.home() / ".charlie" / "CHARLIE_QUARANTINE"
+            self.quarantine_dir = legacy_dir if legacy_dir.exists() and not default_dir.exists() else default_dir
         else:
             self.quarantine_dir = Path(quarantine_dir)
         self.quarantine_dir.mkdir(parents=True, exist_ok=True)
@@ -73,7 +75,7 @@ class FileSafetyEngine:
         return count, RiskLevel.R1_SAFE_WRITE, f"Routine operation: {count} files match."
 
     def safe_delete(self, target_path: Path, reason: str = "User command") -> Tuple[bool, str]:
-        """Moves file to JARVIS_QUARANTINE instead of permanently deleting it (Section 34 & 35)."""
+        """Moves file to CHARLIE_QUARANTINE instead of permanently deleting it (Section 34 & 35)."""
         if not target_path.exists():
             return False, "Target does not exist"
 

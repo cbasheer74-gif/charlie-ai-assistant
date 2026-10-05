@@ -1,5 +1,5 @@
 """
-JARVIS Phase 10: Secure Pairing Manager
+CHARLIE Phase 10: Secure Pairing Manager
 Handles mutual public key exchange, ephemeral pairing tokens, QR code payloads,
 rate-limiting, and brute force protection.
 """
@@ -17,11 +17,11 @@ from typing import Dict, Optional, Tuple
 from .identity_registry import DeviceRegistry
 from .models import DeviceIdentity, DeviceType, PairingSession, RemotePermission, TrustState
 
-logger = logging.getLogger("jarvis.devices.pairing")
+logger = logging.getLogger("charlie.devices.pairing")
 
 
 class PairingManager:
-    """Manages short-lived, rate-limited pairing sessions between desktop JARVIS and mobile."""
+    """Manages short-lived, rate-limited pairing sessions between desktop CHARLIE and mobile."""
 
     def __init__(self, registry: DeviceRegistry, host_device_id: str = "host_windows_pc", pairing_ttl: float = 300.0):
         self.registry = registry

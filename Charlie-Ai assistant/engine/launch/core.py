@@ -1,5 +1,5 @@
 """
-JARVIS Phase 15: Master Launch Operations Platform
+CHARLIE Phase 15: Master Launch Operations Platform
 Unifies scope freeze, multi-persona UAT, pilot cohorts, issue triage,
 incident containment, Go/No-Go release gates, and staged v1.0 rollout.
 """

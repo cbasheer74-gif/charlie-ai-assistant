@@ -1,5 +1,5 @@
 """
-JARVIS Phase 14: Data and Settings Migration Engine
+CHARLIE Phase 14: Data and Settings Migration Engine
 Handles versioned, idempotent migrations across memory, graph, skills, and configuration,
 ensuring pre-migration backups and atomic rollback on failure.
 """

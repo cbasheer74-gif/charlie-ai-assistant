@@ -1,4 +1,4 @@
-"""engine/verification.py — Verification Engine for JARVIS.
+"""engine/verification.py — Verification Engine for CHARLIE.
 
 Ensures task results are verified with tangible evidence before marking completion.
 Covers Code, Excel spreadsheets, Videos (FFprobe), Files, and Processes.

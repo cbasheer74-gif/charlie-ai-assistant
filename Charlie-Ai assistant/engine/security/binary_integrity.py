@@ -21,7 +21,7 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-logger = logging.getLogger("jarvis.security.binary_integrity")
+logger = logging.getLogger("charlie.security.binary_integrity")
 
 # Critical module paths relative to app root
 CRITICAL_MODULES = [

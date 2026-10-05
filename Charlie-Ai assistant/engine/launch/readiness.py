@@ -1,5 +1,5 @@
 """
-JARVIS Phase 15: Launch Readiness, Go/No-Go Decision, Staged Rollout & Post-Launch Monitoring
+CHARLIE Phase 15: Launch Readiness, Go/No-Go Decision, Staged Rollout & Post-Launch Monitoring
 Evaluates launch readiness gates, computes deterministic Go/No-Go decisions,
 manages staged cohort rollouts, and tracks post-launch stability.
 """
@@ -225,7 +225,7 @@ class UserCommunicationManager:
     """Formats release notes, known issues, and first-launch orientation messages."""
 
     def format_release_notes(self, version: str = "1.0.0") -> str:
-        return f"""# JARVIS v{version} Release Notes
+        return f"""# CHARLIE v{version} Release Notes
 - Production certified Windows 10/11 desktop assistant.
 - Local-first AI model routing with zero mandatory cloud dependencies.
 - Persistent memory, knowledge graph, and autonomous workflow execution.
@@ -235,6 +235,6 @@ class UserCommunicationManager:
 
     def format_first_launch_message(self) -> str:
         return (
-            "Welcome to JARVIS v1.0. Your personal AI desktop assistant is ready. "
-            "Press Ctrl+Space or say 'Hey Jarvis' to start. Emergency stop is always available via Esc or 'Stop'."
+            "Welcome to CHARLIE v1.0. Your personal AI desktop assistant is ready. "
+            "Press Ctrl+Space or say 'Hey Charlie' to start. Emergency stop is always available via Esc or 'Stop'."
         )

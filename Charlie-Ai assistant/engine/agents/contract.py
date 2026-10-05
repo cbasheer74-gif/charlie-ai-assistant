@@ -1,6 +1,6 @@
 """engine/agents/contract.py — Universal Agent Contract and Structured Result Protocol.
 
-Defines the standard execution, verification, and recovery interface for all JARVIS
+Defines the standard execution, verification, and recovery interface for all CHARLIE
 specialized agents.
 """
 
@@ -34,7 +34,7 @@ class AgentResult:
 
 
 class AgentContract(ABC):
-    """Universal contract for specialized agents in JARVIS autonomous orchestration."""
+    """Universal contract for specialized agents in CHARLIE autonomous orchestration."""
 
     name: str = "BaseAgent"
     description: str = ""

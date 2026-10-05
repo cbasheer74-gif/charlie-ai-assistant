@@ -53,7 +53,7 @@ class StructuredLoggingMiddleware(BaseHTTPMiddleware):
             log_entry = {
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "level": level,
-                "service": "jarvis-licensing",
+                "service": "charlie-licensing",
                 "request_id": req_id,
                 "method": method,
                 "path": path,
@@ -70,7 +70,7 @@ class StructuredLoggingMiddleware(BaseHTTPMiddleware):
             log_entry = {
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "level": "ERROR",
-                "service": "jarvis-licensing",
+                "service": "charlie-licensing",
                 "request_id": req_id,
                 "method": method,
                 "path": path,

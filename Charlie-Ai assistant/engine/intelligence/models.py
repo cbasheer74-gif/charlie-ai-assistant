@@ -1,4 +1,4 @@
-"""engine/intelligence/models.py — Data Models and Enums for JARVIS Phase 8 Intelligence Core."""
+"""engine/intelligence/models.py — Data Models and Enums for CHARLIE Phase 8 Intelligence Core."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional
 
 class EntityType(str, Enum):
     USER = "USER"
+    AGENT = "AGENT"
     PROJECT = "PROJECT"
     PERSON = "PERSON"
     COMPANY = "COMPANY"

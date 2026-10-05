@@ -1,0 +1,445 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e16]:
+      - generic [ref=e17]: LEKHTRA
+      - generic [ref=e18]: Business Billing
+    - button "Search invoices, customers, products and records (Ctrl+K)" [ref=e20] [cursor=pointer]:
+      - generic [ref=e21]: Search ledger records, entities, invoices (⌘K)...
+      - generic [ref=e26]:
+        - generic [ref=e27]: Ctrl K
+        - button "Activate voice assistant" [ref=e28]
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - button "Open calculator" [ref=e34] [cursor=pointer]
+        - button "Keyboard shortcuts" [ref=e37] [cursor=pointer]
+      - button "Cloud Synced" [ref=e41] [cursor=pointer]
+      - button "Notifications" [ref=e48] [cursor=pointer]
+      - button "Quick create record menu" [ref=e53] [cursor=pointer]:
+        - generic [ref=e55]: Issue Record
+      - button "Select Language" [ref=e59] [cursor=pointer]:
+        - generic [ref=e63]: English
+      - button "B" [ref=e67] [cursor=pointer]
+  - generic [ref=e71]:
+    - navigation "Main sidebar navigation" [ref=e72]:
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - button "BR Basheer Retail Pvt Ltd Main Branch • Maharashtra" [ref=e75] [cursor=pointer]:
+            - generic [ref=e76]:
+              - generic [ref=e77]: BR
+              - generic [ref=e78]:
+                - generic [ref=e79]: Basheer Retail Pvt Ltd
+                - generic [ref=e80]: Main Branch • Maharashtra
+          - button "Collapse sidebar" [ref=e83] [cursor=pointer]
+        - button "Create new invoice" [ref=e87] [cursor=pointer]:
+          - generic [ref=e89]: Create Invoice
+        - menu "Sidebar main navigation" [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]: OVERVIEW
+            - menuitem "Dashboard" [ref=e94] [cursor=pointer]
+          - generic [ref=e103]:
+            - generic [ref=e104]: SALES
+            - generic [ref=e105]:
+              - menuitem "Invoices" [ref=e106] [cursor=pointer]
+              - menuitem "Customer & Lead Directory" [ref=e112] [cursor=pointer]
+              - menuitem "Products & Items" [ref=e120] [cursor=pointer]
+              - menuitem "Payments Received" [ref=e127] [cursor=pointer]
+              - menuitem "Outstanding Due PRO" [ref=e132] [cursor=pointer]:
+                - generic [ref=e133]: Outstanding Due
+                - generic [ref=e138]: PRO
+          - generic [ref=e140]:
+            - generic [ref=e141]: PURCHASES
+            - generic [ref=e142]:
+              - menuitem "Vendor Bills" [ref=e143] [cursor=pointer]
+              - menuitem "Vendor Directory" [ref=e150] [cursor=pointer]
+          - generic [ref=e158]:
+            - generic [ref=e159]: ACCOUNTING & BANKING
+            - generic [ref=e160]:
+              - menuitem "Bank Accounts & Feeds" [ref=e161] [cursor=pointer]
+              - menuitem "GST Control Tower" [ref=e166] [cursor=pointer]
+              - menuitem "Financial Reports (P&L) PRO" [ref=e173] [cursor=pointer]:
+                - generic [ref=e174]: Financial Reports (P&L)
+                - generic [ref=e178]: PRO
+              - menuitem "Analytics & Forecast" [ref=e180] [cursor=pointer]
+          - generic [ref=e185]:
+            - generic [ref=e186]: WORKSPACE & SETTINGS
+            - generic [ref=e187]:
+              - menuitem "Settings" [ref=e188] [cursor=pointer]
+              - menuitem "Integrations & API" [ref=e194] [cursor=pointer]
+        - button "BC Basheer Chaudhary Owner • Simple" [ref=e201] [cursor=pointer]:
+          - generic [ref=e202]:
+            - generic [ref=e203]: BC
+            - generic [ref=e204]:
+              - generic [ref=e205]: Basheer Chaudhary
+              - generic [ref=e206]:
+                - generic [ref=e207]: Owner
+                - generic [ref=e208]: •
+                - generic [ref=e209]: Simple
+    - main [ref=e214]:
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - generic [ref=e217]:
+            - generic [ref=e218]:
+              - generic [ref=e220]: Today in LEKHTRA
+              - generic [ref=e221]: •
+              - generic [ref=e222]: Live
+            - heading "Good morning, Basheer Retail Pvt Ltd" [level=1] [ref=e223]
+            - paragraph [ref=e224]: Here is your daily business operations overview.
+          - radiogroup [ref=e226]:
+            - radio "Today" [checked] [ref=e227] [cursor=pointer]
+            - radio "This Week" [ref=e228] [cursor=pointer]
+            - radio "This Month" [ref=e229] [cursor=pointer]
+        - generic [ref=e230]:
+          - text: Daily Action Center
+          - generic [ref=e231]:
+            - generic [ref=e232]:
+              - generic [ref=e234]:
+                - generic [ref=e235]: Due Today
+                - generic [ref=e236]: ₹86,500.00
+                - generic [ref=e237]: 7 invoices due today
+              - generic [ref=e242]:
+                - generic [ref=e243]: PRIORITY
+                - button "Review" [ref=e244] [cursor=pointer]
+            - generic [ref=e250]:
+              - generic [ref=e252]:
+                - generic [ref=e253]: Overdue
+                - generic [ref=e254]: ₹70,800.00
+                - generic [ref=e255]: 20 overdue invoices
+              - generic [ref=e259]:
+                - generic [ref=e260]: ACTION REQ
+                - button "Follow Up" [ref=e261] [cursor=pointer]
+            - generic [ref=e266]:
+              - generic [ref=e268]:
+                - generic [ref=e269]: Low Stock
+                - generic [ref=e270]: 4 Products
+                - generic [ref=e271]: Below reorder point
+              - generic [ref=e277]:
+                - generic [ref=e278]: INVENTORY
+                - button "View Stock" [ref=e279] [cursor=pointer]
+            - generic [ref=e286]:
+              - generic [ref=e288]:
+                - generic [ref=e289]: Received Today
+                - generic [ref=e290]: ₹78,500.00
+                - generic [ref=e291]: 6 settled customer payments
+              - generic [ref=e295]:
+                - generic [ref=e296]: SETTLED
+                - button "View Ledger" [ref=e297] [cursor=pointer]
+        - generic [ref=e302]:
+          - generic [ref=e307]:
+            - generic [ref=e308]:
+              - generic [ref=e309]: Overdue
+              - generic [ref=e312]: "Next Best Action: CyberDyne Systems"
+            - paragraph [ref=e313]: "Invoice overdue by 33 days (₹70,800.00 outstanding balance). Recommended action: send WhatsApp reminder or record settlement."
+          - generic [ref=e314]:
+            - button "Send Reminder" [ref=e315] [cursor=pointer]
+            - button "Record Payment" [ref=e321] [cursor=pointer]
+        - generic [ref=e326]:
+          - generic [ref=e327]: "Actions:"
+          - generic [ref=e329]:
+            - button "Create Invoice" [ref=e330] [cursor=pointer]
+            - button "Record Payment" [ref=e334] [cursor=pointer]
+            - button "Add Customer" [ref=e339] [cursor=pointer]
+            - button "Add Item" [ref=e347] [cursor=pointer]
+            - button "New Purchase Bill" [ref=e354] [cursor=pointer]
+            - button "GST Control Tower & Compliance" [ref=e360] [cursor=pointer]
+        - generic [ref=e366]:
+          - text: Today in LEKHTRA
+          - generic [ref=e367]:
+            - generic [ref=e368]:
+              - generic [ref=e369]: Total Gross Sales
+              - generic [ref=e370]: ₹42,500.00
+              - generic [ref=e371]: 0 invoices recorded
+            - generic [ref=e372]:
+              - generic [ref=e373]: Collections Settled
+              - generic [ref=e374]: ₹78,500.00
+              - generic [ref=e375]: 6 payments settled
+            - generic [ref=e376]:
+              - generic [ref=e377]: Pending Receivables
+              - generic [ref=e378]: ₹4,18,910.00
+              - generic [ref=e379]: 0 active debtors
+            - generic [ref=e380]:
+              - generic [ref=e381]: Overdue Dues
+              - generic [ref=e382]: ₹70,800.00
+              - generic [ref=e383]: 33 days oldest
+        - generic [ref=e384]:
+          - generic [ref=e385]:
+            - generic [ref=e386]:
+              - text: Predictive Liquidity Engine
+              - heading "Cashflow Runway Weather & Stress Simulator" [level=3] [ref=e387]
+              - paragraph [ref=e388]: Real-time forward forecast modeling 30-day receivables, scheduled payables, and customer payment delay shocks.
+            - generic [ref=e395]:
+              - generic [ref=e396]: FORECAST CLIMATE
+              - text: Partly Cloudy (Balanced Buffer)
+          - generic [ref=e397]:
+            - generic [ref=e398]:
+              - generic [ref=e399]:
+                - generic [ref=e400]: OPERATING RUNWAY
+                - generic [ref=e401]: 109 Days
+                - paragraph [ref=e402]: Liquid reserves at current burn
+              - generic [ref=e403]:
+                - generic [ref=e404]: PROJECTED NET CASH
+                - generic [ref=e405]: ₹3,51,000
+                - paragraph [ref=e406]: Estimated bank balance at Day +30
+              - generic [ref=e407]:
+                - generic [ref=e408]: EXPECTED INFLOW (30D)
+                - generic [ref=e409]: ₹4,20,000
+                - paragraph [ref=e410]: Scheduled client invoice payments
+              - generic [ref=e411]:
+                - generic [ref=e412]: SCHEDULED PAYABLES
+                - generic [ref=e413]: ₹3,10,000
+                - paragraph [ref=e414]: Vendor bills & MSME 45-day cycle
+              - generic [ref=e415]:
+                - generic [ref=e416]: "Liquidity Curve:"
+                - generic [ref=e417]:
+                  - generic [ref=e418]: "Today: ₹485k"
+                  - generic [ref=e419]: "+5d: ₹463k"
+                  - generic [ref=e420]: "+10d: ₹440k"
+                  - generic [ref=e421]: "+15d: ₹418k"
+                  - generic [ref=e422]: "+20d: ₹396k"
+                  - generic [ref=e423]: "+25d: ₹373k"
+                  - generic [ref=e424]: "+30d: ₹351k"
+            - generic [ref=e425]:
+              - generic [ref=e426]: Simulate Customer Payment Shock
+              - generic [ref=e429]:
+                - generic [ref=e430]:
+                  - generic [ref=e431]: "Receivable Delay:"
+                  - generic [ref=e432]: +5 Days
+                - slider [ref=e433] [cursor=pointer]: "5"
+                - generic [ref=e434]:
+                  - generic [ref=e435]: On-Time
+                  - generic [ref=e436]: +15d Delay
+                  - generic [ref=e437]: +30d Worst-Case
+              - generic [ref=e438]:
+                - generic [ref=e439]: "AI Liquidity Recommendation:"
+                - paragraph [ref=e444]: Maintain weekly customer follow-ups and monitor receivables older than 30 days.
+              - button "View Outstanding Debtors" [ref=e445] [cursor=pointer]
+        - generic [ref=e449]:
+          - text: Business Operations
+          - generic [ref=e450]:
+            - generic [ref=e451]:
+              - generic [ref=e452]:
+                - heading "Recent Invoices" [level=2] [ref=e458]
+                - button "View All" [ref=e459] [cursor=pointer]
+              - table [ref=e465]:
+                - rowgroup [ref=e466]:
+                  - row [ref=e467]:
+                    - 'columnheader "Invoice #" [ref=e468]'
+                    - columnheader "Customer" [ref=e469]
+                    - columnheader "Date" [ref=e470]
+                    - columnheader "Amount (₹)" [ref=e471]
+                    - columnheader "Status" [ref=e472]
+                - rowgroup
+              - button "View All Invoices" [ref=e474] [cursor=pointer]
+            - generic [ref=e476]:
+              - generic [ref=e477]:
+                - heading "Outstanding Balance" [level=2] [ref=e485]
+                - button "View All" [ref=e486] [cursor=pointer]
+              - generic [ref=e491]:
+                - generic [ref=e492]:
+                  - generic [ref=e493]:
+                    - generic [ref=e494]: Sharma Traders
+                    - text: ₹24,500.00 overdue
+                  - generic [ref=e495]:
+                    - generic [ref=e496]: ₹84,500.00
+                    - button "Send Reminder" [ref=e497] [cursor=pointer]
+                - generic [ref=e499]:
+                  - generic [ref=e500]:
+                    - generic [ref=e501]: Acme Corporation
+                    - text: Current terms
+                  - generic [ref=e502]:
+                    - generic [ref=e503]: ₹52,000.00
+                    - button "Send Reminder" [ref=e504] [cursor=pointer]
+                - generic [ref=e506]:
+                  - generic [ref=e507]:
+                    - generic [ref=e508]: Metro Hardware
+                    - text: ₹31,800.00 overdue
+                  - generic [ref=e509]:
+                    - generic [ref=e510]: ₹31,800.00
+                    - button "Send Reminder" [ref=e511] [cursor=pointer]
+            - generic [ref=e513]:
+              - generic [ref=e514]:
+                - heading "Live Stock & Warehouses" [level=2] [ref=e521]
+                - button "View All" [ref=e522] [cursor=pointer]
+              - generic [ref=e527]:
+                - generic [ref=e528]:
+                  - radiogroup [ref=e529]:
+                    - radio "All SKUs1248" [checked] [ref=e530] [cursor=pointer]
+                    - radio "Low Stock14" [ref=e531] [cursor=pointer]
+                    - radio "Out of Stock3" [ref=e532] [cursor=pointer]
+                  - generic [ref=e533]: "Valuation: ₹18,42,500.00"
+                - generic [ref=e534]:
+                  - generic [ref=e535]:
+                    - generic [ref=e536]: Total SKUs
+                    - generic [ref=e537]: "1248"
+                  - generic [ref=e538]:
+                    - generic [ref=e539]: Low Stock
+                    - generic [ref=e540]: "14"
+                  - generic [ref=e541]:
+                    - generic [ref=e542]: Out of Stock
+                    - generic [ref=e543]: "3"
+                - button "Manage Inventory" [ref=e545] [cursor=pointer]
+            - generic [ref=e550]:
+              - generic [ref=e551]:
+                - heading "GST Control Tower & Compliance" [level=2] [ref=e557]
+                - button "View All" [ref=e558] [cursor=pointer]
+              - generic [ref=e563]:
+                - generic [ref=e564]:
+                  - generic [ref=e565]:
+                    - generic [ref=e566]: GSTR-1
+                    - text: "Period: Aug 2026"
+                  - generic [ref=e567]: Ready to Export
+                - generic [ref=e570]:
+                  - generic [ref=e571]:
+                    - generic [ref=e572]: GSTR-3B
+                    - generic [ref=e573]: "Output: ₹84,500.00 • ITC: ₹42,300.00"
+                  - generic [ref=e574]: Pending Review
+                - generic [ref=e577]:
+                  - button "View GST" [ref=e578] [cursor=pointer]
+                  - button "Review Filing" [ref=e580] [cursor=pointer]
+            - generic [ref=e582]:
+              - generic [ref=e583]:
+                - heading "Upcoming Payments" [level=2] [ref=e589]
+                - button "View All" [ref=e590] [cursor=pointer]
+              - generic [ref=e595]:
+                - generic [ref=e596]:
+                  - generic [ref=e597]:
+                    - generic [ref=e598]: Today
+                    - generic [ref=e599]: ₹86,500
+                    - generic [ref=e600]: 7 invoices
+                  - generic [ref=e601]:
+                    - generic [ref=e602]: Next 7 Days
+                    - generic [ref=e603]: ₹2,45,000
+                    - generic [ref=e604]: 18 invoices
+                  - generic [ref=e605]:
+                    - generic [ref=e606]: Overdue
+                    - generic [ref=e607]: ₹70,800
+                    - generic [ref=e608]: 20 invoices
+                - button "Review Receivables" [ref=e610] [cursor=pointer]
+            - generic [ref=e612]:
+              - generic [ref=e613]:
+                - heading "Recent Payments" [level=2] [ref=e618]
+                - button "View All" [ref=e619] [cursor=pointer]
+              - generic [ref=e624]:
+                - generic [ref=e625]:
+                  - generic [ref=e626]:
+                    - generic [ref=e627]: PhonePe
+                    - generic [ref=e632]:
+                      - generic [ref=e633]: Acme Corporation
+                      - generic [ref=e634]: Today · 10:42 AM
+                  - generic [ref=e635]: +₹25,000.00
+                - generic [ref=e636]:
+                  - generic [ref=e637]:
+                    - generic [ref=e638]: Google Pay
+                    - generic [ref=e645]:
+                      - generic [ref=e646]: Sharma Traders
+                      - generic [ref=e647]: Today · 9:18 AM
+                  - generic [ref=e648]: +₹12,500.00
+                - generic [ref=e649]:
+                  - generic [ref=e650]:
+                    - generic [ref=e651]: UPI
+                    - generic [ref=e653]:
+                      - generic [ref=e654]: Metro Hardware
+                      - generic [ref=e655]: Yesterday · 4:30 PM
+                  - generic [ref=e656]: +₹8,000.00
+            - generic [ref=e657]:
+              - generic [ref=e658]:
+                - heading "Bank Reconciliation" [level=2] [ref=e666]
+                - button "View All" [ref=e667] [cursor=pointer]
+              - generic [ref=e672]:
+                - generic [ref=e673]:
+                  - generic [ref=e674]:
+                    - generic [ref=e675]: Bank Account Balance
+                    - text: ₹3,45,000.00
+                  - generic [ref=e676]:
+                    - generic [ref=e677]: 7 Unmatched
+                    - generic [ref=e679]: "Synced: Today · 10:30 AM"
+                - generic [ref=e680]:
+                  - button "View Banking" [ref=e681] [cursor=pointer]
+                  - button "Reconcile Now" [ref=e683] [cursor=pointer]
+            - generic [ref=e685]:
+              - generic [ref=e686]:
+                - heading "Purchases & Payables" [level=2] [ref=e692]
+                - button "View All" [ref=e693] [cursor=pointer]
+              - generic [ref=e698]:
+                - generic [ref=e699]:
+                  - generic [ref=e700]:
+                    - generic [ref=e701]: Open POs
+                    - generic [ref=e702]: "4"
+                  - generic [ref=e703]:
+                    - generic [ref=e704]: Pending Bills
+                    - generic [ref=e705]: "7"
+                  - generic [ref=e706]:
+                    - generic [ref=e707]: Total Payables
+                    - generic [ref=e708]: ₹1,22,590.00
+                - generic [ref=e709]:
+                  - button "View Purchases" [ref=e710] [cursor=pointer]
+                  - button "Record Vendor Payment" [ref=e712] [cursor=pointer]
+            - generic [ref=e714]:
+              - heading "Continue Working" [level=2] [ref=e720]
+              - generic [ref=e722]:
+                - generic [ref=e723]:
+                  - generic [ref=e724]:
+                    - generic [ref=e725]:
+                      - generic [ref=e726]: Draft Invoice
+                      - generic [ref=e728]: INV-DRAFT-009
+                    - generic [ref=e729]: Sharma Traders • ₹34,500.00 • Edited 12m ago
+                  - button "Continue" [ref=e730] [cursor=pointer]
+                - generic [ref=e732]:
+                  - generic [ref=e733]:
+                    - generic [ref=e734]:
+                      - generic [ref=e735]: Estimate Draft
+                      - generic [ref=e737]: QT-0048
+                    - generic [ref=e738]: Acme Corp • ₹18,000.00 • Edited 1h ago
+                  - button "Continue" [ref=e739] [cursor=pointer]
+            - generic [ref=e741]:
+              - generic [ref=e743]:
+                - heading "Cash Position" [level=2] [ref=e748]
+                - generic [ref=e749]: Live
+              - generic [ref=e751]:
+                - generic [ref=e752]:
+                  - generic [ref=e753]: Cash & Bank Balance
+                  - generic [ref=e754]: ₹3,45,000.00
+                - generic [ref=e755]:
+                  - generic [ref=e756]: Expected Collections (7d)
+                  - generic [ref=e757]: +₹1,42,000.00
+                - generic [ref=e758]:
+                  - generic [ref=e759]: Upcoming Payments (7d)
+                  - generic [ref=e760]: "-₹58,000.00"
+                - generic [ref=e761]:
+                  - generic [ref=e762]: Projected 30D Position
+                  - generic [ref=e763]: ₹4,29,000.00
+  - dialog "Ask LEKHTRA Voice Assistant" [ref=e764]:
+    - generic [ref=e765]:
+      - generic [ref=e771]:
+        - generic [ref=e772]:
+          - heading "Ask LEKHTRA" [level=2] [ref=e773]
+          - generic [ref=e774]: AI Chat
+        - paragraph [ref=e775]: Billing & Accounts Assistant
+      - generic [ref=e776]:
+        - button "Clear Conversation History" [ref=e777] [cursor=pointer]
+        - button "Close" [ref=e781] [cursor=pointer]
+    - generic [ref=e786]:
+      - heading "How can I assist you today?" [level=4] [ref=e791]
+      - paragraph [ref=e792]: Ask any question about your invoices, pending payments, stock balances, or GST reports.
+      - generic [ref=e793]:
+        - button "\"Mera kitna payment lena baaki hai?\"" [ref=e794] [cursor=pointer]
+        - button "\"Show overdue invoices\"" [ref=e798] [cursor=pointer]
+        - button "\"Invoice 1048 dikhao\"" [ref=e802] [cursor=pointer]
+        - button "\"Aaj kitna payment aaya?\"" [ref=e806] [cursor=pointer]
+        - button "\"Low stock dikhao\"" [ref=e810] [cursor=pointer]
+    - generic [ref=e815]:
+      - generic "Upload Bill or Receipt for OCR Analysis" [ref=e816] [cursor=pointer]
+      - generic [ref=e820]:
+        - textbox "Ask LEKHTRA or type a command..." [ref=e821]
+        - button "Send" [disabled] [ref=e822]
+  - generic [ref=e827]:
+    - generic [ref=e831]:
+      - heading "We respect your privacy" [level=2] [ref=e832]
+      - paragraph [ref=e833]:
+        - text: We use cookies to ensure the best possible browsing experience. Some are needed for essential features like login sessions, while others help us provide you with content and marketing more closely tailored to your needs. Accepting all cookies enables us to enhance your experience further. Please note, some of these may be third-party cookies. You can modify your cookie preferences by clicking the button below. For more information, please see our
+        - button "Cookie Policy" [ref=e834]
+        - text: .
+    - generic [ref=e835]:
+      - button "Modify Preferences" [ref=e836] [cursor=pointer]
+      - button "Accept All" [ref=e838] [cursor=pointer]
+  - button "Ask LEKHTRA Assistant" [ref=e840] [cursor=pointer]:
+    - generic [ref=e845]: Ask LEKHTRA

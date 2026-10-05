@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Tool Resolver & Dynamic Tool Loader
+CHARLIE Phase 12: Tool Resolver & Dynamic Tool Loader
 Resolves tools semantically based on user goals and injects only relevant tool schemas into prompts.
 """
 
@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional
 
 from .models import ToolContract
 
-logger = logging.getLogger("jarvis.platform.tool_resolver")
+logger = logging.getLogger("charlie.platform.tool_resolver")
 
 
 class ToolResolver:

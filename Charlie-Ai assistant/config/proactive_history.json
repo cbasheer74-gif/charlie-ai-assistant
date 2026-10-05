@@ -1,0 +1,90 @@
+[
+  {
+    "category": "EFFICIENCY",
+    "title": "Desktop Tidy Suggestion",
+    "message": "There are 28 loose files cluttering your desktop. Would you like Charlie to organize them into neat category folders?",
+    "suggested_action": "Organize desktop files",
+    "action_tool": "file_organizer",
+    "created_at": 1790536705.4255939
+  },
+  {
+    "category": "EFFICIENCY",
+    "title": "Desktop Tidy Suggestion",
+    "message": "There are 28 loose files cluttering your desktop. Would you like Charlie to organize them into neat category folders?",
+    "suggested_action": "Organize desktop files",
+    "action_tool": "file_organizer",
+    "created_at": 1790537023.536576
+  },
+  {
+    "category": "CRITICAL",
+    "title": "High System Load Alert",
+    "message": "System usage elevated: CPU 0%, RAM 92% (top process: System Idle Process).",
+    "suggested_action": "Inspect system processes",
+    "action_tool": "system_monitor",
+    "created_at": 1790537984.7453752
+  },
+  {
+    "category": "EFFICIENCY",
+    "title": "Desktop Tidy Suggestion",
+    "message": "There are 28 loose files cluttering your desktop. Would you like Charlie to organize them into neat category folders?",
+    "suggested_action": "Organize desktop files",
+    "action_tool": "file_organizer",
+    "created_at": 1790538014.8307962
+  },
+  {
+    "category": "CRITICAL",
+    "title": "High System Load Alert",
+    "message": "System usage elevated: CPU 0%, RAM 93% (top process: System Idle Process).",
+    "suggested_action": "Inspect system processes",
+    "action_tool": "system_monitor",
+    "created_at": 1790538648.6621966
+  },
+  {
+    "category": "CRITICAL",
+    "title": "High System Load Alert",
+    "message": "System usage elevated: CPU 0%, RAM 94% (top process: System Idle Process).",
+    "suggested_action": "Inspect system processes",
+    "action_tool": "system_monitor",
+    "created_at": 1790538792.0151176
+  },
+  {
+    "category": "EFFICIENCY",
+    "title": "Desktop Tidy Suggestion",
+    "message": "There are 28 loose files cluttering your desktop. Would you like Charlie to organize them into neat category folders?",
+    "suggested_action": "Organize desktop files",
+    "action_tool": "file_organizer",
+    "created_at": 1790539157.091372
+  },
+  {
+    "category": "CRITICAL",
+    "title": "High System Load Alert",
+    "message": "System usage elevated: CPU 39%, RAM 94% (top process: System Idle Process).",
+    "suggested_action": "Inspect system processes",
+    "action_tool": "system_monitor",
+    "created_at": 1790581486.116229
+  },
+  {
+    "category": "CRITICAL",
+    "title": "High System Load Alert",
+    "message": "System usage elevated: CPU 24%, RAM 97% (top process: System Idle Process).",
+    "suggested_action": "Inspect system processes",
+    "action_tool": "system_monitor",
+    "created_at": 1791027569.099649
+  },
+  {
+    "category": "CRITICAL",
+    "title": "High System Load Alert",
+    "message": "System usage elevated: CPU 31%, RAM 97% (top process: System Idle Process).",
+    "suggested_action": "Inspect system processes",
+    "action_tool": "system_monitor",
+    "created_at": 1791027636.0313785
+  },
+  {
+    "category": "CRITICAL",
+    "title": "High System Load Alert",
+    "message": "System usage elevated: CPU 38%, RAM 97% (top process: System Idle Process).",
+    "suggested_action": "Inspect system processes",
+    "action_tool": "system_monitor",
+    "created_at": 1791027636.966337
+  }
+]

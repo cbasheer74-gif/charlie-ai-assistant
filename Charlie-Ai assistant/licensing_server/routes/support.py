@@ -9,12 +9,13 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from licensing_server.database import UserDB, get_db
 from licensing_server.middleware.auth_middleware import get_current_user
+from licensing_server.middleware.rate_limiter import limit_crash_report
 from licensing_server.services.support_service import SupportService
 
 router = APIRouter(prefix="/support", tags=["Customer Support"])
@@ -83,11 +84,13 @@ class CrashReportUploadRequest(BaseModel):
 @router.post("/crash-report")
 def upload_crash_report(
     req: CrashReportUploadRequest,
+    request: Request,
     db: Session = Depends(get_db),
 ):
     """Receive sanitized crash report from desktop client.
     Groups identical stack signatures into a single incident.
     """
+    limit_crash_report(request)
     clean_crash = support_service.sanitize_diagnostics(req.crash)
     clean_bundle = support_service.sanitize_diagnostics(req.bundle or {})
 

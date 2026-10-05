@@ -1,4 +1,4 @@
-"""engine.autonomy — Autonomous Work Engine and Multi-Agent Orchestration for JARVIS."""
+"""engine.autonomy — Autonomous Work Engine and Multi-Agent Orchestration for CHARLIE."""
 
 from engine.autonomy.context import ArtifactRecord, ArtifactRegistry, ExecutionContext
 from engine.autonomy.task_graph import TaskGraph, TaskNode, TaskStatus

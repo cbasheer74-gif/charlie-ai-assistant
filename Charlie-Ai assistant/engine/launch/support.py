@@ -1,5 +1,5 @@
 """
-JARVIS Phase 15: Customer Support, Diagnostics, and Operational Runbooks
+CHARLIE Phase 15: Customer Support, Diagnostics, and Operational Runbooks
 Provides 5-tier support escalation, self-diagnosis, privacy-safe support bundles,
 and operational runbooks for production incident troubleshooting.
 """
@@ -15,14 +15,14 @@ class OperationalRunbookManager:
     """Provides operational troubleshooting runbooks for standard failure modes."""
 
     RUNBOOKS = {
-        "JARVIS_WONT_START": {
-            "title": "JARVIS Fails to Start or Freezes on Splash",
+        "CHARLIE_WONT_START": {
+            "title": "CHARLIE Fails to Start or Freezes on Splash",
             "symptoms": ["Crash on launch", "Freeze on 'Starting core'"],
             "steps": [
-                "Check for existing instance lock in %APPDATA%\\JARVIS\\checkpoints",
+                "Check for existing instance lock in %APPDATA%\\CHARLIE\\checkpoints",
                 "Verify available disk space (> 2 GB required)",
                 "Trigger Safe Mode via --safe-mode command-line flag or recovery launcher",
-                "Inspect redacted crash logs in %APPDATA%\\JARVIS\\diagnostics",
+                "Inspect redacted crash logs in %APPDATA%\\CHARLIE\\diagnostics",
             ],
             "escalation": "If safe mode fails, restore latest validated backup.",
         },
@@ -43,7 +43,7 @@ class OperationalRunbookManager:
             "steps": [
                 "Circuit breaker automatically isolates failing extension",
                 "Quarantine extension via Platform Control Action",
-                "Core JARVIS system continues without extension",
+                "Core CHARLIE system continues without extension",
                 "Review extension audit logs for unhandled exceptions",
             ],
             "escalation": "Roll back extension to previous version or uninstall.",
@@ -70,6 +70,9 @@ class OperationalRunbookManager:
             "escalation": "Check release notes and wait for hotfix release.",
         },
     }
+
+    # Backward compatibility alias
+    RUNBOOKS["JARVIS_WONT_START"] = RUNBOOKS["CHARLIE_WONT_START"]
 
     def get_runbook(self, topic: str) -> Optional[Dict[str, Any]]:
         return self.RUNBOOKS.get(topic)

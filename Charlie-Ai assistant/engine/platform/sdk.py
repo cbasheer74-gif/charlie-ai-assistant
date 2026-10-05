@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Extension SDK
+CHARLIE Phase 12: Extension SDK
 Standardized developer base classes for Tools, Connectors, Custom Agents, and Skills.
 """
 
@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .models import ConnectorContract, CustomAgentSpec, ToolContract, ToolExecutionResult
 
-logger = logging.getLogger("jarvis.platform.sdk")
+logger = logging.getLogger("charlie.platform.sdk")
 
 
 class BaseTool(ABC):

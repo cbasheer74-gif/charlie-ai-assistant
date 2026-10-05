@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Task Profiler, Complexity Estimator & Privacy Classifier
+CHARLIE Phase 11: Task Profiler, Complexity Estimator & Privacy Classifier
 Inspects user requests, detects deterministic tasks, assigns complexity tiers,
 and enforces zero-trust privacy classifications.
 """
@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .models import ComplexityLevel, ModelCapability, PrivacyLevel, TaskProfile
 
-logger = logging.getLogger("jarvis.ai.profiler")
+logger = logging.getLogger("charlie.ai.profiler")
 
 
 class ComplexityEstimator:

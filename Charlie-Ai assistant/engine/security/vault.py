@@ -48,7 +48,7 @@ class CredentialVault:
 
     def __init__(self, vault_dir: Optional[Path] = None):
         if vault_dir is None:
-            v_dir = Path.home() / ".jarvis" / "vault"
+            v_dir = Path.home() / ".charlie" / "vault"
             v_dir.mkdir(parents=True, exist_ok=True)
             self.vault_path = v_dir / "credentials.vault"
         else:
@@ -61,8 +61,8 @@ class CredentialVault:
 
     def _derive_machine_key(self) -> bytes:
         # Machine-bound key seed (OS user + machine specific salt)
-        user = os.environ.get("USERNAME", "jarvis_user")
-        seed = f"jarvis_sec_vault_{user}_{os.name}".encode("utf-8")
+        user = os.environ.get("USERNAME", "charlie_user")
+        seed = f"charlie_sec_vault_{user}_{os.name}".encode("utf-8")
         key = hashlib.sha256(seed).digest()
         return base64.urlsafe_b64encode(key)
 
@@ -74,8 +74,8 @@ class CredentialVault:
             return Fernet(self._encryption_key).decrypt(data)
         except Exception:
             # Fallback for legacy XOR stored secrets
-            user = os.environ.get("USERNAME", "jarvis_user")
-            legacy_key = hashlib.sha256(f"jarvis_sec_vault_{user}_{os.name}".encode("utf-8")).digest()
+            user = os.environ.get("USERNAME", "charlie_user")
+            legacy_key = hashlib.sha256(f"charlie_sec_vault_{user}_{os.name}".encode("utf-8")).digest()
             return bytes([b ^ legacy_key[i % len(legacy_key)] for i, b in enumerate(data)])
 
     def _load(self) -> None:

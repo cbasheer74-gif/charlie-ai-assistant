@@ -1,5 +1,5 @@
 """
-JARVIS Phase 15: Launch Operations Package
+CHARLIE Phase 15: Launch Operations Package
 """
 
 from engine.launch.models import (

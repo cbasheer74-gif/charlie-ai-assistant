@@ -16,7 +16,7 @@ from engine.security.trust_guard import InputTrustClassifier
 
 
 class SecurityPolicyEngine:
-    """Centralized security policy evaluation engine for all JARVIS agents and tools."""
+    """Centralized security policy evaluation engine for all CHARLIE agents and tools."""
 
     def __init__(self):
         self.lockdown_mode: bool = False

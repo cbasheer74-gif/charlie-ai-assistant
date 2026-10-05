@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Model Context Protocol (MCP) Gateway & Client Manager
+CHARLIE Phase 12: Model Context Protocol (MCP) Gateway & Client Manager
 Connects to external MCP servers, validates schemas, maps tools to ToolRegistry,
 and ensures all actions strictly pass through SecurityCore.
 """
@@ -11,7 +11,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from .models import ToolContract, ToolExecutionResult
 
-logger = logging.getLogger("jarvis.platform.mcp")
+logger = logging.getLogger("charlie.platform.mcp")
 
 
 class MockMCPServer:

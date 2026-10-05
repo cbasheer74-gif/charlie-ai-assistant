@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Plugin Registry & Extension Health Manager
+CHARLIE Phase 12: Plugin Registry & Extension Health Manager
 Manages extension lifecycle, versioning, health tracking, and circuit breakers.
 """
 
@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from .models import ExtensionManifest, PluginLifecycle, TrustStatus
 from .security import ExtensionSandbox, PluginSecurityScanner
 
-logger = logging.getLogger("jarvis.platform.registry")
+logger = logging.getLogger("charlie.platform.registry")
 
 
 class ExtensionHealthManager:

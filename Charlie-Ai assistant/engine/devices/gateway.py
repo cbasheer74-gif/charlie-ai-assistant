@@ -1,7 +1,7 @@
 """
-JARVIS Phase 10: Remote Command Gateway & Router
+CHARLIE Phase 10: Remote Command Gateway & Router
 Validates device sessions, enforces replay & nonce protection, strictly blocks raw shell commands,
-checks per-device permissions, and dispatches structured intents to JARVIS execution engines.
+checks per-device permissions, and dispatches structured intents to CHARLIE execution engines.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from .identity_registry import DeviceRegistry
 from .models import DeviceIdentity, RemoteCommandEnvelope, RemotePermission, TrustState
 from .presence_session import MobileSessionManager
 
-logger = logging.getLogger("jarvis.devices.gateway")
+logger = logging.getLogger("charlie.devices.gateway")
 
 
 class RemoteCommandGateway:
@@ -140,6 +140,7 @@ class RemoteCommandGateway:
             "CANCEL_TASK": RemotePermission.PAUSE_RESUME,
             "APPROVE_ACTION": RemotePermission.APPROVE_ACTIONS,
             "FILE_DOWNLOAD": RemotePermission.FILE_PREVIEW,
+            "LOCKDOWN_CHARLIE": RemotePermission.LOCKDOWN,
             "LOCKDOWN_JARVIS": RemotePermission.LOCKDOWN,
             "PC_SHUTDOWN": RemotePermission.APPROVE_ACTIONS,
             "PC_RESTART": RemotePermission.APPROVE_ACTIONS,
@@ -157,7 +158,7 @@ class RemoteCommandGateway:
 
 class RemoteCommandRouter:
     """
-    Dispatches validated intents to JARVIS task graph, projects, and autonomous systems.
+    Dispatches validated intents to CHARLIE task graph, projects, and autonomous systems.
     Executes intents using pre-approved Skills and Agents, never raw shell strings.
     """
 

@@ -1,5 +1,5 @@
 """
-JARVIS Phase 13: QA, Observability & Certification Models
+CHARLIE Phase 13: QA, Observability & Certification Models
 Defines telemetry spans, metric structures, evidence records, golden scenarios, quality gates, and certification reports.
 """
 
@@ -131,9 +131,9 @@ class QualityGate:
 @dataclass
 class ReleaseReadinessReport:
     report_id: str
-    jarvis_version: str
-    build_id: str
-    environment: str
+    charlie_version: str = "1.0.0"
+    build_id: str = ""
+    environment: str = ""
     timestamp: float = field(default_factory=time.time)
     release_decision: ReleaseDecision = ReleaseDecision.NOT_CERTIFIED
     critical_gates_passed: int = 0
@@ -143,4 +143,11 @@ class ReleaseReadinessReport:
     phase_certifications: Dict[str, CertificationStatus] = field(default_factory=dict)
     open_blockers: List[str] = field(default_factory=list)
     known_limitations: List[str] = field(default_factory=list)
+    jarvis_version: Optional[str] = None
+
+    def __post_init__(self):
+        if self.jarvis_version is None:
+            self.jarvis_version = self.charlie_version
+        elif self.charlie_version == "1.0.0" and self.jarvis_version != "1.0.0":
+            self.charlie_version = self.jarvis_version
     evidence_summary: Dict[str, str] = field(default_factory=dict)

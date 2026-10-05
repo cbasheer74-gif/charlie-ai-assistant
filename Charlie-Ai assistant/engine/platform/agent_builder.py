@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Custom Agent Builder & Templates
+CHARLIE Phase 12: Custom Agent Builder & Templates
 Allows no-code and programmatic creation of specialized agents with scoped tools, memory, and permissions.
 """
 
@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional
 
 from .models import CustomAgentSpec, MemoryScope
 
-logger = logging.getLogger("jarvis.platform.agent_builder")
+logger = logging.getLogger("charlie.platform.agent_builder")
 
 
 class CustomAgentBuilder:

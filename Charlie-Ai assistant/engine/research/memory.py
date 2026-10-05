@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import time
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
@@ -27,8 +28,17 @@ class ResearchMemoryManager:
         self._seen_queries: Set[str] = set()
         self._consecutive_zero_gains = 0
 
+    @contextmanager
+    def _connection(self):
+        conn = sqlite3.connect(self.db_path)
+        try:
+            with conn:
+                yield conn
+        finally:
+            conn.close()
+
     def _init_db(self) -> None:
-        with sqlite3.connect(self.db_path) as conn:
+        with self._connection() as conn:
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS research_reports (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,7 +73,7 @@ class ResearchMemoryManager:
             for s in report.sources[:10]
         ]
 
-        with sqlite3.connect(self.db_path) as conn:
+        with self._connection() as conn:
             conn.execute("""
                 INSERT INTO research_reports (
                     topic, topic_key, summary, established_facts, recent_developments,
@@ -96,7 +106,7 @@ class ResearchMemoryManager:
 
     def find_cached_report(self, topic: str, force_live_if_time_sensitive: bool = True) -> Optional[ResearchReport]:
         key = self._topic_key(topic)
-        with sqlite3.connect(self.db_path) as conn:
+        with self._connection() as conn:
             conn.row_factory = sqlite3.Row
             row = conn.execute("SELECT * FROM research_reports WHERE topic_key = ?;", (key,)).fetchone()
             if not row:

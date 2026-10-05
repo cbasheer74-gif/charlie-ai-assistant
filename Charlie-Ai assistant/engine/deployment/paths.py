@@ -1,5 +1,5 @@
 """
-JARVIS Phase 14: Deployment Paths and Port Management
+CHARLIE Phase 14: Deployment Paths and Port Management
 Handles stable per-user application directories and dynamic localhost port allocation.
 """
 
@@ -15,14 +15,18 @@ class DeploymentPathManager:
     def __init__(self, data_dir_override: Optional[str] = None):
         if data_dir_override:
             self._data_dir = Path(data_dir_override).resolve()
+        elif "CHARLIE_DATA_DIR" in os.environ:
+            self._data_dir = Path(os.environ["CHARLIE_DATA_DIR"]).resolve()
         elif "JARVIS_DATA_DIR" in os.environ:
             self._data_dir = Path(os.environ["JARVIS_DATA_DIR"]).resolve()
         else:
             appdata = os.environ.get("APPDATA")
             if appdata:
-                self._data_dir = Path(appdata) / "JARVIS"
+                charlie_dir = Path(appdata) / "CHARLIE"
+                jarvis_dir = Path(appdata) / "JARVIS"
+                self._data_dir = charlie_dir if (charlie_dir.exists() or not jarvis_dir.exists()) else jarvis_dir
             else:
-                self._data_dir = Path.home() / ".jarvis" / "JARVIS"
+                self._data_dir = Path.home() / ".charlie" / "CHARLIE"
 
         self.ensure_dirs()
 
@@ -53,10 +57,20 @@ class DeploymentPathManager:
         return p
 
     def get_log_file(self) -> Path:
-        return self.get_sub_dir("logs") / "jarvis.log"
+        log_dir = self.get_sub_dir("logs")
+        charlie_log = log_dir / "charlie.log"
+        jarvis_log = log_dir / "jarvis.log"
+        if not charlie_log.exists() and jarvis_log.exists():
+            return jarvis_log
+        return charlie_log
 
     def get_config_file(self) -> Path:
-        return self.get_sub_dir("config") / "jarvis_config.json"
+        cfg_dir = self.get_sub_dir("config")
+        charlie_cfg = cfg_dir / "charlie_config.json"
+        jarvis_cfg = cfg_dir / "jarvis_config.json"
+        if not charlie_cfg.exists() and jarvis_cfg.exists():
+            return jarvis_cfg
+        return charlie_cfg
 
 
 class PortManager:

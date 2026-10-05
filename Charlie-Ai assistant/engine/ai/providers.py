@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: AI Providers & Adapters
+CHARLIE Phase 11: AI Providers & Adapters
 Unified interface for local and cloud inference engines with mock test adapter.
 """
 
@@ -15,7 +15,7 @@ import requests
 
 from .models import ModelSpec
 
-logger = logging.getLogger("jarvis.ai.providers")
+logger = logging.getLogger("charlie.ai.providers")
 
 
 class BaseModelProvider(ABC):
@@ -46,7 +46,7 @@ class LocalProvider(BaseModelProvider):
         self.is_online = True
 
     def _settings(self, model: ModelSpec) -> tuple[str, str]:
-        """Read Jarvis's live local-model settings without duplicating config paths."""
+        """Read Charlie's live local-model settings without duplicating config paths."""
         try:
             from core.llm_client import get_llm_settings
             url, configured_model = get_llm_settings()
@@ -178,4 +178,99 @@ class CloudProvider(BaseModelProvider):
     def estimate_cost(self, model: ModelSpec, input_tokens: int, output_tokens: int) -> float:
         in_cost = (input_tokens / 1000.0) * model.cost_per_1k_input
         out_cost = (output_tokens / 1000.0) * model.cost_per_1k_output
+        return round(in_cost + out_cost, 6)
+
+
+class GroqProvider(BaseModelProvider):
+    """Production adapter for Groq Cloud LPU inference."""
+
+    def __init__(self, api_key: Optional[str] = None):
+        self._api_key = api_key
+        self.is_online = True
+
+    def _client(self, timeout: float = 30.0):
+        from core.groq_client import get_groq_client
+        return get_groq_client(key=self._api_key, timeout=timeout)
+
+    def generate(self, model: ModelSpec, prompt: str, system_prompt: Optional[str] = None, **kwargs) -> Dict[str, Any]:
+        from core.groq_client import resolve_model
+
+        timeout = float(kwargs.get("timeout", 30.0))
+        client = self._client(timeout=timeout)
+        if client is None:
+            raise ConnectionError("Groq client unavailable or GROQ_API_KEY missing.")
+
+        target_model = resolve_model(model.model_id)
+        messages: list[dict[str, str]] = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
+
+        started = time.perf_counter()
+        try:
+            response = client.chat.completions.create(
+                model=target_model,
+                messages=messages,
+                stream=False,
+            )
+            duration = round(time.perf_counter() - started, 3)
+            choice = response.choices[0] if response and response.choices else None
+            text = (choice.message.content if choice and choice.message else "") or ""
+
+            in_tokens = int(getattr(response.usage, "prompt_tokens", len(prompt.split())))
+            out_tokens = int(getattr(response.usage, "completion_tokens", len(text.split())))
+            cost = self.estimate_cost(model, in_tokens, out_tokens)
+
+            return {
+                "text": text,
+                "model_id": target_model,
+                "provider": "groq",
+                "input_tokens": in_tokens,
+                "output_tokens": out_tokens,
+                "cost_usd": cost,
+                "duration_seconds": duration,
+            }
+        except Exception as e:
+            logger.warning("[GroqProvider] Error during completion: %s", type(e).__name__)
+            raise ConnectionError(f"Groq API call failed: {type(e).__name__}") from e
+
+    def stream(self, model: ModelSpec, prompt: str, system_prompt: Optional[str] = None, **kwargs) -> Iterator[str]:
+        from core.groq_client import resolve_model
+
+        timeout = float(kwargs.get("timeout", 30.0))
+        client = self._client(timeout=timeout)
+        if client is None:
+            raise ConnectionError("Groq client unavailable or GROQ_API_KEY missing.")
+
+        target_model = resolve_model(model.model_id)
+        messages: list[dict[str, str]] = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
+
+        try:
+            stream = client.chat.completions.create(
+                model=target_model,
+                messages=messages,
+                stream=True,
+            )
+            for chunk in stream:
+                if chunk.choices and chunk.choices[0].delta:
+                    content = chunk.choices[0].delta.content
+                    if content:
+                        yield content
+        except Exception as e:
+            logger.warning("[GroqProvider] Stream error: %s", type(e).__name__)
+            raise ConnectionError(f"Groq stream failed: {type(e).__name__}") from e
+
+    def health_check(self) -> bool:
+        from core.groq_client import is_configured
+        if not is_configured():
+            return False
+        client = self._client(timeout=5.0)
+        return client is not None
+
+    def estimate_cost(self, model: ModelSpec, input_tokens: int, output_tokens: int) -> float:
+        in_cost = (input_tokens / 1000.0) * getattr(model, "cost_per_1k_input", 0.0005)
+        out_cost = (output_tokens / 1000.0) * getattr(model, "cost_per_1k_output", 0.0015)
         return round(in_cost + out_cost, 6)

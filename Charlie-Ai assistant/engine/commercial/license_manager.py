@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from .models import DeviceLicenseRecord, PlanTier, SignedLicense, UserAccount
 from .plan_registry import PlanRegistry
 
-logger = logging.getLogger("jarvis.commercial.license_manager")
+logger = logging.getLogger("charlie.commercial.license_manager")
 
 
 class OfflineLicenseManager:
@@ -33,8 +33,9 @@ class OfflineLicenseManager:
 
     def __init__(self, storage_path: Optional[Path] = None, secret: Optional[Any] = None):
         self.storage_path = storage_path
-        raw_secret = secret or "jarvis_offline_license_secret_key"
+        raw_secret = secret or "charlie_offline_license_secret_key"
         self._secret = raw_secret.encode("utf-8") if isinstance(raw_secret, str) else raw_secret
+        self._legacy_secret = b"jarvis_offline_license_secret_key" if secret is None else None
 
     def sign_license(
         self,
@@ -73,8 +74,11 @@ class OfflineLicenseManager:
         )
         expected_sig = hmac.new(self._secret, expected_bytes, hashlib.sha256).hexdigest()
 
-        # Constant-time comparison prevents timing attacks
-        if not hmac.compare_digest(expected_sig, license_obj.signature):
+        valid_sig = hmac.compare_digest(expected_sig, license_obj.signature)
+        if not valid_sig and self._legacy_secret:
+            legacy_sig = hmac.new(self._legacy_secret, expected_bytes, hashlib.sha256).hexdigest()
+            valid_sig = hmac.compare_digest(legacy_sig, license_obj.signature)
+        if not valid_sig:
             return False, "Cryptographic signature mismatch. License tampering detected."
 
         # Device binding check

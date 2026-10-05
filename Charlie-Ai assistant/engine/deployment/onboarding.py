@@ -1,5 +1,5 @@
 """
-JARVIS Phase 14: User Onboarding Engine & First-Run Management
+CHARLIE Phase 14: User Onboarding Engine & First-Run Management
 Guides users through setup, supports interrupt/resume, enforces telemetry privacy,
 and validates the first safe success milestone.
 """
@@ -18,7 +18,7 @@ from engine.deployment.paths import DeploymentPathManager
 
 
 class FirstRunManager:
-    """Detects whether JARVIS is running for the first time, upgrading, or restored."""
+    """Detects whether CHARLIE is running for the first time, upgrading, or restored."""
 
     def __init__(self, path_manager: Optional[DeploymentPathManager] = None):
         self.paths = path_manager or DeploymentPathManager()
@@ -144,7 +144,7 @@ class OnboardingEngine:
         else:
             return {"tier": "TINY", "model": "SmolLM2-1.7B", "download_gb": 1.1}
 
-    def verify_first_safe_task(self, command: str = "Open Notepad and type Hello JARVIS") -> Dict[str, Any]:
+    def verify_first_safe_task(self, command: str = "Open Notepad and type Hello CHARLIE") -> Dict[str, Any]:
         """Executes first safe success task to verify user intent and control loop."""
         self._profile.first_task_verified = True
         self._save_profile()

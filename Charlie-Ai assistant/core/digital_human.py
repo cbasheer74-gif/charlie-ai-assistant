@@ -1,0 +1,1037 @@
+"""
+Photorealistic 2D talking-portrait rig for the Digital Human Engine.
+
+Animates a photorealistic portrait image via 2D mesh deformation:
+  * Per-viseme mouth morph targets (16 shapes, not just openness+width)
+  * Eye blink via eyelid landmark warp
+  * Gaze via iris displacement
+  * Brow raise/lower via upper-face warp
+  * Micro-expression overlays (smile, concern, etc.)
+  * Breathing via subtle shoulder/chest shift
+
+Architecture: one reusable engine, male/female differ only in:
+  * source portrait
+  * landmark calibration
+  * personality profile (emotion intensity bias)
+
+Rendering: cv2.remap → QImage → QPainter  (zero GPU, works on VM/RDP)
+"""
+from __future__ import annotations
+
+import math
+import random
+import time
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Dict, List, Optional, Tuple
+
+import cv2
+import numpy as np
+from PyQt6.QtGui import QImage, QPixmap
+
+
+# ── Viseme / Emotion enums ─────────────────────────────────────────────────
+
+class Viseme(str, Enum):
+    REST = "REST"
+    MBP  = "MBP"     # lips compressed (m, b, p)
+    FV   = "FV"      # lower lip to upper teeth (f, v)
+    TH   = "TH"      # tongue between teeth
+    TD   = "TD"      # t, d, n, l
+    KG   = "KG"      # k, g, ng
+    CH   = "CH"      # ch, j, sh
+    SZ   = "SZ"      # s, z
+    R    = "R"        # r
+    W_OO = "W_OO"    # w, oo — rounded
+    EE   = "EE"      # ee, i — spread
+    EH   = "EH"      # eh, e
+    AH   = "AH"      # ah, aa — open
+    OH   = "OH"      # oh, o — rounded open
+    UH   = "UH"      # uh, u
+    SILENCE = "SILENCE"
+
+
+class Emotion(str, Enum):
+    NEUTRAL     = "NEUTRAL"
+    FRIENDLY    = "FRIENDLY"
+    HAPPY       = "HAPPY"
+    EXCITED     = "EXCITED"
+    FOCUSED     = "FOCUSED"
+    SERIOUS     = "SERIOUS"
+    CONCERNED   = "CONCERNED"
+    REASSURING  = "REASSURING"
+    APOLOGETIC  = "APOLOGETIC"
+    URGENT      = "URGENT"
+    CALM        = "CALM"
+
+
+class AvatarState(str, Enum):
+    IDLE       = "IDLE"
+    LISTENING  = "LISTENING"
+    PROCESSING = "PROCESSING"
+    THINKING   = "THINKING"
+    SPEAKING   = "SPEAKING"
+    CONFIRMING = "CONFIRMING"
+    WARNING    = "WARNING"
+    ERROR      = "ERROR"
+    SUCCESS    = "SUCCESS"
+    SLEEPING   = "SLEEPING"
+    INACTIVE   = "INACTIVE"
+
+
+class PerformanceLevel(str, Enum):
+    HIGH     = "HIGH"
+    BALANCED = "BALANCED"
+    LOW      = "LOW"
+
+
+# ── Facial landmark positions (normalised 0..1) ───────────────────────────
+# These define control points on the portrait for mesh deformation.
+# Calibrated per-portrait; these are sensible defaults for a centred face.
+
+@dataclass
+class FaceLandmarks:
+    """Normalised (0..1) positions of key facial features on the portrait."""
+    # Mouth region
+    mouth_centre:    Tuple[float, float] = (0.527, 0.568)
+    mouth_left:      Tuple[float, float] = (0.400, 0.558)
+    mouth_right:     Tuple[float, float] = (0.610, 0.558)
+    upper_lip:       Tuple[float, float] = (0.505, 0.540)
+    lower_lip:       Tuple[float, float] = (0.505, 0.575)
+    mouth_width:     float = 0.081   # half-width from centre
+
+    # Jaw
+    jaw_centre:      Tuple[float, float] = (0.505, 0.720)
+    jaw_max_drop:    float = 0.024    # natural speech displacement
+    upper_lip_lift:  float = 0.006
+    seam_curve:      float = -0.002
+
+    # Eyes
+    left_eye:        Tuple[float, float] = (0.441, 0.373)
+    right_eye:       Tuple[float, float] = (0.607, 0.374)
+    eye_width:       float = 0.055
+    eye_height:      float = 0.022
+    left_iris:       Tuple[float, float] = (0.441, 0.373)
+    right_iris:      Tuple[float, float] = (0.607, 0.374)
+    iris_radius:     float = 0.014
+
+    # Eyelids
+    left_upper_lid:  Tuple[float, float] = (0.441, 0.360)
+    left_lower_lid:  Tuple[float, float] = (0.441, 0.386)
+    right_upper_lid: Tuple[float, float] = (0.607, 0.360)
+    right_lower_lid: Tuple[float, float] = (0.607, 0.386)
+
+    # Brows
+    left_brow:       Tuple[float, float] = (0.441, 0.320)
+    right_brow:      Tuple[float, float] = (0.607, 0.320)
+    brow_width:      float = 0.070
+    brow_max_lift:   float = 0.030
+
+    # Breathing region (clavicle / upper chest)
+    shoulder_y:      float = 0.810
+    breath_amplitude: float = 0.009
+
+    # Cheeks (for smile/expression)
+    left_cheek:      Tuple[float, float] = (0.380, 0.500)
+    right_cheek:     Tuple[float, float] = (0.670, 0.500)
+
+    @classmethod
+    def for_male(cls) -> "FaceLandmarks":
+        """Calibrated landmarks for CGI male avatar (charlie_male_avatar).
+        1024×1024 square crop.
+        Mouth seam verified at y=0.650, lips span y=0.635 to 0.665.
+        """
+        return cls(
+            # Mouth — CGI male lip seam at y=0.650
+            mouth_centre=(0.505, 0.650),
+            mouth_left=(0.430, 0.650),
+            mouth_right=(0.590, 0.650),
+            upper_lip=(0.505, 0.635),
+            lower_lip=(0.505, 0.665),
+            mouth_width=0.080,
+            # Jaw — chin at y=0.760
+            jaw_centre=(0.505, 0.760),
+            jaw_max_drop=0.024,
+            upper_lip_lift=0.006,
+            seam_curve=-0.002,
+            # Eyes — centred at y=0.370
+            left_eye=(0.410, 0.370),
+            right_eye=(0.580, 0.370),
+            eye_width=0.058,
+            eye_height=0.022,
+            left_iris=(0.410, 0.370),
+            right_iris=(0.580, 0.370),
+            iris_radius=0.015,
+            # Eyelids
+            left_upper_lid=(0.410, 0.356),
+            left_lower_lid=(0.410, 0.384),
+            right_upper_lid=(0.580, 0.356),
+            right_lower_lid=(0.580, 0.384),
+            # Brows — y=0.320
+            left_brow=(0.408, 0.320),
+            right_brow=(0.578, 0.320),
+            brow_width=0.066,
+            brow_max_lift=0.024,
+            # Clavicle / upper chest breathing region
+            shoulder_y=0.810,
+            breath_amplitude=0.007,
+            # Cheeks
+            left_cheek=(0.360, 0.520),
+            right_cheek=(0.650, 0.520),
+        )
+
+    @classmethod
+    def for_female(cls) -> "FaceLandmarks":
+        """Calibrated landmarks for CGI female avatar (charlie_female_avatar).
+        1024×1024 square crop.
+        Mouth seam verified at y=0.598, lips span y=0.582 to 0.614.
+        """
+        return cls(
+            # Mouth — CGI female lip seam at y=0.598
+            mouth_centre=(0.505, 0.598),
+            mouth_left=(0.435, 0.598),
+            mouth_right=(0.575, 0.598),
+            upper_lip=(0.505, 0.582),
+            lower_lip=(0.505, 0.614),
+            mouth_width=0.070,
+            # Jaw — chin at y=0.705
+            jaw_centre=(0.505, 0.705),
+            jaw_max_drop=0.022,
+            upper_lip_lift=0.005,
+            seam_curve=0.001,
+            # Eyes — centred at y=0.395
+            left_eye=(0.425, 0.395),
+            right_eye=(0.585, 0.395),
+            eye_width=0.055,
+            eye_height=0.021,
+            left_iris=(0.425, 0.395),
+            right_iris=(0.585, 0.395),
+            iris_radius=0.014,
+            # Eyelids
+            left_upper_lid=(0.425, 0.382),
+            left_lower_lid=(0.425, 0.408),
+            right_upper_lid=(0.585, 0.382),
+            right_lower_lid=(0.585, 0.408),
+            # Brows — y=0.340
+            left_brow=(0.420, 0.340),
+            right_brow=(0.590, 0.340),
+            brow_width=0.062,
+            brow_max_lift=0.024,
+            # Clavicle / upper chest breathing region
+            shoulder_y=0.740,
+            breath_amplitude=0.006,
+            # Cheeks — higher cheekbones
+            left_cheek=(0.370, 0.490),
+            right_cheek=(0.640, 0.490),
+        )
+
+
+# ── Viseme morph definitions ──────────────────────────────────────────────
+# Each viseme defines displacements from REST as:
+# (jaw_open 0..1, lip_spread -1..+1, lip_round 0..1,
+#  upper_lip_raise 0..1, lower_lip_tuck 0..1, lip_compress 0..1)
+
+@dataclass
+class VisemeShape:
+    jaw_open:        float = 0.0   # 0=closed, 1=full open
+    lip_spread:      float = 0.0   # -1=pursed, +1=spread wide
+    lip_round:       float = 0.0   # 0=flat, 1=fully rounded
+    upper_lip_raise: float = 0.0   # 0=rest, 1=raised (showing teeth)
+    lower_lip_tuck:  float = 0.0   # 0=rest, 1=tucked under teeth
+    lip_compress:    float = 0.0   # 0=rest, 1=lips pressed together
+    tongue_raise:    float = 0.0
+
+
+VISEME_SHAPES: Dict[Viseme, VisemeShape] = {
+    Viseme.REST:    VisemeShape(),
+    Viseme.SILENCE: VisemeShape(),
+    Viseme.MBP:     VisemeShape(jaw_open=0.00, lip_compress=0.85),
+    Viseme.FV:      VisemeShape(jaw_open=0.04, lower_lip_tuck=0.60, lip_spread=0.10),
+    Viseme.TH:      VisemeShape(jaw_open=0.10, lip_spread=0.05, upper_lip_raise=0.08, tongue_raise=0.60),
+    Viseme.TD:      VisemeShape(jaw_open=0.08, lip_spread=0.08, tongue_raise=0.55),
+    Viseme.KG:      VisemeShape(jaw_open=0.08, lip_spread=-0.04),
+    Viseme.CH:      VisemeShape(jaw_open=0.06, lip_round=0.30, lip_spread=-0.12),
+    Viseme.SZ:      VisemeShape(jaw_open=0.04, lip_spread=0.25),
+    Viseme.R:       VisemeShape(jaw_open=0.10, lip_round=0.20, lip_spread=-0.08),
+    Viseme.W_OO:    VisemeShape(jaw_open=0.08, lip_round=0.65, lip_spread=-0.40),
+    Viseme.EE:      VisemeShape(jaw_open=0.06, lip_spread=0.50),
+    Viseme.EH:      VisemeShape(jaw_open=0.14, lip_spread=0.20),
+    Viseme.AH:      VisemeShape(jaw_open=0.26, lip_spread=0.05),
+    Viseme.OH:      VisemeShape(jaw_open=0.18, lip_round=0.45, lip_spread=-0.25),
+    Viseme.UH:      VisemeShape(jaw_open=0.12, lip_round=0.25, lip_spread=-0.15),
+}
+
+
+# ── Emotion expression definitions ────────────────────────────────────────
+
+@dataclass
+class ExpressionShape:
+    brow_raise:      float = 0.0   # symmetric raise (-1=furrowed, +1=raised)
+    brow_raise_l:    float = 0.0   # left brow independent delta (+ = more raise)
+    brow_raise_r:    float = 0.0   # right brow independent delta
+    brow_squeeze:    float = 0.0   # 0=relaxed, 1=inner brows pulled together
+    eye_wide:        float = 0.0   # -1=narrowed, +1=widened
+    lid_tight:       float = 0.0   # 0=open, 1=squinted/focused
+    cheek_raise:     float = 0.0   # 0=rest, 1=raised (smile)
+    mouth_corner_up: float = 0.0   # -1=down, +1=up (smile/frown)
+    lip_tension:     float = 0.0   # 0=relaxed, 1=tense
+
+
+EMOTION_EXPRESSIONS: Dict[Emotion, ExpressionShape] = {
+    Emotion.NEUTRAL:    ExpressionShape(),
+    # Warm brow raise, cheeks up, gentle smile
+    Emotion.FRIENDLY:   ExpressionShape(
+        brow_raise=0.22, cheek_raise=0.28, mouth_corner_up=0.32),
+    # Both brows high, cheeks full, eyes slightly narrowed by smile muscles
+    Emotion.HAPPY:      ExpressionShape(
+        brow_raise=0.30, cheek_raise=0.55, mouth_corner_up=0.55,
+        eye_wide=-0.15, lid_tight=0.18),
+    # Highly arched brows, wide eyes, big smile — maximum positive energy
+    Emotion.EXCITED:    ExpressionShape(
+        brow_raise=0.55, cheek_raise=0.45, mouth_corner_up=0.48,
+        eye_wide=0.30),
+    # Inner brows pulled down and in, eyes narrowed — concentration
+    Emotion.FOCUSED:    ExpressionShape(
+        brow_raise=-0.28, brow_squeeze=0.52, eye_wide=-0.22, lid_tight=0.40),
+    # Brows low and flat, lips pressed — authoritative
+    Emotion.SERIOUS:    ExpressionShape(
+        brow_raise=-0.32, brow_squeeze=0.28, lip_tension=0.48),
+    # Oblique: inner brows raised asymmetrically (worry furrow)
+    Emotion.CONCERNED:  ExpressionShape(
+        brow_raise=0.28, brow_raise_l=0.18, brow_raise_r=-0.12,
+        brow_squeeze=0.60, mouth_corner_up=-0.28),
+    # Soft, open expression — calm reassurance
+    Emotion.REASSURING: ExpressionShape(
+        brow_raise=0.18, cheek_raise=0.22, mouth_corner_up=0.28),
+    # Puppy-dog brows (both inner corners raised), slight downturn
+    Emotion.APOLOGETIC: ExpressionShape(
+        brow_raise=0.38, brow_raise_l=0.22, brow_raise_r=0.22,
+        brow_squeeze=0.55, mouth_corner_up=-0.18),
+    # Brows pulled down hard, eyes wide with urgency
+    Emotion.URGENT:     ExpressionShape(
+        brow_raise=-0.22, brow_squeeze=0.45, eye_wide=0.28, lip_tension=0.58),
+    # Very subtle — barely perceptible serenity
+    Emotion.CALM:       ExpressionShape(
+        brow_raise=0.10, eye_wide=-0.12, mouth_corner_up=0.14),
+}
+
+
+# ── Smoothing helpers ─────────────────────────────────────────────────────
+
+def _lerp(a: float, b: float, t: float) -> float:
+    return a + (b - a) * t
+
+def _rate(dt: float, tau: float) -> float:
+    """Frame-rate independent exponential approach factor."""
+    return 1.0 - math.exp(-dt / max(tau, 0.001))
+
+def _clamp(v: float, lo: float = 0.0, hi: float = 1.0) -> float:
+    return max(lo, min(hi, v))
+
+
+# ── Blink Controller ──────────────────────────────────────────────────────
+
+class BlinkController:
+    """Procedural blinking tuned for CGI faces — cinematic timing.
+
+    CGI avatars read as more lifelike with longer inter-blink intervals
+    (real humans average 12–15 blinks/min at rest; cinematic CGI feels
+    better at ~8/min = 7-8 s average).  The close/open animation is also
+    slightly slower for a smoother, less robotic lid movement.
+    """
+
+    def __init__(self):
+        self._blink = 0.0          # 0=open, 1=closed
+        self._next_blink = 3.0 + random.random() * 4.0   # first blink 3-7 s in
+        self._t = 0.0
+        self._closing = False
+        self._half = False         # half-blink (lazy lid droop, not full close)
+
+    def step(self, dt: float, state: AvatarState) -> float:
+        self._t += dt
+        if state in (AvatarState.SLEEPING, AvatarState.INACTIVE):
+            # Heavy-lidded: drift toward 85 % closed
+            self._blink += (0.85 - self._blink) * _rate(dt, 0.4)
+            return self._blink
+
+        if self._closing:
+            # Slightly slower close (tau 0.026 vs old 0.018) for CGI smoothness
+            target = 0.55 if self._half else 1.0
+            self._blink += (target - self._blink) * _rate(dt, 0.026)
+            if self._blink > (0.48 if self._half else 0.92):
+                self._closing = False
+        elif self._blink > 0.01:
+            # Open faster than close — matches real eyelid physiology
+            self._blink += (0.0 - self._blink) * _rate(dt, 0.038)
+            if self._blink < 0.01:
+                self._blink = 0.0
+        elif self._t >= self._next_blink:
+            self._half = random.random() < 0.08     # 8 % chance: lazy half-blink
+            self._closing = True
+            # CGI-tuned interval: 5-9 s normal, 3-6 s while thinking
+            base = 4.0 if state == AvatarState.THINKING else 5.5
+            spread = 3.5 if state == AvatarState.THINKING else 4.0
+            self._next_blink = self._t + base + random.random() * spread
+            # Occasional rapid double-blink (10 % chance)
+            if not self._half and random.random() < 0.10:
+                self._next_blink = self._t + 0.28 + random.random() * 0.18
+
+        return self._blink
+
+
+# ── Gaze Controller ───────────────────────────────────────────────────────
+
+class GazeController:
+    """Micro-saccades and state-aware gaze direction."""
+
+    def __init__(self):
+        self._gx = 0.0
+        self._gy = 0.0
+        self._target_gx = 0.0
+        self._target_gy = 0.0
+        self._next_saccade = 0.5
+        self._t = 0.0
+
+    def step(self, dt: float, state: AvatarState) -> Tuple[float, float]:
+        self._t += dt
+
+        if self._t >= self._next_saccade:
+            if state == AvatarState.THINKING:
+                # Gaze drifts up-right while thinking — deliberate, not jittery
+                self._target_gx = random.uniform(-0.45, 0.55)
+                self._target_gy = random.uniform(0.15, 0.50)
+                self._next_saccade = self._t + 2.0 + random.random() * 3.0
+            elif state == AvatarState.LISTENING:
+                # Attentive forward gaze with minimal drift
+                self._target_gx = random.uniform(-0.10, 0.10)
+                self._target_gy = random.uniform(-0.05, 0.08)
+                self._next_saccade = self._t + 2.0 + random.random() * 3.0
+            elif state == AvatarState.SPEAKING:
+                # CGI presenters hold gaze more than they drift
+                self._target_gx = random.uniform(-0.18, 0.18)
+                self._target_gy = random.uniform(-0.10, 0.10)
+                self._next_saccade = self._t + 1.2 + random.random() * 2.5
+            elif state in (AvatarState.SLEEPING, AvatarState.INACTIVE):
+                self._target_gx = 0.0
+                self._target_gy = -0.25   # eyes drop downward when sleeping
+                self._next_saccade = self._t + 6.0
+            else:
+                # Idle — calm, very gentle wandering
+                self._target_gx = random.uniform(-0.15, 0.15)
+                self._target_gy = random.uniform(-0.08, 0.08)
+                self._next_saccade = self._t + 2.5 + random.random() * 3.5
+
+        # CGI saccades: slightly smoother (tau 0.05 vs 0.03) — less robotic
+        self._gx += (self._target_gx - self._gx) * _rate(dt, 0.05)
+        self._gy += (self._target_gy - self._gy) * _rate(dt, 0.05)
+        return (self._gx, self._gy)
+
+
+# ── Breathing Controller ──────────────────────────────────────────────────
+
+class BreathingController:
+    """Extremely subtle idle breathing cycle."""
+
+    def __init__(self):
+        self._phase = random.random() * math.pi * 2
+        self._rate = 0.22  # ~13 breaths per minute at rest
+
+    def step(self, dt: float, state: AvatarState) -> float:
+        """Returns -1..+1 breathing displacement."""
+        if state == AvatarState.SPEAKING:
+            self._rate = 0.30  # slightly faster breathing while speaking
+        elif state in (AvatarState.SLEEPING, AvatarState.INACTIVE):
+            self._rate = 0.16  # slower while sleeping
+        else:
+            self._rate = 0.22
+        self._phase += dt * self._rate * math.pi * 2
+        return math.sin(self._phase) * 0.5 + 0.1 * math.sin(self._phase * 2.3)
+
+
+# ── Emotion Controller ────────────────────────────────────────────────────
+
+class EmotionController:
+    """Classifies text emotion and smoothly transitions expression state."""
+
+    # Keyword patterns → (Emotion, base_intensity)
+    _PATTERNS = [
+        (["don't worry", "no problem", "it's okay", "chinta mat", "tension mat", "चिंता मत"],
+         Emotion.REASSURING, 0.45),
+        (["tense", "tension", "pareshan", "ghabra", "परेशान", "चिंता"],
+         Emotion.CONCERNED, 0.55),
+        (["joke", "funny", "haha", "mazaak", "mazak", "hansi", "मजाक", "हाहा"],
+         Emotion.HAPPY, 0.65),
+        (["serious", "gambhir", "गंभीर"], Emotion.SERIOUS, 0.55),
+        (["sorry", "apologize", "apologi", "couldn't", "unable", "failed", "mistake"],
+         Emotion.APOLOGETIC, 0.40),
+        (["warning", "danger", "critical", "caution", "permanently", "delete", "overheating"],
+         Emotion.SERIOUS, 0.45),
+        (["urgent", "immediately", "critical", "emergency", "low on disk", "running out"],
+         Emotion.URGENT, 0.50),
+        (["great", "excellent", "perfect", "wonderful", "awesome", "successfully", "completed",
+          "ready", "done", "finished"],
+         Emotion.HAPPY, 0.35),
+        (["hello", "hi ", "good morning", "good afternoon", "good evening", "welcome"],
+         Emotion.FRIENDLY, 0.30),
+        (["concern", "worried", "unfortunately", "issue", "problem"],
+         Emotion.CONCERNED, 0.35),
+        (["don't worry", "no problem", "it's okay", "safe", "secure"],
+         Emotion.REASSURING, 0.30),
+        (["focus", "analyzing", "processing", "checking", "scanning"],
+         Emotion.FOCUSED, 0.25),
+    ]
+
+    def __init__(self):
+        self._current = Emotion.NEUTRAL
+        self._target = Emotion.NEUTRAL
+        self._intensity = 0.0
+        self._target_intensity = 0.0
+        self._current_shape = ExpressionShape()
+
+    @property
+    def emotion(self) -> Emotion:
+        return self._current
+
+    @property
+    def intensity(self) -> float:
+        return self._intensity
+
+    @property
+    def shape(self) -> ExpressionShape:
+        return self._current_shape
+
+    def classify(self, text: str) -> Tuple[Emotion, float]:
+        """Simple rule-based emotion classification."""
+        if not text:
+            return Emotion.NEUTRAL, 0.0
+        lower = text.lower()
+
+        # Question detection
+        if text.strip().endswith("?"):
+            # Questions get neutral with slight brow raise
+            for words, emotion, intensity in self._PATTERNS:
+                if any(w in lower for w in words):
+                    return emotion, intensity * 0.7
+            return Emotion.NEUTRAL, 0.15
+
+        for words, emotion, intensity in self._PATTERNS:
+            if any(w in lower for w in words):
+                return emotion, intensity
+        return Emotion.NEUTRAL, 0.0
+
+    def set_emotion(self, emotion: Emotion, intensity: float = 0.3) -> None:
+        self._target = emotion
+        self._target_intensity = _clamp(intensity, 0.0, 1.0)
+
+    def step(self, dt: float) -> ExpressionShape:
+        # Emotion blends in slowly, fades out slowly — natural expression timing
+        rate = _rate(dt, 0.25)
+        self._intensity += (self._target_intensity - self._intensity) * rate
+
+        if self._intensity < 0.02:
+            self._current = self._target
+
+        target_shape = EMOTION_EXPRESSIONS.get(self._target, ExpressionShape())
+        s = self._current_shape
+        k = self._intensity
+
+        # Blend all expression channels including new asymmetric brow fields
+        s.brow_raise       = _lerp(s.brow_raise,       target_shape.brow_raise * k,       rate)
+        s.brow_raise_l     = _lerp(s.brow_raise_l,     target_shape.brow_raise_l * k,     rate)
+        s.brow_raise_r     = _lerp(s.brow_raise_r,     target_shape.brow_raise_r * k,     rate)
+        s.brow_squeeze     = _lerp(s.brow_squeeze,     target_shape.brow_squeeze * k,     rate)
+        s.eye_wide         = _lerp(s.eye_wide,         target_shape.eye_wide * k,         rate)
+        s.lid_tight        = _lerp(s.lid_tight,        target_shape.lid_tight * k,        rate)
+        s.cheek_raise      = _lerp(s.cheek_raise,      target_shape.cheek_raise * k,      rate)
+        s.mouth_corner_up  = _lerp(s.mouth_corner_up,  target_shape.mouth_corner_up * k,  rate)
+        s.lip_tension      = _lerp(s.lip_tension,      target_shape.lip_tension * k,      rate)
+
+        self._current = self._target
+        return s
+
+
+# ── Prosody Planner ───────────────────────────────────────────────────────
+
+class ProsodyPlanner:
+    """Plans prosody parameters (rate, pitch, volume) based on emotion."""
+
+    _EMOTION_PROSODY = {
+        Emotion.NEUTRAL:    ("+0%", "+0Hz", "+0%"),
+        Emotion.FRIENDLY:   ("+3%", "+4Hz", "+0%"),
+        Emotion.HAPPY:      ("+6%", "+8Hz", "+2%"),
+        Emotion.EXCITED:    ("+12%", "+12Hz", "+4%"),
+        Emotion.FOCUSED:    ("-2%", "-2Hz", "+0%"),
+        Emotion.SERIOUS:    ("-8%", "-5Hz", "+0%"),
+        Emotion.CONCERNED:  ("-4%", "-2Hz", "-2%"),
+        Emotion.REASSURING: ("-3%", "+1Hz", "-1%"),
+        Emotion.APOLOGETIC: ("-6%", "-4Hz", "-2%"),
+        Emotion.URGENT:     ("+15%", "+6Hz", "+5%"),
+        Emotion.CALM:       ("-5%", "-2Hz", "-2%"),
+    }
+
+    @classmethod
+    def get_prosody(cls, emotion: Emotion) -> tuple[str, str, str]:
+        """Returns (rate, pitch, volume) strings suitable for EdgeTTS."""
+        return cls._EMOTION_PROSODY.get(emotion, ("+0%", "+0Hz", "+0%"))
+
+
+class NodController:
+    """Simulates physiological micro-nodding for affirmations, active listening, and speech rhythm."""
+    def __init__(self):
+        self._active = False
+        self._time = 0.0
+        self._duration = 0.65
+        self._amplitude = 0.005
+
+    def trigger(self, amplitude: float = 0.005, duration: float = 0.65) -> None:
+        self._active = True
+        self._time = 0.0
+        self._amplitude = amplitude
+        self._duration = max(0.2, duration)
+
+    def step(self, dt: float) -> float:
+        if not self._active:
+            return 0.0
+        self._time += dt
+        if self._time >= self._duration:
+            self._active = False
+            return 0.0
+        progress = self._time / self._duration
+        envelope = math.sin(progress * math.pi)
+        wave = math.sin(progress * math.pi * 2.0)
+        return wave * envelope * self._amplitude
+
+
+# ── PhotoRealisticRig ─────────────────────────────────────────────────────
+
+class PhotoRealisticRig:
+    """Full-face 2D talking portrait rig with viseme morphs, blink, gaze,
+    brow, expression, breathing, and affirmative micro-nodding.
+
+    One instance per persona (male/female). Shared animation architecture,
+    different assets and calibration.
+
+    Usage:
+        rig = PhotoRealisticRig(portrait_pixmap, landmarks)
+        rig.set_state(AvatarState.SPEAKING)
+        rig.set_viseme(Viseme.AH, 0.8)
+        rig.set_emotion(Emotion.HAPPY, 0.3)
+        frame = rig.render(size=512, dt=0.016)  # returns QImage
+    """
+
+    def __init__(self, portrait: QPixmap, landmarks: Optional[FaceLandmarks] = None,
+                 performance: PerformanceLevel = PerformanceLevel.BALANCED):
+        # Load source image
+        image = portrait.toImage().convertToFormat(QImage.Format.Format_RGBA8888)
+        ptr = image.bits()
+        ptr.setsize(image.sizeInBytes())
+        self._source = np.frombuffer(bytes(ptr), np.uint8).reshape(
+            image.height(), image.bytesPerLine() // 4, 4
+        )[:, :image.width()].copy()
+
+        self._lm = landmarks or FaceLandmarks()
+        self._perf = performance
+
+        # Controllers
+        self._blink = BlinkController()
+        self._gaze = GazeController()
+        self._breath = BreathingController()
+        self._emotion = EmotionController()
+        self._nod = NodController()
+
+        # Current state
+        self._state = AvatarState.IDLE
+        self._t = 0.0
+
+        # Current viseme (smoothed)
+        self._vis_shape = VisemeShape()
+        self._vis_target = VisemeShape()
+        self._vis_strength = 0.0
+
+        # Head drift
+        self._head_dx = 0.0
+        self._head_dy = 0.0
+        self._drift_phase = random.random() * math.pi * 2
+
+        # Cache
+        self._cache_key = None
+        self._cache_frame: Optional[QImage] = None
+        self._base_cache: Dict[int, np.ndarray] = {}
+        self._grid_cache: Dict[Tuple[int, int], Tuple[np.ndarray, np.ndarray]] = {}
+        self._full_grid_cache: Dict[int, Tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
+
+    # ── Public API ─────────────────────────────────────────────────────
+
+    def set_state(self, state: AvatarState) -> None:
+        self._state = state
+        # State-to-emotion auto-mapping: gentle baseline expression per state
+        # Only updates when current emotion intensity is low (< 0.20),
+        # preserving explicit classify_and_set_emotion() / set_emotion().
+        if self._emotion.intensity < 0.20:
+            if state == AvatarState.LISTENING:
+                self._emotion.set_emotion(Emotion.FOCUSED, 0.18)
+            elif state in (AvatarState.THINKING, AvatarState.PROCESSING):
+                self._emotion.set_emotion(Emotion.FOCUSED, 0.28)
+            elif state == AvatarState.SPEAKING:
+                self._emotion.set_emotion(Emotion.FRIENDLY, 0.20)
+            elif state in (AvatarState.SLEEPING, AvatarState.INACTIVE):
+                self._emotion.set_emotion(Emotion.CALM, 0.25)
+            elif state == AvatarState.IDLE:
+                self._emotion.set_emotion(Emotion.NEUTRAL, 0.0)
+
+    def set_viseme(self, viseme: Viseme, strength: float = 1.0) -> None:
+        self._vis_target = VISEME_SHAPES.get(viseme, VisemeShape())
+        self._vis_strength = _clamp(strength)
+
+    def set_viseme_blend(self, opening: float, width: float,
+                          strength: float = 1.0) -> None:
+        """Legacy-compatible: drive mouth from openness+width (natural speech scale)."""
+        shape = VisemeShape(
+            jaw_open=_clamp(opening * 0.35),
+            lip_spread=_clamp(width, -1, 1) * 0.50,
+            lip_round=max(0, -width) * 0.45,
+        )
+        self._vis_target = shape
+        self._vis_strength = _clamp(strength)
+
+    def trigger_nod(self, amplitude: float = 0.005, duration: float = 0.65) -> None:
+        """Trigger an affirmative micro-nod gesture."""
+        self._nod.trigger(amplitude, duration)
+
+    def set_emotion(self, emotion: Emotion, intensity: float = 0.3) -> None:
+        self._emotion.set_emotion(emotion, intensity)
+        if emotion in (Emotion.FRIENDLY, Emotion.HAPPY, Emotion.REASSURING):
+            self.trigger_nod(amplitude=0.004 * intensity, duration=0.60)
+
+    def classify_and_set_emotion(self, text: str) -> None:
+        emo, intensity = self._emotion.classify(text)
+        self._emotion.set_emotion(emo, intensity)
+        low = (text or "").lower()
+        if any(w in low for w in ("yes", "sure", "absolutely", "haan", "theek", "zarur", "done", "completed", "ready", "understood", "right")):
+            self.trigger_nod(amplitude=0.005, duration=0.70)
+
+    # ── Animation step ─────────────────────────────────────────────────
+
+    def render(self, size: int, dt: float = 0.016) -> QImage:
+        """Advance animation and render one frame. Returns QImage."""
+        dt = max(0.001, min(0.1, dt))
+        self._t += dt
+
+        # Step controllers
+        blink_val = self._blink.step(dt, self._state)
+        gaze_x, gaze_y = self._gaze.step(dt, self._state)
+        breath_val = self._breath.step(dt, self._state)
+        expr = self._emotion.step(dt)
+        nod_dy = self._nod.step(dt)
+
+        # Smooth viseme transition (coarticulation)
+        vis_tau = 0.025 if self._vis_strength > 0.1 else 0.045
+        rate = _rate(dt, vis_tau)
+        s = self._vis_shape
+        t = self._vis_target
+        strength = self._vis_strength
+
+        s.jaw_open = _lerp(s.jaw_open, t.jaw_open * strength, rate)
+        s.lip_spread = _lerp(s.lip_spread, t.lip_spread * strength, rate)
+        s.lip_round = _lerp(s.lip_round, t.lip_round * strength, rate)
+        s.upper_lip_raise = _lerp(s.upper_lip_raise, t.upper_lip_raise * strength, rate)
+        s.lower_lip_tuck = _lerp(s.lower_lip_tuck, t.lower_lip_tuck * strength, rate)
+        s.lip_compress = _lerp(s.lip_compress, t.lip_compress * strength, rate)
+        s.tongue_raise = _lerp(s.tongue_raise, t.tongue_raise * strength, rate)
+
+        # Head drift (multi-harmonic natural sway + physiological micro-nod)
+        if self._state not in (AvatarState.SLEEPING, AvatarState.INACTIVE):
+            self._drift_phase += dt * 0.35
+            drift_scale = 0.0035 if self._state == AvatarState.SPEAKING else 0.0022
+            self._head_dx = (math.sin(self._drift_phase * 0.70) * 0.75 +
+                             math.sin(self._drift_phase * 1.35 + 0.4) * 0.25) * drift_scale
+            self._head_dy = ((math.sin(self._drift_phase * 0.50 + 1.3) * 0.70 +
+                              math.sin(self._drift_phase * 0.95 + 2.1) * 0.30) * drift_scale * 0.65) + nod_dy
+        else:
+            self._head_dx = 0.0
+            self._head_dy = 0.0025 + nod_dy  # subtle relaxed posture drop
+
+        # Quantise for cache hit
+        cache_key = (
+            size,
+            round(s.jaw_open, 2), round(s.lip_spread, 2),
+            round(s.lip_round, 2), round(s.lip_compress, 2),
+            round(s.tongue_raise, 2), round(s.upper_lip_raise, 2),
+            round(expr.eye_wide, 2), round(expr.brow_squeeze, 2),
+            round(blink_val, 2), round(gaze_x, 2), round(gaze_y, 2),
+            round(breath_val, 2),
+            round(expr.brow_raise, 2), round(expr.cheek_raise, 2),
+            round(expr.mouth_corner_up, 2),
+            round(self._head_dx, 3), round(self._head_dy, 3),
+        )
+        if cache_key == self._cache_key and self._cache_frame is not None:
+            return self._cache_frame
+
+        # Get base image at target size
+        if size not in self._base_cache:
+            self._base_cache[size] = cv2.resize(
+                self._source, (size, size), interpolation=cv2.INTER_AREA)
+            # Limit cache to 3 sizes
+            if len(self._base_cache) > 3:
+                oldest = next(iter(self._base_cache))
+                del self._base_cache[oldest]
+
+        base = self._base_cache[size]
+        result = self._deform(base, size, s, blink_val, gaze_x, gaze_y,
+                               breath_val, expr)
+
+        frame = QImage(result.data, size, size, result.strides[0],
+                       QImage.Format.Format_RGBA8888).copy()
+        self._cache_key = cache_key
+        self._cache_frame = frame
+        return frame
+
+    # ── Deformation engine ─────────────────────────────────────────────
+
+    def _deform(self, base: np.ndarray, size: int, vis: VisemeShape,
+                blink: float, gaze_x: float, gaze_y: float,
+                breath: float, expr: ExpressionShape) -> np.ndarray:
+        """Apply all facial deformations via calibrated inverse remap and soft oral depth shading."""
+        lm = self._lm
+        # Animate a small displacement grid, but sample the full-resolution
+        # portrait. Upscaling the already-warped 320px image blurred eyes/lips.
+        h = w = min(size, 320)
+        if (w, h) not in self._grid_cache:
+            yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+            self._grid_cache[(w, h)] = (xx / w, yy / h)
+        nx, ny = self._grid_cache[(w, h)]
+
+        # Normalized coordinates to deform
+        sx = nx.copy()
+        sy = ny.copy()
+
+        # ── Mouth deformation ──────────────────────────────────────────
+        mc = lm.mouth_centre
+        mw = lm.mouth_width
+        seam_curve = getattr(lm, "seam_curve", 0.002)
+
+        # Horizontal mouth influence
+        u = np.clip((nx - mc[0]) / mw, -1.0, 1.0)
+        lip_c2 = (1.0 - u * u) ** 2
+
+        # Horizontal spread / round (EE, OH, W_OO)
+        if abs(vis.lip_spread) > 0.005:
+            vert_m = np.clip(1.0 - ((ny - mc[1]) / 0.035) ** 2, 0.0, 1.0) ** 2
+            h_infl = lip_c2 * vert_m
+            sx = mc[0] + (nx - mc[0]) / (1.0 + 0.22 * vis.lip_spread * h_infl)
+        elif vis.lip_round > 0.01:
+            vert_m = np.clip(1.0 - ((ny - mc[1]) / 0.035) ** 2, 0.0, 1.0) ** 2
+            h_infl = lip_c2 * vert_m
+            sx = mc[0] + (nx - mc[0]) * (1.0 + 0.25 * vis.lip_round * h_infl)
+
+        # Deformed horizontal profile for vertical lip separation
+        u_def = np.clip((sx - mc[0]) / mw, -1.0, 1.0)
+        lip_def = (1.0 - u_def * u_def) ** 2
+        seam = mc[1] + seam_curve * (1.0 - lip_def)
+
+        open_val = _clamp(vis.jaw_open * 1.8)
+        upper = seam - lm.upper_lip_lift * open_val * lip_def
+        lower = seam + lm.jaw_max_drop * open_val * lip_def
+
+        # Chin influence
+        chin_u = np.clip((sx - mc[0]) / (mw * 1.5), -1.0, 1.0)
+        chin_mask = (1.0 - chin_u * chin_u) ** 2
+
+        # Vertical falloffs — upper zone tighter (0.025) so upper-lip lift
+        # doesn't pull the nose down; lower zone also tighter (0.090) so chin
+        # drop stays below the actual jaw line.
+        top_w = np.clip((seam - ny) / 0.025, 0.0, 1.0)
+        top_falloff = (1.0 - top_w) ** 2
+        bot_w = np.clip((ny - seam) / 0.090, 0.0, 1.0)
+        bot_falloff = 1.0 - bot_w
+
+        # Continuous parting and chin displacement
+        disp = np.zeros_like(ny)
+        above = ny < seam
+        disp = np.where(above, -lm.upper_lip_lift * open_val * lip_def * top_falloff, disp)
+        below = ny >= seam
+        chin_drop = 0.0025 * open_val * chin_mask * np.sin(np.pi * bot_falloff)
+        lip_drop = (lm.jaw_max_drop - 0.0025) * open_val * lip_def * bot_falloff
+        disp = np.where(below, lip_drop + chin_drop * lip_def, disp)
+
+        # Lip compression (MBP — lips pressed together)
+        if vis.lip_compress > 0.01:
+            disp_comp = np.where(below, -0.005 * vis.lip_compress * lip_def * bot_falloff, 0.003 * vis.lip_compress * lip_def * top_falloff)
+            disp += disp_comp
+
+        # Map the *destination* lip boundaries back to the photographed seam.
+        # Subtracting a displacement evaluated at the source position sampled
+        # the closed lip a second time inside the gap, producing stretched lips.
+        if open_val > 0.002 or vis.lip_compress > 0.01:
+            sy = ny - disp
+        if open_val > 0.002:
+            upper_drop = seam - upper
+            lower_drop = lower - seam
+            top_d = np.maximum(upper - ny, 0.0) * 25.0
+            bot_d = np.maximum(ny - lower, 0.0) * 7.14
+            top_decay = 1.0 / (1.0 + top_d * (1.0 + 0.5 * top_d))
+            bot_decay = 1.0 / (1.0 + bot_d * (1.0 + 0.5 * bot_d))
+            sy = np.where(ny <= upper, ny + upper_drop * top_decay, sy)
+            sy = np.where(ny >= lower, ny - lower_drop * bot_decay, sy)
+
+        # ── Mouth corner expression (smile/frown) ──────────────────────
+        if abs(expr.mouth_corner_up) > 0.005:
+            corner_disp = expr.mouth_corner_up * 0.006
+            for cx in [mc[0] - mw, mc[0] + mw]:
+                corner_r2 = ((nx - cx) / 0.04) ** 2 + ((ny - mc[1]) / 0.03) ** 2
+                corner_mask = np.clip(1.0 - corner_r2, 0, 1) ** 2
+                sy -= corner_disp * corner_mask
+
+        # ── Cheek raise (smile) ────────────────────────────────────────
+        if expr.cheek_raise > 0.005:
+            for cheek in [lm.left_cheek, lm.right_cheek]:
+                cr2 = ((nx - cheek[0]) / 0.08) ** 2 + ((ny - cheek[1]) / 0.06) ** 2
+                cmask = np.clip(1.0 - cr2, 0, 1) ** 2
+                sy -= expr.cheek_raise * 0.004 * cmask
+
+        # ── Eyelid blink ──────────────────────────────────────────────
+        if blink > 0.01:
+            for eye in [lm.left_eye, lm.right_eye]:
+                ew, eh = lm.eye_width, lm.eye_height
+                er2 = ((nx - eye[0]) / (ew * 1.3)) ** 2 + ((ny - eye[1]) / (eh * 2.5)) ** 2
+                eye_mask = np.clip(1.0 - er2, 0, 1) ** 2
+                lid_disp = blink * eh * 0.8
+                sy += lid_disp * (eye[1] - ny) / max(eh, 0.001) * eye_mask * 0.3
+
+        # ── Gaze (iris displacement) ──────────────────────────────────
+        if abs(gaze_x) > 0.005 or abs(gaze_y) > 0.005:
+            for iris in [lm.left_iris, lm.right_iris]:
+                ir = lm.iris_radius
+                ir2 = ((nx - iris[0]) / (ir * 2.5)) ** 2 + ((ny - iris[1]) / (ir * 2.5)) ** 2
+                iris_mask = np.clip(1.0 - ir2, 0, 1) ** 2
+                sx -= gaze_x * ir * 0.4 * iris_mask
+                sy -= gaze_y * ir * 0.3 * iris_mask
+
+        # ── Brow ──────────────────────────────────────────────────────
+        # Eye widening / narrowing (driven by emotion eye_wide)
+        if abs(expr.eye_wide) > 0.005:
+            for eye in (lm.left_eye, lm.right_eye):
+                eye_mask = np.exp(-((nx-eye[0])/lm.eye_width)**2
+                                  -((ny-eye[1])/(lm.eye_height*2))**2)
+                sy -= (ny-eye[1]) * expr.eye_wide * 0.35 * eye_mask
+
+        # Lid squint (lid_tight): upper lid drops for FOCUSED/HAPPY
+        if expr.lid_tight > 0.005:
+            for eye in (lm.left_eye, lm.right_eye):
+                ul_y = eye[1] - lm.eye_height        # approximate upper lid row
+                lid_mask = np.exp(-((nx-eye[0])/lm.eye_width)**2
+                                  -((ny-ul_y)/(lm.eye_height*1.5))**2)
+                sy += expr.lid_tight * lm.eye_height * 0.55 * lid_mask
+
+        # Brow squeeze (inner corners pull together)
+        if abs(expr.brow_squeeze) > 0.005:
+            for brow in (lm.left_brow, lm.right_brow):
+                brow_mask = np.exp(-((nx-brow[0])/lm.brow_width)**2
+                                   -((ny-brow[1])/0.025)**2)
+                sx -= (mc[0]-brow[0]) * expr.brow_squeeze * 0.038 * brow_mask
+
+        # Symmetric brow lift + per-brow asymmetric deltas (concerned/apologetic)
+        brow_lift_l = (expr.brow_raise + expr.brow_raise_l) * lm.brow_max_lift
+        brow_lift_r = (expr.brow_raise + expr.brow_raise_r) * lm.brow_max_lift
+        for brow, lift in [(lm.left_brow, brow_lift_l), (lm.right_brow, brow_lift_r)]:
+            if abs(lift) > 0.0005:
+                bw = lm.brow_width
+                br2 = ((nx - brow[0]) / bw) ** 2 + ((ny - brow[1]) / 0.030) ** 2
+                bmask = np.clip(1.0 - br2, 0, 1) ** 2
+                sy -= lift * bmask
+
+        # ── Breathing (clavicle / shoulder region) ─────────────────────
+        if abs(breath) > 0.01:
+            breath_mask = np.clip((ny - lm.shoulder_y) / 0.14, 0.0, 1.0)
+            breath_mask = breath_mask * breath_mask * (3.0 - 2.0 * breath_mask)
+            sy -= breath * lm.breath_amplitude * breath_mask
+            # Subtle vertical head counter-motion with respiration
+            sy += breath * 0.0012
+
+        # ── Head drift & speech nod ───────────────────────────────────
+        # Conversational speech nod: stressed vowels (large jaw opening)
+        # induce micro-downward head accentuation
+        speech_nod = 0.0035 * vis.jaw_open if self._state == AvatarState.SPEAKING else 0.0
+        tot_dx = self._head_dx
+        tot_dy = self._head_dy + speech_nod
+
+        if abs(tot_dx) > 0.0001 or abs(tot_dy) > 0.0001:
+            sx -= tot_dx
+            sy -= tot_dy
+
+        # ── Apply continuous remap ────────────────────────────────────
+        if size > w:
+            if size not in self._full_grid_cache:
+                full_y, full_x = np.mgrid[0:size, 0:size].astype(np.float32)
+                self._full_grid_cache[size] = (full_x, full_y, full_y / size)
+            full_x, full_y, ny = self._full_grid_cache[size]
+            map_x = full_x + cv2.resize(sx - self._grid_cache[(w, h)][0], (size, size)) * size
+            map_y = full_y + cv2.resize(sy - self._grid_cache[(w, h)][1], (size, size)) * size
+            upper, lower, u_def, lip_def = (
+                cv2.resize(field, (size, size))
+                for field in (upper, lower, u_def, lip_def)
+            )
+            h = w = size
+        else:
+            map_x = (sx * w).astype(np.float32)
+            map_y = (sy * h).astype(np.float32)
+        result = cv2.remap(base, map_x, map_y, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+
+        # ── Soft natural oral depth shading (inside parted lips only) ──
+        gap = lower - upper
+        max_gap = (lm.upper_lip_lift + lm.jaw_max_drop) * open_val
+        if open_val > 0.06 and max_gap > 0.001:
+            y0 = max(0, int((mc[1] - lm.upper_lip_lift * open_val - 0.015) * h))
+            y1 = min(h, int((mc[1] + lm.jaw_max_drop * open_val + 0.015) * h) + 1)
+            x0 = max(0, int((mc[0] - mw * 1.1) * w))
+            x1 = min(w, int((mc[0] + mw * 1.1) * w) + 1)
+
+            ny_sub = ny[y0:y1, x0:x1]
+            upper_sub = upper[y0:y1, x0:x1]
+            lower_sub = lower[y0:y1, x0:x1]
+            gap_sub = gap[y0:y1, x0:x1]
+            u_def_sub = u_def[y0:y1, x0:x1]
+            lip_def_sub = lip_def[y0:y1, x0:x1]
+
+            depth = np.clip((ny_sub - upper_sub) / np.maximum(gap_sub, 0.0001), 0.0, 1.0)
+            res_sub = result[y0:y1, x0:x1]
+
+            # Natural cinematic oral cavity shading (warm dark ambient occlusion)
+            cavity = np.zeros_like(res_sub, dtype=np.float32)
+            cavity[..., 0] = 20.0 + 10.0 * depth  # R
+            cavity[..., 1] = 10.0 + 5.0 * depth   # G
+            cavity[..., 2] = 14.0 + 5.0 * depth   # B
+            cavity[..., 3] = 255.0
+
+            # Upper teeth: subtle, recessed, warm enamel
+            if open_val > 0.12:
+                arch_depth = 0.35 * (1.0 - 0.30 * u_def_sub * u_def_sub)
+                t_fade = np.clip((arch_depth - depth) / 0.18, 0.0, 1.0) * np.clip(1.0 - u_def_sub * u_def_sub, 0.0, 1.0)
+                t_fade = t_fade[..., None]
+                tooth_color = np.array([168.0, 158.0, 150.0, 255.0])  # Warm shadowed enamel
+                cavity = cavity * (1.0 - t_fade * 0.60) + tooth_color * (t_fade * 0.60)
+
+            # Lower teeth line for wide mouth openings
+            if open_val > 0.22:
+                lower_arch = 0.88 * (1.0 - 0.20 * u_def_sub * u_def_sub)
+                lower_fade = np.clip((depth - lower_arch) / 0.14, 0.0, 1.0) * np.clip(1.0 - 0.40 * u_def_sub * u_def_sub, 0.0, 1.0)
+                lower_fade = lower_fade[..., None]
+                lower_tooth = np.array([162.0, 152.0, 146.0, 255.0])
+                cavity = cavity * (1.0 - lower_fade * 0.50) + lower_tooth * (lower_fade * 0.50)
+
+            # Soft tongue hint
+            tongue_y = 0.85 - 0.35 * vis.tongue_raise
+            tongue_mask = np.clip(1.0 - (u_def_sub / 0.68)**2 - ((depth - tongue_y) / 0.30)**2, 0, 1)
+            tongue_alpha = tongue_mask[..., None] * 0.65
+            tongue_colour = np.array([118., 58., 64., 255.])
+            cavity = cavity * (1.0 - tongue_alpha) + tongue_colour * tongue_alpha
+
+            dist_to_lip = np.minimum(ny_sub - upper_sub, lower_sub - ny_sub)
+            # Smooth Hermite S-curve edge feathering into inner mucosal lip margin
+            edge_norm = np.clip(dist_to_lip * h * 0.30, 0.0, 1.0)
+            edge_feather = edge_norm * edge_norm * (3.0 - 2.0 * edge_norm)
+            inside_mask = edge_feather * (lip_def_sub > 0.01) * min(0.92, open_val * 4.0)
+            alpha = inside_mask[..., None]
+            result[y0:y1, x0:x1, :3] = (res_sub[..., :3].astype(np.float32) * (1.0 - alpha) + cavity[..., :3] * alpha).astype(np.uint8)
+
+        return result

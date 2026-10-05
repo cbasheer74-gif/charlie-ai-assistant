@@ -34,7 +34,7 @@ from engine.research.trend_engine import TopicClusterer, TrendDiscoveryEngine
 
 
 class InternetIntelligenceEngine:
-    """Core coordinator for JARVIS Phase 5 Deep Research & Internet Intelligence."""
+    """Core coordinator for CHARLIE Phase 5 Deep Research & Internet Intelligence."""
 
     def __init__(
         self,

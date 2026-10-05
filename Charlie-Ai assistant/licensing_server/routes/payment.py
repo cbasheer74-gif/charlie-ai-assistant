@@ -6,7 +6,7 @@ Payment verification is SERVER-SIDE ONLY. Desktop cannot fake payment status.
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, Header, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -86,11 +86,32 @@ async def razorpay_webhook(
     x_razorpay_signature: str = Header(default=""),
     db: Session = Depends(get_db),
 ):
-    """Razorpay webhook endpoint. No JWT required — authenticated via webhook signature."""
+    """Razorpay webhook endpoint. Authenticated strictly via HMAC SHA256 webhook signature."""
+    if not x_razorpay_signature:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Missing X-Razorpay-Signature header.",
+        )
+
     body = await request.body()
     ok, data = payment_service.verify_razorpay_webhook(body, x_razorpay_signature)
     if not ok:
-        return {"success": False, "error": data.get("error", "Webhook verification failed.")}
+        import json
+        import logging
+        from datetime import datetime, timezone
+        sec_logger = logging.getLogger("licensing_server.security")
+        sec_logger.warning(
+            json.dumps({
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "event": "WEBHOOK_SIGNATURE_VERIFICATION_FAILED",
+                "ip": request.client.host if request.client else "unknown",
+                "error": data.get("error", "Invalid signature"),
+            })
+        )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=data.get("error", "Webhook verification failed."),
+        )
 
     # Process webhook event
     event_type = data.get("event", "")
@@ -125,7 +146,7 @@ async def razorpay_webhook(
                 json.dumps({
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                     "level": "ERROR",
-                    "service": "jarvis-licensing-payment",
+                    "service": "charlie-licensing-payment",
                     "event": "PAYMENT_CAPTURED_MISSING_METADATA",
                     "order_id": order_id,
                     "payment_id": payload.get("id", ""),

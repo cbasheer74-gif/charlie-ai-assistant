@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional, Tuple
 from .models import CloudComputeMode, PlanTier, UserAccount
 from .plan_registry import PlanRegistry
 
-logger = logging.getLogger("jarvis.commercial.cloud_policy")
+logger = logging.getLogger("charlie.commercial.cloud_policy")
 
 
 @dataclass

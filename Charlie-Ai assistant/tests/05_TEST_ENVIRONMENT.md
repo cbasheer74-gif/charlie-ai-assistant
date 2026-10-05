@@ -25,9 +25,9 @@ Before running tests, ensure the following environment variables are set (or def
 CHARLIE_ENV=test
 CHARLIE_DB_URL=sqlite:///:memory:
 CHARLIE_JWT_SECRET=test_static_jwt_secret_for_unit_tests_only
-JARVIS_LOGIN_RATE_LIMIT=1000
-JARVIS_ACTIVATION_RATE_LIMIT=1000
-JARVIS_TRANSFER_RATE_LIMIT=1000
+CHARLIE_LOGIN_RATE_LIMIT=1000
+CHARLIE_ACTIVATION_RATE_LIMIT=1000
+CHARLIE_TRANSFER_RATE_LIMIT=1000
 ```
 
 ---

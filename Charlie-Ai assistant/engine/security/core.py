@@ -33,7 +33,7 @@ class SecurityCore:
     """Central authoritative security coordinator. All autonomous agents and tools must pass through SecurityCore."""
 
     def __init__(self, base_dir: Optional[Path] = None):
-        self.base_dir = Path(base_dir) if base_dir else (Path.home() / ".jarvis")
+        self.base_dir = Path(base_dir) if base_dir else (Path.home() / ".charlie")
         self.base_dir.mkdir(parents=True, exist_ok=True)
 
         self.vault = CredentialVault(vault_dir=self.base_dir / "vault")

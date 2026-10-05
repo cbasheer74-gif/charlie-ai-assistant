@@ -1,5 +1,5 @@
 """
-JARVIS Phase 10: Device Registry & Revocation Manager
+CHARLIE Phase 10: Device Registry & Revocation Manager
 Stores paired device identities, public keys, trust states, and manages instant revocation.
 """
 
@@ -14,7 +14,7 @@ from typing import Dict, List, Optional
 
 from .models import DeviceIdentity, DeviceType, RemotePermission, TrustState
 
-logger = logging.getLogger("jarvis.devices.registry")
+logger = logging.getLogger("charlie.devices.registry")
 
 
 class DeviceRegistry:

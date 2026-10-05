@@ -1,5 +1,5 @@
 """
-JARVIS Phase 15: User Acceptance Testing (UAT) & Pilot Program Engine
+CHARLIE Phase 15: User Acceptance Testing (UAT) & Pilot Program Engine
 Executes multi-persona UAT scenarios, manages pilot cohort progression,
 and collects privacy-safe user feedback.
 """
@@ -67,7 +67,7 @@ class UATManager:
                 user_persona=UATPersona.BEGINNER,
                 scenario_name="First-Run Setup and Simple Automation",
                 preconditions=["Clean Windows installation", "Zero developer tools installed"],
-                steps=["Run JARVIS-Setup.exe", "Complete onboarding", "Ask to open Notepad", "Exit JARVIS"],
+                steps=["Run CHARLIE-Setup.exe", "Complete onboarding", "Ask to open Notepad", "Exit CHARLIE"],
                 expected_behavior="Install, onboarding, and Notepad control succeed without opening terminal.",
             ),
             UATCase(
@@ -99,7 +99,7 @@ class UATManager:
                 user_persona=UATPersona.VOICE,
                 scenario_name="Hinglish Voice Commands and Emergency Stop",
                 preconditions=["Microphone connected"],
-                steps=["Say 'Hey Jarvis, Chrome kholo'", "Say 'Stop'"],
+                steps=["Say 'Hey Charlie, Chrome kholo'", "Say 'Stop'"],
                 expected_behavior="Wake detected, Hinglish recognized, browser opened, automation halted immediately.",
             ),
             UATCase(

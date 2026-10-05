@@ -8,6 +8,8 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional, Tuple
 
+from sqlalchemy import func, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from licensing_server.database import (
@@ -39,8 +41,7 @@ MONTHLY_ALLOWANCES: Dict[str, int] = {
     PlanTier.BASIC.value: 500,
     PlanTier.PRO.value: 1500,
     PlanTier.PRO_PLUS.value: 4000,
-    PlanTier.ANNUAL_PRO.value: 1500,
-    PlanTier.LIFETIME.value: 2000,
+    PlanTier.ANNUAL_PRO.value: 1800,
 }
 
 # Provider cost estimation per 1k tokens in INR (~₹86/USD)
@@ -73,33 +74,44 @@ class CreditService:
                 last_reset_at=now,
             )
             db.add(wallet)
-            db.commit()
-            db.refresh(wallet)
-        else:
+            try:
+                db.commit()
+                db.refresh(wallet)
+            except IntegrityError:
+                db.rollback()
+                wallet = db.query(CreditWalletDB).filter(CreditWalletDB.user_id == user_id).first()
+        if wallet:
             self._check_and_apply_reset(db, wallet)
         return wallet
 
     def _check_and_apply_reset(self, db: Session, wallet: CreditWalletDB) -> None:
         """Reset monthly subscription credits if period expired."""
         now = datetime.now(timezone.utc)
-        if wallet.billing_cycle_end and now >= wallet.billing_cycle_end:
-            allowance = MONTHLY_ALLOWANCES.get(wallet.plan_tier, 0)
-            wallet.subscription_credits = allowance
-            wallet.daily_messages_used = 0
-            wallet.billing_cycle_start = now
-            wallet.billing_cycle_end = now + timedelta(days=30)
-            wallet.last_reset_at = now
+        cycle_end = wallet.billing_cycle_end
+        if cycle_end:
+            if cycle_end.tzinfo is None:
+                cycle_end = cycle_end.replace(tzinfo=timezone.utc)
+            if now >= cycle_end:
+                allowance = MONTHLY_ALLOWANCES.get(wallet.plan_tier, 0)
+                wallet.subscription_credits = allowance
+                wallet.daily_messages_used = 0
+                wallet.billing_cycle_start = now
+                wallet.billing_cycle_end = now + timedelta(days=30)
+                wallet.last_reset_at = now
 
-            tx = CreditTransactionDB(
-                id=f"tx_{uuid.uuid4().hex[:16]}",
-                user_id=wallet.user_id,
-                type="RESET",
-                amount=allowance,
-                source="monthly_cycle_reset",
-                created_at=now,
-            )
-            db.add(tx)
-            db.commit()
+                tx = CreditTransactionDB(
+                    id=f"tx_{uuid.uuid4().hex[:16]}",
+                    user_id=wallet.user_id,
+                    type="RESET",
+                    amount=allowance,
+                    source="monthly_cycle_reset",
+                    created_at=now,
+                )
+                db.add(tx)
+                try:
+                    db.commit()
+                except Exception:
+                    db.rollback()
 
     def deduct_credits(
         self,
@@ -113,7 +125,12 @@ class CreditService:
         custom_cost: Optional[int] = None,
     ) -> Tuple[bool, str, int]:
         """Atomically deduct credits with consumption order: 1) subscription, 2) purchased."""
-        wallet = self.get_or_create_wallet(db, user_id)
+        self.get_or_create_wallet(db, user_id)
+        # Lock wallet row for update to prevent concurrent lost-update anomalies
+        wallet = db.query(CreditWalletDB).filter(CreditWalletDB.user_id == user_id).with_for_update().first()
+        if not wallet:
+            return False, "Wallet not found", 0
+
         cost = custom_cost if custom_cost is not None else ACTION_CREDIT_COSTS.get(feature, 1)
 
         # Starter tier checks daily message limit (15)
@@ -121,7 +138,11 @@ class CreditService:
             if wallet.daily_messages_used >= 15:
                 return False, "You've reached your daily free allowance (15 messages/day). Upgrade for AI credits.", cost
             wallet.daily_messages_used += 1
-            db.commit()
+            try:
+                db.commit()
+            except Exception:
+                db.rollback()
+                raise
             return True, "Starter message recorded", cost
 
         total_credits = (wallet.subscription_credits or 0) + (wallet.purchased_credits or 0)
@@ -129,16 +150,38 @@ class CreditService:
             return False, f"Insufficient AI credits. Needed: {cost}, Available: {total_credits}", cost
 
         # Deduct in strict order: subscription credits first, then purchased credits
-        rem_cost = cost
-        if wallet.subscription_credits >= rem_cost:
-            wallet.subscription_credits -= rem_cost
-            rem_cost = 0
+        # Atomic SQL updates prevent concurrent lost-update anomalies
+        sub_avail = wallet.subscription_credits or 0
+        if sub_avail >= cost:
+            res = db.execute(
+                update(CreditWalletDB)
+                .where(CreditWalletDB.user_id == user_id, CreditWalletDB.subscription_credits >= cost)
+                .values(
+                    subscription_credits=CreditWalletDB.subscription_credits - cost,
+                    credits_used=func.coalesce(CreditWalletDB.credits_used, 0) + cost,
+                )
+            )
+            if res.rowcount == 0:
+                db.rollback()
+                return self.deduct_credits(db, user_id, feature, model, provider, input_tokens, output_tokens, custom_cost)
         else:
-            rem_cost -= wallet.subscription_credits
-            wallet.subscription_credits = 0
-            wallet.purchased_credits = max(0, wallet.purchased_credits - rem_cost)
-
-        wallet.credits_used = (wallet.credits_used or 0) + cost
+            needed_purchased = cost - sub_avail
+            res = db.execute(
+                update(CreditWalletDB)
+                .where(
+                    CreditWalletDB.user_id == user_id,
+                    CreditWalletDB.subscription_credits == sub_avail,
+                    CreditWalletDB.purchased_credits >= needed_purchased,
+                )
+                .values(
+                    subscription_credits=0,
+                    purchased_credits=CreditWalletDB.purchased_credits - needed_purchased,
+                    credits_used=func.coalesce(CreditWalletDB.credits_used, 0) + cost,
+                )
+            )
+            if res.rowcount == 0:
+                db.rollback()
+                return self.deduct_credits(db, user_id, feature, model, provider, input_tokens, output_tokens, custom_cost)
 
         now = datetime.now(timezone.utc)
 
@@ -171,7 +214,11 @@ class CreditService:
             created_at=now,
         )
         db.add(usage)
-        db.commit()
+        try:
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise
 
         return True, "Credits deducted successfully", cost
 

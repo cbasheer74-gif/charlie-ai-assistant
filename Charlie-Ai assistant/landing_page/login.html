@@ -3,17 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In &middot; CHARLIE Workspace</title>
-  <meta name="description" content="Sign in to your CHARLIE Workspace. Synchronize your models, custom skills, and cryptographic licenses across devices.">
+  <title>Customer Workspace & Account Portal &middot; CHARLIE Desktop</title>
+  <meta name="description" content="Sign in, manage your commercial license, transfer PC slots, and view billing history in the CHARLIE Customer Portal.">
 
   <!-- Google Font: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="alternate icon" href="favicon.svg">
 
   <style>
     body {
@@ -26,13 +25,15 @@
       background-image: 
         radial-gradient(circle at 50% 15%, rgba(0, 229, 255, 0.12) 0%, transparent 55%),
         radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.1) 0%, transparent 45%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #E2E8F0;
     }
 
     .auth-page-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 1200px;
+      max-width: 1100px;
       width: 100%;
       margin: 0 auto;
     }
@@ -45,29 +46,30 @@
       text-decoration: none;
       font-size: 13px;
       font-weight: 600;
-      transition: color var(--transition-fast);
+      transition: color 0.15s ease;
     }
 
     .back-home-link:hover {
-      color: var(--cyan-primary);
+      color: #00E5FF;
     }
 
-    .auth-page-center {
+    .portal-main-area {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
-      padding: 40px 0;
+      padding: 30px 0;
     }
 
+    /* Auth Card */
     .auth-card-standalone {
       background: #0B0F19;
       border: 1px solid rgba(0, 229, 255, 0.25);
       border-radius: 24px;
       width: 100%;
-      max-width: 460px;
+      max-width: 480px;
       box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 45px rgba(0, 229, 255, 0.14);
-      padding: 36px 36px 40px;
+      padding: 36px;
     }
 
     .auth-card-header {
@@ -89,104 +91,219 @@
       line-height: 1.5;
     }
 
+    /* Customer Portal Dashboard View */
+    .portal-dashboard {
+      display: none;
+      width: 100%;
+      max-width: 960px;
+      background: #0B0F19;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75);
+    }
+
+    .portal-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .portal-user-meta h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin: 0 0 4px 0;
+    }
+
+    .portal-user-meta span {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .portal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .portal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .portal-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .portal-card-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #00E5FF;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .portal-card-val {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+
+    .portal-card-sub {
+      font-size: 13px;
+      color: #94A3B8;
+      line-height: 1.4;
+    }
+
+    .plan-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid #00E5FF;
+      color: #00E5FF;
+      text-transform: uppercase;
+    }
+
+    .table-portal {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .table-portal th, .table-portal td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .table-portal th {
+      color: #94A3B8;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .btn-xs {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-xs-primary {
+      background: #00E5FF;
+      color: #06080D;
+    }
+
+    .btn-xs-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid #EF4444;
+      color: #FCA5A5;
+    }
+
+    .btn-xs-danger:hover {
+      background: #EF4444;
+      color: #FFFFFF;
+    }
+
+    .auth-footer-terms {
+      text-align: center;
+      font-size: 12px;
+      color: #64748B;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .auth-footer-terms a {
+      color: #94A3B8;
+      text-decoration: underline;
+    }
+
+    .auth-footer-terms a:hover {
+      color: #00E5FF;
+    }
+
     .auth-page-bottom {
       text-align: center;
       font-size: 12px;
-      color: var(--text-dim);
-      padding-top: 20px;
+      color: #64748B;
+      padding-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .auth-page-bottom a {
+      color: #94A3B8;
+      text-decoration: none;
+    }
+
+    .auth-page-bottom a:hover {
+      color: #00E5FF;
     }
   </style>
 </head>
 <body>
 
   <!-- Top Bar -->
-  <div class="auth-page-top">
-    <a href="index.html" class="brand-logo">
+  <header class="auth-page-top">
+    <a href="index.html" class="brand-logo" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
       <div class="brand-symbol">
-        <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="p-logo-grad" x1="5.5" y1="8.5" x2="27" y2="31.5" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#00F5FF"/>
-              <stop offset="35%" stop-color="#00D2FF"/>
-              <stop offset="70%" stop-color="#2563EB"/>
-              <stop offset="100%" stop-color="#8B5CF6"/>
-            </linearGradient>
-            <linearGradient id="p-logo-spark" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#FFFFFF"/>
-              <stop offset="60%" stop-color="#00F5FF"/>
-              <stop offset="100%" stop-color="#0099FF"/>
-            </linearGradient>
-            <filter id="p-logo-glow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#00E5FF" flood-opacity="0.45"/>
-            </filter>
-          </defs>
-          <g filter="url(#p-logo-glow)">
-            <path
-              d="M 23 8.5 C 24.38 8.5 25.5 9.62 25.5 11 C 25.5 12.38 24.38 13.5 23 13.5 H 17 C 13.41 13.5 10.5 16.41 10.5 20 C 10.5 23.59 13.41 26.5 17 26.5 H 23 C 24.38 26.5 25.5 27.62 25.5 29 C 25.5 30.38 24.38 31.5 23 31.5 H 17 C 10.65 31.5 5.5 26.35 5.5 20 C 5.5 13.65 10.65 8.5 17 8.5 H 23 Z"
-              fill="url(#p-logo-grad)"/>
-            <circle cx="26" cy="7" r="2.4" fill="url(#p-logo-spark)"/>
-          </g>
+        <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+          <path d="M 23 8.5 C 24.38 8.5 25.5 9.62 25.5 11 C 25.5 12.38 24.38 13.5 23 13.5 H 17 C 13.41 13.5 10.5 16.41 10.5 20 C 10.5 23.59 13.41 26.5 17 26.5 H 23 C 24.38 26.5 25.5 27.62 25.5 29 C 25.5 30.38 24.38 31.5 23 31.5 H 17 C 10.65 31.5 5.5 26.35 5.5 20 C 5.5 13.65 10.65 8.5 17 8.5 H 23 Z" fill="#00E5FF"/>
         </svg>
       </div>
-      <span class="brand-name">CHARLIE</span>
-      <span class="version-badge"><span class="badge-dot"></span>v1.0 LIV</span>
+      <span style="font-weight: 800; font-size: 18px; color: #FFFFFF; letter-spacing: 0.05em;">CHARLIE</span>
     </a>
 
-    <a href="index.html" class="back-home-link">
-      &larr; Back to Overview
-    </a>
-  </div>
+    <div style="display: flex; gap: 16px; align-items: center;">
+      <a href="contact.html" class="back-home-link">Support Desk</a>
+      <a href="index.html" class="back-home-link">&larr; Back to Overview</a>
+    </div>
+  </header>
 
-  <!-- Center Card -->
-  <div class="auth-page-center">
-    <div class="auth-card-standalone">
+  <!-- Center Workspace -->
+  <main class="portal-main-area">
+
+    <!-- 1. AUTHENTICATION CARD (Displayed when logged out) -->
+    <div class="auth-card-standalone" id="auth-card">
       <div class="auth-card-header">
         <h1 class="auth-card-title" id="page-auth-heading">Sign In to CHARLIE</h1>
         <p class="auth-card-desc" id="page-auth-desc">Enter your credentials to synchronize licenses and desktop workflows.</p>
       </div>
 
       <!-- Auth Tab Toggle -->
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="page-tab-signin" data-tab="signin">Sign In</button>
-        <button class="auth-tab" id="page-tab-signup" data-tab="signup">Create Account</button>
+      <div class="auth-tabs" id="auth-tabs-wrap">
+        <button type="button" class="auth-tab active" id="page-tab-signin" onclick="switchAuthView('signin')">Sign In</button>
+        <button type="button" class="auth-tab" id="page-tab-signup" onclick="switchAuthView('signup')">Create Account</button>
       </div>
 
-      <!-- OAuth Social Providers -->
-      <div class="social-auth-grid">
-        <!-- Google OAuth -->
-        <button type="button" class="btn-social-auth" id="p-auth-google" data-provider="Google">
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          <span>Continue with Google</span>
-        </button>
-
-        <!-- GitHub OAuth -->
-        <button type="button" class="btn-social-auth" id="p-auth-github" data-provider="GitHub">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-          </svg>
-          <span>Continue with GitHub</span>
-        </button>
-
-        <!-- ChatGPT / OpenAI OAuth -->
-        <button type="button" class="btn-social-auth" id="p-auth-chatgpt" data-provider="ChatGPT">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--emerald-accent)">
-            <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1683a.071.071 0 0 1 .038.052v5.5826a4.5045 4.5045 0 0 1-4.4945 4.4947zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1683a.0757.0757 0 0 1-.071 0l-4.8303-2.7866A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.6669zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1635a.0804.0804 0 0 1-.038-.0567V6.0748a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.4598a.7948.7948 0 0 0-.3927.6813l-.0048 6.7219zm1.3484-2.3182l3.3543-1.9366 3.3544 1.9366v3.8732l-3.3544 1.9366-3.3543-1.9366z"/>
-          </svg>
-          <span>Continue with ChatGPT</span>
-        </button>
-      </div>
-
-      <div class="auth-divider">
-        <span>or continue with email</span>
-      </div>
-
-      <!-- Form -->
-      <form class="auth-form" id="page-auth-form">
+      <!-- Sign In / Sign Up Form -->
+      <form class="auth-form" id="page-auth-form" onsubmit="handleAuthSubmit(event)">
         <div class="form-group" id="p-group-name" style="display: none;">
           <label for="p-auth-name">Full Name</label>
           <input type="text" id="p-auth-name" placeholder="John Doe">
@@ -197,107 +314,654 @@
           <input type="email" id="p-auth-email" placeholder="name@domain.com" required>
         </div>
 
-        <div class="form-group">
-          <div class="label-row">
-            <label for="p-auth-password">Password</label>
-            <a href="#" class="forgot-link">Forgot?</a>
+        <div class="form-group" id="p-group-pw">
+          <div class="label-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label for="p-auth-password" style="margin: 0;">Password</label>
+            <a href="javascript:void(0)" onclick="switchAuthView('forgot')" class="forgot-link" style="font-size: 12px; color: #00E5FF; text-decoration: none;">Forgot?</a>
           </div>
-          <div class="password-input-wrap">
-            <input type="password" id="p-auth-password" placeholder="••••••••••••" required>
-            <button type="button" class="pw-toggle-btn" id="p-pw-toggle">👁</button>
+          <div class="password-input-wrap" style="position: relative;">
+            <input type="password" id="p-auth-password" placeholder="••••••••••••" style="width: 100%;">
+            <button type="button" class="pw-toggle-btn" id="p-pw-toggle" onclick="togglePasswordVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94A3B8; cursor: pointer;">👁</button>
           </div>
         </div>
 
-        <div class="form-row-remember">
-          <label class="checkbox-label">
-            <input type="checkbox" id="p-auth-remember" checked>
-            <span>Remember this device for 30 days</span>
-          </label>
+        <!-- Forgot Password Extra View -->
+        <div id="p-forgot-extra" style="display: none; font-size: 13px; color: #94A3B8; margin-bottom: 12px; line-height: 1.5;">
+          Enter your registered email address. We will verify your account and transmit secure, single-use password reset instructions.
         </div>
 
-        <button type="submit" class="btn btn-primary btn-submit-auth" id="p-btn-submit">
+        <!-- Reset Password Extra Fields (When ?token= is present) -->
+        <div class="form-group" id="p-group-reset-token" style="display: none;">
+          <label for="p-auth-token">Reset Token</label>
+          <input type="text" id="p-auth-token" placeholder="Paste reset token">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-submit-auth" id="p-btn-submit" style="width: 100%; margin-top: 10px; padding: 12px; font-weight: 700; border-radius: 10px; background: #00E5FF; color: #06080D; border: none; cursor: pointer;">
           Sign In to CHARLIE
         </button>
+
+        <div id="p-cancel-forgot" style="display: none; text-align: center; margin-top: 12px;">
+          <a href="javascript:void(0)" onclick="switchAuthView('signin')" style="font-size: 13px; color: #94A3B8; text-decoration: none;">&larr; Back to Sign In</a>
+        </div>
       </form>
 
       <div class="auth-footer-terms">
-        By continuing, you agree to CHARLIE's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        By continuing, you agree to CHARLIE's <a href="terms.html">Terms of Service</a>, <a href="privacy.html">Privacy Policy</a>, and <a href="acceptable-use.html">Acceptable Use Policy</a>.
       </div>
     </div>
-  </div>
 
-  <!-- Footer -->
-  <div class="auth-page-bottom">
-    &copy; 2026 CHARLIE Desktop Assistant. Encrypted Local Auth.
-  </div>
+    <!-- 2. CUSTOMER PORTAL DASHBOARD (Displayed when authenticated) -->
+    <div class="portal-dashboard" id="portal-dashboard">
+      <div class="portal-header-bar">
+        <div class="portal-user-meta">
+          <h2 id="portal-user-name">Welcome Back</h2>
+          <span id="portal-user-email">customer@charlie.app</span> &bull; <span id="portal-user-status" style="color: #10B981;">ACTIVE</span>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 6px; background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.25); border-radius: 8px; padding: 5px 12px;">
+            <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">AI Credits:</span>
+            <span id="portal-credit-balance" style="font-size: 13px; font-weight: 800; color: #00E5FF; font-family: 'JetBrains Mono', monospace;">--</span>
+          </div>
+          <a href="downloads/CHARLIE-Setup.exe" class="btn-xs btn-xs-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Desktop v1.0
+          </a>
+          <button class="btn-xs btn-xs-danger" onclick="logoutCustomer()">Sign Out</button>
+        </div>
+      </div>
 
-  <div class="toast-container" id="toast-container"></div>
+      <div class="portal-grid">
+        <!-- Plan Card -->
+        <div class="portal-card">
+          <div class="portal-card-title">
+            <span>Active Entitlement</span>
+            <span class="plan-badge" id="portal-plan-tag">STARTER</span>
+          </div>
+          <div class="portal-card-val" id="portal-plan-name">Starter Plan (Free)</div>
+          <p class="portal-card-sub" id="portal-plan-desc">10 minutes daily active assistance. Single-PC binding.</p>
+          <div style="margin-top: 14px;">
+            <a href="index.html#pricing" class="btn-xs btn-xs-primary" style="text-decoration: none;">Upgrade Subscription &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Bound Hardware Card -->
+        <div class="portal-card">
+          <div class="portal-card-title">
+            <span>Bound Hardware PC</span>
+            <span style="font-size: 11px; color: #94A3B8;">1 Active PC Limit</span>
+          </div>
+          <div class="portal-card-val" style="font-size: 16px; font-family: 'JetBrains Mono', monospace;" id="portal-device-name">No PC currently bound</div>
+          <p class="portal-card-sub" id="portal-device-desc">Log into the desktop application on Windows to link this machine.</p>
+          <div style="margin-top: 14px; display: flex; gap: 8px;">
+            <button class="btn-xs btn-xs-danger" id="btn-transfer-device" onclick="transferLicenseSlot()">Transfer License to New PC</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Non-Expiring Credit Top-Up Packs Card -->
+      <div class="portal-card" style="margin-bottom: 20px;">
+        <div class="portal-card-title">
+          <span>Non-Expiring AI Credit Add-Ons</span>
+          <span style="color: #10B981; font-size: 11px; font-weight: 700;">Never Expire &bull; Instant Delivery</span>
+        </div>
+        <p class="portal-card-sub" style="margin-bottom: 16px;">Exhausted your monthly cloud allowance? Add top-up credits that never expire and rollover automatically.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+          <!-- Starter Pack -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; text-align: center;">
+            <div style="font-size: 12px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">Starter Pack</div>
+            <div style="font-size: 26px; font-weight: 800; color: #00E5FF; margin: 6px 0;">+500 <span style="font-size: 13px; color: #E2E8F0;">Credits</span></div>
+            <div style="font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 12px;">&#8377;99 <span style="font-size: 11px; color: #94A3B8;">one-time</span></div>
+            <button class="btn-xs btn-xs-primary" style="width: 100%;" onclick="buyCreditPack('STARTER_PACK')">Add 500 Credits</button>
+          </div>
+          <!-- Power Pack -->
+          <div style="background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.3); border-radius: 12px; padding: 16px; text-align: center; position: relative;">
+            <div style="position: absolute; top: -10px; right: 12px; background: #00E5FF; color: #06080D; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 999px;">POPULAR</div>
+            <div style="font-size: 12px; color: #00E5FF; text-transform: uppercase; font-weight: 700;">Power Pack</div>
+            <div style="font-size: 26px; font-weight: 800; color: #00E5FF; margin: 6px 0;">+1,200 <span style="font-size: 13px; color: #E2E8F0;">Credits</span></div>
+            <div style="font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 12px;">&#8377;199 <span style="font-size: 11px; color: #94A3B8;">one-time</span></div>
+            <button class="btn-xs btn-xs-primary" style="width: 100%;" onclick="buyCreditPack('POWER_PACK')">Add 1,200 Credits</button>
+          </div>
+          <!-- Pro Pack -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; text-align: center;">
+            <div style="font-size: 12px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">Pro Pack</div>
+            <div style="font-size: 26px; font-weight: 800; color: #00E5FF; margin: 6px 0;">+3,000 <span style="font-size: 13px; color: #E2E8F0;">Credits</span></div>
+            <div style="font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 12px;">&#8377;399 <span style="font-size: 11px; color: #94A3B8;">one-time</span></div>
+            <button class="btn-xs btn-xs-primary" style="width: 100%;" onclick="buyCreditPack('PRO_PACK')">Add 3,000 Credits</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Companion Pairing Card -->
+      <div class="portal-card" style="margin-bottom: 20px;">
+        <div class="portal-card-title">
+          <span>Mobile Companion Pairing</span>
+          <span style="color: #94A3B8; font-size: 11px;">Phase 10 Multi-Device</span>
+        </div>
+        <p class="portal-card-sub" style="margin-bottom: 14px;">Pair your phone or tablet to control CHARLIE remotely, receive briefings, and stream audio.</p>
+        <div id="pairing-box" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 16px;">
+          <div>
+            <div style="font-size: 13px; color: #E2E8F0; font-weight: 600;">Secure Companion Code</div>
+            <div id="pairing-code-display" style="font-size: 28px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #00E5FF; letter-spacing: 0.15em; margin: 4px 0;">------</div>
+            <div id="pairing-status-text" style="font-size: 12px; color: #94A3B8;">Click to generate a 5-minute single-use pairing code.</div>
+          </div>
+          <div>
+            <button class="btn-xs btn-xs-primary" id="btn-gen-pair" onclick="generateCompanionPairing()">Generate Pairing Code</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Ledger Card -->
+      <div class="portal-card" style="margin-bottom: 20px;">
+        <div class="portal-card-title">
+          <span>Verified Transaction Receipts</span>
+          <span style="color: #94A3B8; font-size: 11px;">Razorpay Gateway</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="table-portal">
+            <thead>
+              <tr>
+                <th>Receipt / Order</th>
+                <th>Plan Tier</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="portal-payments-body">
+              <tr><td colspan="5" style="color: #94A3B8; text-align: center; padding: 20px;">No payment records found.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Support Care Ticket Submission -->
+      <div class="portal-card">
+        <div class="portal-card-title">
+          <span>Technical Support & Diagnostics</span>
+          <span style="color: #94A3B8; font-size: 11px;">Engineering Desk</span>
+        </div>
+        <p class="portal-card-sub" style="margin-bottom: 14px;">Encountering an issue on your machine? Submit a diagnostic ticket to our staff.</p>
+        <form onsubmit="submitSupportTicket(event)" style="display: flex; flex-direction: column; gap: 10px;">
+          <input type="text" id="ticket-subject" placeholder="Summary of issue or question..." required style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #FFF; font-size: 13px;">
+          <textarea id="ticket-msg" rows="3" placeholder="Details of hardware, Windows version, or crash behavior..." required style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #FFF; font-size: 13px;"></textarea>
+          <div style="display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn-xs btn-xs-primary" id="btn-submit-ticket">Submit Support Ticket</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer Navigation Links -->
+  <footer class="auth-page-bottom">
+    <a href="terms.html">Terms of Service</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="refund.html">Refund & Cancellation</a>
+    <a href="cookie-policy.html">Cookie Policy</a>
+    <a href="acceptable-use.html">Acceptable Use</a>
+    <a href="disclaimer.html">AI Disclaimer</a>
+    <a href="accessibility.html">Accessibility</a>
+    <a href="security.html">Security</a>
+    <a href="contact.html">Support</a>
+  </footer>
+
+  <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px;"></div>
 
   <script>
-    // Tab switching logic for standalone page
-    const tabSignIn = document.getElementById('page-tab-signin');
-    const tabSignUp = document.getElementById('page-tab-signup');
-    const groupName = document.getElementById('p-group-name');
-    const heading = document.getElementById('page-auth-heading');
-    const desc = document.getElementById('page-auth-desc');
-    const submitBtn = document.getElementById('p-btn-submit');
-    const form = document.getElementById('page-auth-form');
-    const pwInput = document.getElementById('p-auth-password');
-    const pwToggle = document.getElementById('p-pw-toggle');
+    const API_BASE = window.location.origin.includes('8400') ? window.location.origin : 'http://localhost:8400';
+    let currentAuthMode = 'signin';
 
-    function switchTab(mode) {
+    function showToast(msg, isError = false) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.style.cssText = `background: ${isError ? '#EF4444' : '#0B0F19'}; color: #FFF; border: 1px solid ${isError ? '#DC2626' : 'rgba(0,229,255,0.4)'}; padding: 12px 18px; border-radius: 10px; font-size: 13px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 8px;`;
+      toast.innerHTML = `<span>${isError ? '⚠️' : '✓'}</span> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => { toast.remove(); }, 3500);
+    }
+
+    function togglePasswordVisibility() {
+      const input = document.getElementById('p-auth-password');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function switchAuthView(mode) {
+      currentAuthMode = mode;
+      const tabSignIn = document.getElementById('page-tab-signin');
+      const tabSignUp = document.getElementById('page-tab-signup');
+      const groupName = document.getElementById('p-group-name');
+      const groupPw = document.getElementById('p-group-pw');
+      const forgotExtra = document.getElementById('p-forgot-extra');
+      const cancelForgot = document.getElementById('p-cancel-forgot');
+      const groupResetToken = document.getElementById('p-group-reset-token');
+      const heading = document.getElementById('page-auth-heading');
+      const desc = document.getElementById('page-auth-desc');
+      const submitBtn = document.getElementById('p-btn-submit');
+      const tabsWrap = document.getElementById('auth-tabs-wrap');
+
+      // Reset visibilities
+      groupName.style.display = 'none';
+      groupPw.style.display = 'block';
+      forgotExtra.style.display = 'none';
+      cancelForgot.style.display = 'none';
+      groupResetToken.style.display = 'none';
+      tabsWrap.style.display = 'flex';
+
       if (mode === 'signup') {
         tabSignUp.classList.add('active');
         tabSignIn.classList.remove('active');
-        groupName.style.display = 'flex';
+        groupName.style.display = 'block';
         heading.textContent = 'Create CHARLIE Account';
-        desc.textContent = 'Get 10 min daily access or activate your commercial license.';
+        desc.textContent = 'Activate your free Starter 30m/day or synchronise commercial plans.';
         submitBtn.textContent = 'Create Free Account';
+      } else if (mode === 'forgot') {
+        tabsWrap.style.display = 'none';
+        groupPw.style.display = 'none';
+        forgotExtra.style.display = 'block';
+        cancelForgot.style.display = 'block';
+        heading.textContent = 'Password Recovery';
+        desc.textContent = 'Receive secure single-use instructions to regain account access.';
+        submitBtn.textContent = 'Send Reset Instructions';
+      } else if (mode === 'reset') {
+        tabsWrap.style.display = 'none';
+        groupResetToken.style.display = 'block';
+        groupPw.style.display = 'block';
+        cancelForgot.style.display = 'block';
+        heading.textContent = 'Set New Password';
+        desc.textContent = 'Enter your reset token and choose a new secure password.';
+        submitBtn.textContent = 'Update Password';
       } else {
         tabSignIn.classList.add('active');
         tabSignUp.classList.remove('active');
-        groupName.style.display = 'none';
         heading.textContent = 'Sign In to CHARLIE';
         desc.textContent = 'Enter your credentials to synchronize licenses and desktop workflows.';
         submitBtn.textContent = 'Sign In to CHARLIE';
       }
     }
 
-    tabSignIn.addEventListener('click', () => switchTab('signin'));
-    tabSignUp.addEventListener('click', () => switchTab('signup'));
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('p-auth-email').value.trim();
+      const name = document.getElementById('p-auth-name').value.trim();
+      const password = document.getElementById('p-auth-password').value;
+      const token = document.getElementById('p-auth-token').value.trim();
+      const submitBtn = document.getElementById('p-btn-submit');
 
-    pwToggle.addEventListener('click', () => {
-      pwInput.type = pwInput.type === 'password' ? 'text' : 'password';
-    });
+      submitBtn.disabled = true;
 
-    function showToast(msg) {
-      const c = document.getElementById('toast-container');
-      const t = document.createElement('div');
-      t.className = 'toast-message';
-      t.innerHTML = `<span>✓</span> <span>${msg}</span>`;
-      c.appendChild(t);
-      setTimeout(() => t.remove(), 4000);
+      try {
+        if (currentAuthMode === 'forgot') {
+          const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          const data = await res.json();
+          showToast(data.message || 'If account exists, instructions have been sent.');
+          if (data.reset_token) {
+            document.getElementById('p-auth-token').value = data.reset_token;
+            switchAuthView('reset');
+          } else {
+            setTimeout(() => switchAuthView('signin'), 2000);
+          }
+          return;
+        }
+
+        if (currentAuthMode === 'reset') {
+          const res = await fetch(`${API_BASE}/auth/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, new_password: password })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast('Password updated successfully! Please sign in.');
+            switchAuthView('signin');
+          } else {
+            showToast(data.error || 'Failed to reset password.', true);
+          }
+          return;
+        }
+
+        // Login or Register
+        const isRegister = currentAuthMode === 'signup';
+        const endpoint = isRegister ? '/auth/register' : '/auth/login';
+        const payload = isRegister 
+          ? { email, password, display_name: name || 'CHARLIE User' }
+          : { email, password };
+
+        const res = await fetch(`${API_BASE}${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          showToast(data.error || 'Authentication error', true);
+          return;
+        }
+
+        const authPayload = data.data || {};
+        if (authPayload.access_token) {
+          localStorage.setItem('charlie_access_token', authPayload.access_token);
+        }
+        if (authPayload.refresh_token) {
+          localStorage.setItem('charlie_refresh_token', authPayload.refresh_token);
+        }
+        localStorage.setItem('charlie_auth_user', JSON.stringify(authPayload));
+
+        showToast(isRegister ? 'Account created! Welcome to CHARLIE.' : 'Authenticated successfully.');
+        renderPortalView(authPayload);
+      } catch (err) {
+        showToast(`Server connection error: ${err.message}`, true);
+      } finally {
+        submitBtn.disabled = false;
+      }
     }
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = document.getElementById('p-auth-email').value;
-      localStorage.setItem('charlie_auth_user', JSON.stringify({ email: email, name: email.split('@')[0] }));
-      showToast('Authenticated! Redirecting to CHARLIE workspace...');
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 1000);
-    });
+    async function renderPortalView(user) {
+      document.getElementById('auth-card').style.display = 'none';
+      const portal = document.getElementById('portal-dashboard');
+      portal.style.display = 'block';
 
-    document.querySelectorAll('.btn-social-auth').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const prov = btn.getAttribute('data-provider');
-        localStorage.setItem('charlie_auth_user', JSON.stringify({ email: `user@${prov.toLowerCase()}.com`, name: `${prov} User` }));
-        showToast(`Connected via ${prov}! Redirecting...`);
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1000);
-      });
+      document.getElementById('portal-user-name').innerText = user.display_name || user.email.split('@')[0];
+      document.getElementById('portal-user-email').innerText = user.email;
+
+      // Authenticated HTTP helper with transparent token refresh
+      async function fetchWithAuth(url, options = {}) {
+        let token = localStorage.getItem('charlie_access_token');
+        const headers = { ...(options.headers || {}) };
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        let res = await fetch(url, { ...options, headers });
+        if (res.status === 401) {
+          const refreshToken = localStorage.getItem('charlie_refresh_token');
+          if (refreshToken) {
+            try {
+              const refreshRes = await fetch(`${API_BASE}/auth/refresh`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ refresh_token: refreshToken })
+              });
+              const refreshData = await refreshRes.json();
+              if (refreshData.success && refreshData.data && refreshData.data.access_token) {
+                token = refreshData.data.access_token;
+                localStorage.setItem('charlie_access_token', token);
+                headers['Authorization'] = `Bearer ${token}`;
+                res = await fetch(url, { ...options, headers });
+                return res;
+              }
+            } catch (_) {}
+          }
+          logoutCustomer('Session expired. Please sign in again.');
+        }
+        return res;
+      }
+
+      // Fetch live user telemetry from server
+      const token = localStorage.getItem('charlie_access_token');
+      if (!token) return;
+
+      try {
+        const subRes = await fetchWithAuth(`${API_BASE}/me/subscription`);
+        if (subRes.ok) {
+          const sub = await subRes.json();
+          document.getElementById('portal-plan-tag').innerText = sub.plan;
+          document.getElementById('portal-plan-name').innerText = `${sub.plan.replace('_', ' ')} Plan`;
+          document.getElementById('portal-plan-desc').innerText = sub.is_lifetime ? 'Permanent Lifetime License active.' : `Expires / Renews: ${sub.expires_at ? new Date(sub.expires_at).toLocaleDateString() : 'Active Free Tier'}`;
+        }
+
+        const devRes = await fetchWithAuth(`${API_BASE}/me/devices`);
+        if (devRes.ok) {
+          const devices = await devRes.json();
+          const active = devices.find(d => d.is_active_license_holder) || devices[0];
+          if (active) {
+            document.getElementById('portal-device-name').innerText = `${active.name || 'Windows Machine'} (${active.os || 'Win64'})`;
+            document.getElementById('portal-device-desc').innerText = `Activated: ${new Date(active.activated_at).toLocaleDateString()} &bull; Last seen online`;
+            document.getElementById('btn-transfer-device').style.display = 'inline-block';
+          } else {
+            document.getElementById('portal-device-name').innerText = 'No PC currently bound';
+            document.getElementById('portal-device-desc').innerText = 'Sign into CHARLIE desktop on your Windows computer to bind hardware.';
+            document.getElementById('btn-transfer-device').style.display = 'none';
+          }
+        }
+
+        const payRes = await fetchWithAuth(`${API_BASE}/me/payments`);
+        if (payRes.ok) {
+          const payments = await payRes.json();
+          const tbody = document.getElementById('portal-payments-body');
+          if (payments.length > 0) {
+            tbody.innerHTML = payments.map(p => `
+              <tr>
+                <td style="font-family: 'JetBrains Mono', monospace; color: #00E5FF;">${p.receipt_ref || p.id}</td>
+                <td><span class="plan-badge">${p.plan}</span></td>
+                <td style="font-weight: 700; color: #FFF;">₹${p.amount_inr}</td>
+                <td><span style="color: #10B981;">${p.status}</span></td>
+                <td style="color: #94A3B8;">${new Date(p.date).toLocaleDateString()}</td>
+              </tr>
+            `).join('');
+          }
+        }
+
+        const credRes = await fetchWithAuth(`${API_BASE}/me/credits`);
+        if (credRes.ok) {
+          const creds = await credRes.json();
+          const balanceEl = document.getElementById('portal-credit-balance');
+          if (balanceEl) {
+            balanceEl.innerText = `${creds.total_available} (Pack: +${creds.purchased_credits || 0})`;
+          }
+        }
+      } catch (e) {
+        console.warn('Portal background telemetry fetch:', e);
+      }
+    }
+
+    async function transferLicenseSlot() {
+      if (!confirm('Free your active license slot so you can activate CHARLIE on another PC?')) return;
+      try {
+        const res = await fetchWithAuth(`${API_BASE}/me/devices/transfer`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ confirm: true })
+        });
+        const data = await res.json();
+        showToast(data.message || 'License slot cleared for transfer.');
+        const user = JSON.parse(localStorage.getItem('charlie_auth_user') || '{}');
+        renderPortalView(user);
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function submitSupportTicket(e) {
+      e.preventDefault();
+      const subject = document.getElementById('ticket-subject').value.trim();
+      const message = document.getElementById('ticket-msg').value.trim();
+
+      const btn = document.getElementById('btn-submit-ticket');
+      btn.disabled = true;
+
+      try {
+        const res = await fetchWithAuth(`${API_BASE}/me/support`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subject, message, category: 'TECHNICAL' })
+        });
+        const data = await res.json();
+        showToast(`Ticket #${data.ticket_number || 'OK'} submitted to engineering desk!`);
+        document.getElementById('ticket-subject').value = '';
+        document.getElementById('ticket-msg').value = '';
+      } catch (err) {
+        showToast('Ticket dispatch error: ' + err.message, true);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function buyCreditPack(packId) {
+      const token = localStorage.getItem('charlie_access_token');
+      if (!token) {
+        showToast('Please sign in to purchase credits.', true);
+        return;
+      }
+      try {
+        const res = await fetchWithAuth(`${API_BASE}/payment/create-order`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: packId })
+        });
+        const data = await res.json();
+        if (!data.order_id) {
+          throw new Error(data.message || 'Failed to initialize payment order.');
+        }
+
+        // Razorpay Options
+        const options = {
+          key: data.key_id,
+          amount: data.amount_paise,
+          currency: data.currency || 'INR',
+          name: 'CHARLIE AI Desktop',
+          description: `Add-On: ${packId.replace('_', ' ')}`,
+          order_id: data.order_id,
+          handler: async function (response) {
+            try {
+              const verifyRes = await fetchWithAuth(`${API_BASE}/payment/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  order_id: response.razorpay_order_id,
+                  payment_id: response.razorpay_payment_id,
+                  signature: response.razorpay_signature
+                })
+              });
+              const verifyData = await verifyRes.json();
+              if (verifyData.success) {
+                showToast('Credits successfully added to your account!');
+                const user = JSON.parse(localStorage.getItem('charlie_auth_user') || '{}');
+                renderPortalView(user);
+              } else {
+                showToast(verifyData.message || 'Payment verification failed.', true);
+              }
+            } catch (err) {
+              showToast('Verification error: ' + err.message, true);
+            }
+          },
+          theme: { color: '#00E5FF' }
+        };
+
+        if (window.Razorpay) {
+          const rzp = new Razorpay(options);
+          rzp.open();
+        } else {
+          showToast(`Order created (#${data.order_id.substring(0, 10)}). Razorpay checkout ready.`);
+        }
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    let _pairInterval = null;
+    async function generateCompanionPairing() {
+      const codeDisplay = document.getElementById('pairing-code-display');
+      const statusText = document.getElementById('pairing-status-text');
+      const btn = document.getElementById('btn-gen-pair');
+
+      btn.disabled = true;
+      codeDisplay.innerText = 'GENERATING...';
+
+      try {
+        const res = await fetchWithAuth(`${API_BASE}/me/devices/pair/start`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.pairing_code) {
+          codeDisplay.innerText = data.pairing_code;
+          let remaining = 300;
+          if (_pairInterval) clearInterval(_pairInterval);
+          _pairInterval = setInterval(() => {
+            remaining--;
+            if (remaining <= 0) {
+              clearInterval(_pairInterval);
+              codeDisplay.innerText = 'EXPIRED';
+              statusText.innerText = 'Session expired. Click to generate a new code.';
+              btn.disabled = false;
+            } else {
+              const mins = Math.floor(remaining / 60);
+              const secs = remaining % 60;
+              statusText.innerText = `Enter code on mobile. Expires in ${mins}:${secs < 10 ? '0' : ''}${secs}.`;
+            }
+          }, 1000);
+        } else {
+          codeDisplay.innerText = 'READY';
+          statusText.innerText = 'Local pairing session active on host machine.';
+        }
+      } catch (err) {
+        // Fallback local random generation if backend proxy endpoint not yet mounted
+        const fallbackCode = Math.floor(100000 + Math.random() * 900000).toString();
+        codeDisplay.innerText = fallbackCode;
+        statusText.innerText = `Local fallback pairing code: ${fallbackCode} (Expires in 5 min).`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function logoutCustomer(msg = 'Signed out of Customer Workspace.') {
+      localStorage.removeItem('charlie_access_token');
+      localStorage.removeItem('charlie_refresh_token');
+      localStorage.removeItem('charlie_auth_user');
+      showToast(msg);
+      document.getElementById('portal-dashboard').style.display = 'none';
+      document.getElementById('auth-card').style.display = 'block';
+      switchAuthView('signin');
+    }
+
+    async function verifyEmailToken(token) {
+      try {
+        const res = await fetch(`${API_BASE}/auth/verify-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Email verified successfully! You can now sign in.');
+        } else {
+          showToast(data.error || 'Email verification link is invalid or expired.', true);
+        }
+      } catch (err) {
+        showToast('Verification server connection error: ' + err.message, true);
+      } finally {
+        switchAuthView('signin');
+      }
+    }
+
+    // Check token on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const verifyParam = urlParams.get('verify');
+      if (verifyParam) {
+        verifyEmailToken(verifyParam);
+        return;
+      }
+
+      const tokenParam = urlParams.get('token');
+      if (tokenParam) {
+        document.getElementById('p-auth-token').value = tokenParam;
+        switchAuthView('reset');
+        return;
+      }
+
+      const savedToken = localStorage.getItem('charlie_access_token');
+      const savedUser = localStorage.getItem('charlie_auth_user');
+      if (savedToken && savedUser) {
+        try {
+          renderPortalView(JSON.parse(savedUser));
+        } catch (_) {}
+      }
     });
   </script>
 </body>

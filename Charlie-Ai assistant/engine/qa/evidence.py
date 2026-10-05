@@ -1,5 +1,5 @@
 """
-JARVIS Phase 13: Evidence Registry
+CHARLIE Phase 13: Evidence Registry
 Persistent verifiable store for all test and evaluation results with cryptographic SHA256 integrity.
 No feature can be certified PASS without a recorded, verifiable EvidenceRecord.
 """
@@ -16,7 +16,7 @@ from typing import Any, Dict, List, Optional
 
 from .models import CertificationStatus, EvidenceRecord
 
-logger = logging.getLogger("jarvis.qa.evidence")
+logger = logging.getLogger("charlie.qa.evidence")
 
 
 class EvidenceRegistry:

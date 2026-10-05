@@ -4,6 +4,9 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initFeatureHub();
+  initNavbarScrollSpy();
+  initTrustSection();
   initSimulator();
   initPromptPlayground();
   initHardwareCalculator();
@@ -15,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initSystemCompatibilityDetection();
   initSkillDirectoryFilter();
   initPricingCheckout();
+  initOfflineDetection();
+  initCookieConsent();
+  initPrivacyAnalytics();
 });
 
 /* --------------------------------------------------------------------------
@@ -212,7 +218,7 @@ function initDownloadHandlers() {
     const name = filename || 'CHARLIE-Setup.exe';
 
     if (filenameDisplay) {
-      filenameDisplay.innerHTML = `Downloading <strong>${name}</strong> (151 MB)`;
+      filenameDisplay.innerHTML = `Downloading <strong>${name}</strong> (192 MB)`;
     }
 
     if (progressBar) progressBar.style.width = '0%';
@@ -361,6 +367,8 @@ function initAuthModal() {
     authModal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
     document.documentElement.classList.add('modal-open');
+    const tsInput = document.getElementById('auth-form-ts');
+    if (tsInput) tsInput.value = Date.now().toString();
     switchTab(mode);
   }
 
@@ -432,35 +440,19 @@ function initAuthModal() {
   if (pwToggle && pwInput) {
     pwToggle.addEventListener('click', () => {
       pwInput.type = pwInput.type === 'password' ? 'text' : 'password';
-      pwToggle.textContent = pwInput.type === 'password' ? '👁' : '🔒';
+      const eyeOpen = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+      const eyeClosed = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+      pwToggle.innerHTML = pwInput.type === 'password' ? eyeOpen : eyeClosed;
     });
   }
+
+  const AUTH_API_BASE = window.location.origin.includes('8400') ? window.location.origin : 'http://localhost:8400';
 
   // Social OAuth click handlers
   document.querySelectorAll('.btn-social-auth').forEach(btn => {
     btn.addEventListener('click', () => {
-      const provider = btn.getAttribute('data-provider') || 'OAuth';
-      btn.style.opacity = '0.6';
-      btn.style.pointerEvents = 'none';
-
-      showToast(`Connecting via ${provider}...`);
-
-      setTimeout(() => {
-        const mockUser = {
-          name: `${provider} Creator`,
-          email: `user@${provider.toLowerCase()}.com`,
-          provider: provider
-        };
-        try {
-          localStorage.setItem('charlie_auth_user', JSON.stringify(mockUser));
-        } catch (_) {}
-
-        updateHeaderAuth(mockUser);
-        btn.style.opacity = '';
-        btn.style.pointerEvents = '';
-        closeAuth();
-        showToast(`Welcome! Signed in with ${provider}.`);
-      }, 700);
+      const provider = btn.getAttribute('data-provider') || 'Social';
+      showToast(`${provider} single sign-on is scheduled for next release. Please use email registration.`);
     });
   });
 
@@ -468,6 +460,23 @@ function initAuthModal() {
   if (authForm) {
     authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Anti-Spam Bot Trap validation
+      const hpField = document.getElementById('auth-hp-trap');
+      if (hpField && hpField.value.trim() !== '') {
+        console.warn('Bot submission blocked.');
+        showToast('Submission error. Please retry.', true);
+        return;
+      }
+      const formTs = document.getElementById('auth-form-ts');
+      if (formTs && formTs.value) {
+        const elapsed = Date.now() - parseInt(formTs.value, 10);
+        if (elapsed < 500) {
+          showToast('Please wait a moment before submitting.', true);
+          return;
+        }
+      }
+
       const emailInput = document.getElementById('auth-email');
       const nameInput = document.getElementById('auth-name');
       const pwInput = document.getElementById('auth-password');
@@ -492,7 +501,7 @@ function initAuthModal() {
           ? { email, password, display_name: name || 'CHARLIE User' }
           : { email, password };
 
-        const res = await fetch(endpoint, {
+        const res = await fetch(`${AUTH_API_BASE}${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -516,7 +525,7 @@ function initAuthModal() {
         localStorage.setItem('charlie_auth_user', JSON.stringify(userData));
         updateHeaderAuth(userData);
         closeAuth();
-        showToast(isSignUp ? `Welcome ${userData.display_name || email}! Starter 10m/day active.` : `Welcome back, ${userData.display_name || email}!`);
+        showToast(isSignUp ? `Welcome ${userData.display_name || email}! Starter 30m/day active.` : `Welcome back, ${userData.display_name || email}!`);
 
         const pendingPlan = sessionStorage.getItem('pending_checkout_plan');
         if (pendingPlan) {
@@ -524,11 +533,7 @@ function initAuthModal() {
           initiateCheckout(pendingPlan);
         }
       } catch (err) {
-        const user = { email, name, plan: 'STARTER' };
-        localStorage.setItem('charlie_auth_user', JSON.stringify(user));
-        updateHeaderAuth(user);
-        closeAuth();
-        showToast(`Signed in as ${email}.`);
+        showToast(`Server connection error: ${err.message}. Please check connection.`, true);
       } finally {
         if (submitBtn) {
           submitBtn.textContent = isSignUp ? 'Create Free Account' : 'Sign In to CHARLIE';
@@ -882,7 +887,516 @@ function initHardwareCalculator() {
   updateEstimates();
 }
 
+/* --------------------------------------------------------------------------
+   Offline Status Detection & Session Expiration Recovery
+   -------------------------------------------------------------------------- */
+function initOfflineDetection() {
+  function updateNetworkStatus() {
+    let banner = document.getElementById('charlie-offline-indicator');
+    if (!navigator.onLine) {
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'charlie-offline-indicator';
+        banner.setAttribute('role', 'alert');
+        banner.setAttribute('aria-live', 'assertive');
+        banner.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#ef4444;color:#fff;padding:10px 20px;border-radius:9999px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:0 10px 25px rgba(0,0,0,0.5);z-index:9999;border:1px solid rgba(255,255,255,0.2);';
+        banner.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;"></span> Offline: Local execution active. Cloud sync paused.';
+        document.body.appendChild(banner);
+      }
+    } else {
+      if (banner) {
+        banner.style.background = '#10b981';
+        banner.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;"></span> Online: Connection restored.';
+        setTimeout(() => {
+          if (banner && banner.parentNode) banner.parentNode.removeChild(banner);
+        }, 3000);
+      }
+    }
+  }
 
+  window.addEventListener('online', updateNetworkStatus);
+  window.addEventListener('offline', updateNetworkStatus);
+}
 
+function handleSessionExpired() {
+  localStorage.removeItem('charlie_access_token');
+  localStorage.removeItem('charlie_auth_user');
+  sessionStorage.setItem('session_expired_notice', 'true');
+  window.location.href = 'login.html?expired=1';
+}
 
+/* --------------------------------------------------------------------------
+   Cookie Consent Banner
+   -------------------------------------------------------------------------- */
+function initCookieConsent() {
+  const banner = document.getElementById('cookie-consent-banner');
+  const btnAccept = document.getElementById('btn-cookie-accept');
+  const btnEssential = document.getElementById('btn-cookie-essential');
+  if (!banner) return;
 
+  const savedConsent = localStorage.getItem('charlie_cookie_consent');
+  if (!savedConsent) {
+    setTimeout(() => {
+      banner.classList.add('visible');
+    }, 800);
+  }
+
+  function handleConsent(choice) {
+    localStorage.setItem('charlie_cookie_consent', choice);
+    banner.classList.remove('visible');
+    if (window.CharlieAnalytics) {
+      window.CharlieAnalytics.track('consent', choice);
+    }
+  }
+
+  if (btnAccept) btnAccept.addEventListener('click', () => handleConsent('all'));
+  if (btnEssential) btnEssential.addEventListener('click', () => handleConsent('essential'));
+}
+
+/* --------------------------------------------------------------------------
+   Privacy-Preserving Analytics Setup (Zero third-party cookies, GDPR safe)
+   -------------------------------------------------------------------------- */
+function initPrivacyAnalytics() {
+  window.CharlieAnalytics = {
+    track: function(action, label) {
+      if (navigator.doNotTrack === '1') return;
+      const payload = {
+        action: String(action),
+        label: String(label || ''),
+        path: window.location.pathname,
+        ts: Date.now()
+      };
+      try {
+        if (window.sessionStorage) {
+          const events = JSON.parse(sessionStorage.getItem('charlie_analytics_events') || '[]');
+          events.push(payload);
+          if (events.length > 50) events.shift();
+          sessionStorage.setItem('charlie_analytics_events', JSON.stringify(events));
+        }
+      } catch (_) {}
+    }
+  };
+
+  // Track primary CTA clicks and conversion events
+  document.querySelectorAll('.download-trigger-btn, .auth-open-btn, .btn-primary').forEach(el => {
+    el.addEventListener('click', () => {
+      const text = (el.textContent || el.id || 'cta').trim().substring(0, 30);
+      window.CharlieAnalytics.track('click_cta', text);
+    });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   Pro-Level Interactive Feature Stage & Scroll-Driven Feature Switcher
+   -------------------------------------------------------------------------- */
+function initFeatureHub() {
+  const railBtns = document.querySelectorAll('.feature-rail-btn');
+  const panels = document.querySelectorAll('.stage-panel');
+  const stageTitle = document.getElementById('stage-active-title');
+  const stageStatus = document.getElementById('stage-active-status');
+  const featureSection = document.getElementById('features');
+
+  if (!railBtns.length || !panels.length) return;
+
+  const featureMetadata = {
+    video: {
+      title: 'CHARLIE // ENGINE // FILMORA_STUDIO',
+      status: 'ACTIVE • 60 FPS'
+    },
+    os: {
+      title: 'CHARLIE // CORE // OS_AUTOMATION_SANDBOX',
+      status: 'SAFE AST • <4ms'
+    },
+    voice: {
+      title: 'CHARLIE // AUDIO // NEURAL_VOICE_48KHZ',
+      status: '112ms LATENCY'
+    },
+    vision: {
+      title: 'CHARLIE // MULTIMODAL // SCREEN_VISION_OCR',
+      status: '99.4% PRECISION'
+    },
+    code: {
+      title: 'CHARLIE // COPILOT // REPO_DIFF_VERIFIER',
+      status: 'AST VERIFIED'
+    },
+    privacy: {
+      title: 'CHARLIE // SECURITY // AIR_GAPPED_PERIMETER',
+      status: '0.00 KB/s LEAK'
+    }
+  };
+
+  let activeIndex = 0;
+  let autoTimer = null;
+  let isUserInteracting = false;
+
+  function activateFeature(index, manual = false) {
+    if (index < 0 || index >= railBtns.length) return;
+    activeIndex = index;
+
+    const btn = railBtns[index];
+    const featureKey = btn.getAttribute('data-feature');
+
+    // Update rail buttons
+    railBtns.forEach((b, i) => {
+      const isActive = i === index;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    // Update stage panels
+    panels.forEach(p => {
+      const match = p.getAttribute('data-panel') === featureKey;
+      p.classList.toggle('active', match);
+    });
+
+    // Update title bar
+    if (featureMetadata[featureKey]) {
+      if (stageTitle) stageTitle.textContent = featureMetadata[featureKey].title;
+      if (stageStatus) stageStatus.textContent = featureMetadata[featureKey].status;
+    }
+
+    if (manual) {
+      resetTimer();
+    }
+  }
+
+  // Click handlers
+  railBtns.forEach((btn, idx) => {
+    btn.addEventListener('click', () => {
+      activateFeature(idx, true);
+    });
+  });
+
+  // Auto-advance timer (cycles smoothly every 6.5s)
+  function startTimer() {
+    stopTimer();
+    autoTimer = setInterval(() => {
+      if (!isUserInteracting) {
+        const next = (activeIndex + 1) % railBtns.length;
+        activateFeature(next, false);
+      }
+    }, 6500);
+  }
+
+  function stopTimer() {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+  }
+
+  function resetTimer() {
+    stopTimer();
+    startTimer();
+  }
+
+  // Pause on hover
+  const stageContainer = document.getElementById('feature-stage-container');
+  const railContainer = document.querySelector('.feature-nav-rail');
+
+  [stageContainer, railContainer].forEach(el => {
+    if (el) {
+      el.addEventListener('mouseenter', () => { isUserInteracting = true; });
+      el.addEventListener('mouseleave', () => { isUserInteracting = false; });
+    }
+  });
+
+  startTimer();
+
+  // Scroll-driven switcher: when user scrolls down through the feature section
+  if (featureSection) {
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const rect = featureSection.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+
+          // If the feature section is currently spanning the viewport
+          if (rect.top <= windowHeight * 0.4 && rect.bottom >= windowHeight * 0.4) {
+            const sectionHeight = rect.height;
+            const progress = Math.min(Math.max((-rect.top + windowHeight * 0.2) / (sectionHeight - windowHeight * 0.3), 0), 1);
+            const targetIndex = Math.min(Math.floor(progress * railBtns.length), railBtns.length - 1);
+            
+            if (targetIndex !== activeIndex && !isUserInteracting) {
+              activateFeature(targetIndex, false);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  // --- INTERACTIVE ACTIONS INSIDE EACH PANEL ---
+  
+  // 1. Video panel: Run Auto-Cut
+  const btnVideoCut = document.getElementById('btn-trigger-video-cut');
+  const playhead = document.getElementById('video-playhead');
+  const subtitleDisplay = document.getElementById('video-subtitle-display');
+  const renderStatus = document.getElementById('video-render-status');
+  if (btnVideoCut && playhead) {
+    btnVideoCut.addEventListener('click', () => {
+      btnVideoCut.disabled = true;
+      btnVideoCut.textContent = 'Rendering 4K NVENC...';
+      playhead.style.left = '5%';
+      if (renderStatus) renderStatus.textContent = 'Processing Whisper Transcription & Silence Cutter...';
+
+      setTimeout(() => { playhead.style.left = '45%'; if (subtitleDisplay) subtitleDisplay.textContent = '"Ingesting 4K timeline... 12 silences eliminated."'; }, 600);
+      setTimeout(() => { playhead.style.left = '85%'; if (subtitleDisplay) subtitleDisplay.textContent = '"Synchronizing dynamic animated subtitles at 60fps..."'; }, 1300);
+      setTimeout(() => {
+        playhead.style.left = '100%';
+        if (renderStatus) {
+          renderStatus.textContent = '✓ EXPORT COMPLETE: shorts_master.mp4 (4K 60fps in 2.1s)';
+          renderStatus.style.color = 'var(--emerald-accent)';
+        }
+        btnVideoCut.disabled = false;
+        btnVideoCut.innerHTML = '✓ Cut & Render Complete';
+        setTimeout(() => {
+          btnVideoCut.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Auto-Cut & Captions';
+        }, 3000);
+      }, 2100);
+    });
+  }
+
+  // 2. OS Panel: Macro buttons
+  const macroBtns = document.querySelectorAll('.os-macro-btn');
+  const terminalBody = document.getElementById('os-terminal-output');
+  const cursorCoords = document.getElementById('os-cursor-coords');
+  if (macroBtns.length && terminalBody) {
+    const macroLogs = {
+      organize: [
+        '[0.04s] Scanned desktop folder (34 loose files found).',
+        '[0.12s] Categorized files into Documents, Media, and Code.',
+        '[0.24s] Desktop clean. Created archive folder /Desktop/Organized_2026.'
+      ],
+      briefing: [
+        '[0.05s] Checking Outlook & Google Calendar for next 8 hours.',
+        '[0.18s] 3 scheduled meetings: 10:00 AM Sprint, 2:30 PM Architecture Sync.',
+        '[0.31s] Synthesized text briefing and delivered via Evelyn voice.'
+      ],
+      ram: [
+        '[0.03s] Querying system memory manager via Win32 EmptyWorkingSet API.',
+        '[0.10s] Purged cached browser renderers and orphaned electron workers.',
+        '[0.18s] SUCCESS: Reclaimed 2.4 GB of system RAM.'
+      ]
+    };
+
+    macroBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const macro = btn.getAttribute('data-macro');
+        const logs = macroLogs[macro];
+        if (!logs) return;
+
+        if (cursorCoords) {
+          cursorCoords.textContent = `X: ${Math.floor(Math.random() * 1200 + 200)} • Y: ${Math.floor(Math.random() * 700 + 100)}`;
+        }
+
+        const div = document.createElement('div');
+        div.className = 'term-row term-accent';
+        div.innerHTML = `<span class="term-prompt">&gt;</span> [EXECUTING MACRO: ${btn.textContent}]`;
+        terminalBody.appendChild(div);
+
+        logs.forEach((line, i) => {
+          setTimeout(() => {
+            const p = document.createElement('div');
+            p.className = 'term-row';
+            p.innerHTML = `<span class="term-prompt">&gt;</span> ${line}`;
+            terminalBody.appendChild(p);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+          }, (i + 1) * 250);
+        });
+      });
+    });
+  }
+
+  // 3. Voice Panel: Voice switcher & visualizer equalizer bars
+  const spectrumWrap = document.getElementById('voice-spectrum-bars');
+  if (spectrumWrap && !spectrumWrap.children.length) {
+    for (let i = 0; i < 28; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'voice-bar';
+      bar.style.height = `${Math.floor(Math.random() * 50 + 10)}%`;
+      spectrumWrap.appendChild(bar);
+    }
+    // Animate bars subtly
+    setInterval(() => {
+      const bars = spectrumWrap.querySelectorAll('.voice-bar');
+      bars.forEach(b => {
+        const h = Math.floor(Math.random() * 75 + 15);
+        b.style.height = `${h}%`;
+      });
+    }, 180);
+  }
+
+  const btnVoiceFemale = document.getElementById('btn-voice-female');
+  const btnVoiceMale = document.getElementById('btn-voice-male');
+  const voiceName = document.getElementById('voice-persona-name');
+  const voiceDesc = document.getElementById('voice-persona-desc');
+  const voiceInitial = document.getElementById('voice-persona-initial');
+
+  function setVoice(mode) {
+    if (mode === 'female') {
+      if (btnVoiceFemale) btnVoiceFemale.classList.add('active');
+      if (btnVoiceMale) btnVoiceMale.classList.remove('active');
+      if (voiceName) voiceName.textContent = 'Evelyn — Female Neural Companion';
+      if (voiceDesc) voiceDesc.textContent = 'Dynamic, expressive pitch inflection with conversational pauses and natural cadence.';
+      if (voiceInitial) voiceInitial.textContent = 'EV';
+    } else {
+      if (btnVoiceMale) btnVoiceMale.classList.add('active');
+      if (btnVoiceFemale) btnVoiceFemale.classList.remove('active');
+      if (voiceName) voiceName.textContent = 'Marcus — Male Neural Companion';
+      if (voiceDesc) voiceDesc.textContent = 'Authoritative, resonant tone optimized for deep research briefings and code reviews.';
+      if (voiceInitial) voiceInitial.textContent = 'MC';
+    }
+  }
+
+  if (btnVoiceFemale && btnVoiceMale) {
+    btnVoiceFemale.addEventListener('click', () => setVoice('female'));
+    btnVoiceMale.addEventListener('click', () => setVoice('male'));
+  }
+
+  const btnTestSpeech = document.getElementById('btn-test-speech');
+  if (btnTestSpeech) {
+    btnTestSpeech.addEventListener('click', () => {
+      btnTestSpeech.disabled = true;
+      btnTestSpeech.textContent = 'Playing 48kHz Audio Stream...';
+      setTimeout(() => {
+        btnTestSpeech.disabled = false;
+        btnTestSpeech.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> Test Voice Sample';
+      }, 2000);
+    });
+  }
+
+  // 4. Vision Panel: Scan Active Screen
+  const btnVisionScan = document.getElementById('btn-run-vision-ocr');
+  const crosshair = document.getElementById('vision-crosshair');
+  if (btnVisionScan) {
+    btnVisionScan.addEventListener('click', () => {
+      btnVisionScan.disabled = true;
+      btnVisionScan.textContent = 'Scanning Screen Frame...';
+      if (crosshair) {
+        crosshair.style.top = '30%';
+        crosshair.style.left = '35%';
+      }
+      setTimeout(() => {
+        if (crosshair) { crosshair.style.top = '78%'; crosshair.style.left = '22%'; }
+      }, 700);
+      setTimeout(() => {
+        btnVisionScan.disabled = false;
+        btnVisionScan.innerHTML = '✓ OCR Extraction Complete (0.08s)';
+        setTimeout(() => {
+          btnVisionScan.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Scan Active Screen';
+        }, 3000);
+      }, 1500);
+    });
+  }
+
+  // 5. Code Panel: Run Test Suite
+  const btnCodeTests = document.getElementById('btn-run-code-tests');
+  const codeTestDisplay = document.getElementById('code-test-display');
+  if (btnCodeTests && codeTestDisplay) {
+    btnCodeTests.addEventListener('click', () => {
+      btnCodeTests.disabled = true;
+      codeTestDisplay.innerHTML = '<span class="test-pill time">TEST RUNNER EXECUTING...</span> <span class="test-msg">Running 48 pytest suites in parallel sandbox...</span>';
+      setTimeout(() => {
+        codeTestDisplay.innerHTML = '<span class="test-pill pass">✓ 18 PASSED</span> <span class="test-pill time">0.14s</span> <span class="test-msg">Atomic diff confirmed. Zero regressions found.</span>';
+        btnCodeTests.disabled = false;
+        btnCodeTests.innerHTML = '✓ Tests Passed (0.14s)';
+        setTimeout(() => {
+          btnCodeTests.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Execute Test Suite';
+        }, 3000);
+      }, 1200);
+    });
+  }
+
+  // 6. Privacy Panel: Toggle isolation
+  const btnIsolation = document.getElementById('btn-toggle-isolation');
+  const privStatus = document.getElementById('privacy-network-status');
+  if (btnIsolation) {
+    let locked = true;
+    btnIsolation.addEventListener('click', () => {
+      locked = !locked;
+      if (locked) {
+        btnIsolation.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Isolation Locked';
+        btnIsolation.className = 'btn btn-sm btn-secondary';
+        if (privStatus) {
+          privStatus.textContent = '0.00 KB/s OUTGOING (AIR-GAPPED)';
+          privStatus.style.color = 'var(--emerald-accent)';
+        }
+      } else {
+        btnIsolation.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg> Monitored Mode';
+        btnIsolation.className = 'btn btn-sm btn-primary';
+        if (privStatus) {
+          privStatus.textContent = 'BYOK SECURE PROXY (TLS 1.3)';
+          privStatus.style.color = 'var(--cyan-primary)';
+        }
+      }
+    });
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Header Navbar ScrollSpy (Senior Dev Polish)
+   -------------------------------------------------------------------------- */
+function initNavbarScrollSpy() {
+  const navLinks = document.querySelectorAll('.main-nav .nav-link');
+  if (!navLinks.length) return;
+
+  const sectionIds = ['hero', 'features', 'how-it-works', 'skills', 'trust', 'pricing', 'downloads', 'faq'];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.scrollY + 140;
+
+    sections.forEach(sec => {
+      if (sec.offsetTop <= scrollPos && sec.offsetTop + sec.offsetHeight > scrollPos) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const targetId = href.substring(1);
+        const isActive = targetId === currentId || (currentId === 'hero' && targetId === 'features');
+        link.classList.toggle('active', isActive);
+      }
+    });
+  }, { passive: true });
+}
+
+/* --------------------------------------------------------------------------
+   Trust & Verification Section Interaction
+   -------------------------------------------------------------------------- */
+function initTrustSection() {
+  const btnCopy = document.getElementById('btn-copy-checksum');
+  const hashCode = document.getElementById('checksum-hash');
+
+  if (btnCopy && hashCode) {
+    btnCopy.addEventListener('click', async () => {
+      const text = hashCode.textContent.trim();
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+        btnCopy.innerHTML = '<span style="color: #10b981; font-weight: 700;">✓ Copied!</span>';
+        setTimeout(() => {
+          btnCopy.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg> Copy Hash';
+        }, 2200);
+      } catch (err) {
+        console.warn('Copy failed', err);
+      }
+    });
+  }
+}

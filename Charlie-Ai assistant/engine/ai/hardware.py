@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Hardware Profiler
+CHARLIE Phase 11: Hardware Profiler
 Inspects system RAM, CPU, GPU/VRAM, and storage to recommend safe local model tiers.
 """
 
@@ -10,7 +10,7 @@ import os
 import platform
 from typing import Any, Dict
 
-logger = logging.getLogger("jarvis.ai.hardware")
+logger = logging.getLogger("charlie.ai.hardware")
 
 
 class HardwareProfiler:

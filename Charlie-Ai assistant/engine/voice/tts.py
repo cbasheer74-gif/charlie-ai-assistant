@@ -78,7 +78,7 @@ class SAPI5TTSProvider(TTSProvider):
         try:
             from core.tts import WindowsSAPITTSEngine
             engine = WindowsSAPITTSEngine(voice=voice)
-            engine.speak(text)
+            engine.speak(text, cancel_event=stop_event)
             return True
         except Exception:
             return False
@@ -101,7 +101,7 @@ class EdgeTTSProvider(TTSProvider):
         try:
             from core.tts import EdgeTTS
             tts = EdgeTTS(voice=voice or "en-US-ChristopherNeural")
-            tts.speak(text)
+            tts.speak(text, cancel_event=stop_event)
             return True
         except Exception:
             sapi = SAPI5TTSProvider()
@@ -138,18 +138,101 @@ class TextToSpeechManager:
         """Immediately interrupts and cancels active speech output."""
         self._stop_event.set()
         self._is_speaking = False
+        try:
+            from engine.voice.streamer import get_audio_streamer
+            get_audio_streamer().stop()
+        except Exception:
+            pass
+
+    def speak_stream(
+        self,
+        text_or_sentences: Any,
+        is_critical: bool = False,
+        on_sentence_start: Optional[Callable[[str], None]] = None,
+        on_complete: Optional[Callable[[], None]] = None,
+        emotion: str = "calm",
+    ) -> bool:
+        """Asynchronously streams speech using sentence pipelining for minimal first-byte latency."""
+        if not text_or_sentences or (self.quiet_mode and not is_critical):
+            if on_complete:
+                on_complete()
+            return False
+
+        effective_speed = self.voice_speed
+        effective_volume = self.voice_volume
+        try:
+            from engine.voice.conversational_intelligence import get_voice_suite
+            suite = get_voice_suite()
+            mod_speed, mod_vol, _ = suite.prosody.modulate_tts_params(
+                emotion=emotion,
+                base_speed=self.voice_speed,
+                base_volume=self.voice_volume,
+            )
+            effective_speed = mod_speed
+            effective_volume = mod_vol
+        except Exception:
+            pass
+
+        with self._lock:
+            self._stop_event.clear()
+            self._is_speaking = True
+
+        from engine.voice.streamer import get_audio_streamer
+        streamer = get_audio_streamer()
+
+        def _wrapped_finish():
+            with self._lock:
+                self._is_speaking = False
+            if on_complete:
+                on_complete()
+
+        if isinstance(text_or_sentences, str):
+            streamer.stream_text(
+                full_text=text_or_sentences,
+                voice=self.preferred_voice,
+                speed=effective_speed,
+                volume=effective_volume,
+                on_sentence_start=on_sentence_start,
+                on_finish=_wrapped_finish,
+            )
+        else:
+            streamer.stream_sentences(
+                sentences=text_or_sentences,
+                voice=self.preferred_voice,
+                speed=effective_speed,
+                volume=effective_volume,
+                on_sentence_start=on_sentence_start,
+                on_finish=_wrapped_finish,
+            )
+        return True
 
     def speak(
         self,
         text: str,
         is_critical: bool = False,
         on_complete: Optional[Callable[[], None]] = None,
+        emotion: str = "calm",
     ) -> bool:
         """Speaks the response concisely. Respects quiet mode unless critical confirmation."""
         if not text or (self.quiet_mode and not is_critical):
             if on_complete:
                 on_complete()
             return False
+
+        effective_speed = self.voice_speed
+        effective_volume = self.voice_volume
+        try:
+            from engine.voice.conversational_intelligence import get_voice_suite
+            suite = get_voice_suite()
+            mod_speed, mod_vol, _ = suite.prosody.modulate_tts_params(
+                emotion=emotion,
+                base_speed=self.voice_speed,
+                base_volume=self.voice_volume,
+            )
+            effective_speed = mod_speed
+            effective_volume = mod_vol
+        except Exception:
+            pass
 
         with self._lock:
             self._stop_event.clear()
@@ -160,8 +243,8 @@ class TextToSpeechManager:
                 self.active_provider.synthesize_and_play(
                     text=text,
                     voice=self.preferred_voice,
-                    speed=self.voice_speed,
-                    volume=self.voice_volume,
+                    speed=effective_speed,
+                    volume=effective_volume,
                     stop_event=self._stop_event,
                 )
             finally:
@@ -172,3 +255,4 @@ class TextToSpeechManager:
         thread = threading.Thread(target=_worker, daemon=True)
         thread.start()
         return True
+

@@ -15,7 +15,7 @@ from engine.security.models import (
 
 
 class IntegrityMonitor:
-    """Monitors critical JARVIS files (security configs, policies, trusted skills) for tampering (Section 57 & 58)."""
+    """Monitors critical CHARLIE files (security configs, policies, trusted skills) for tampering (Section 57 & 58)."""
 
     def __init__(self):
         self._baseline_hashes: Dict[str, str] = {}

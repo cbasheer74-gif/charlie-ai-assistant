@@ -1,0 +1,706 @@
+- generic [ref=f1e4]:
+  - banner [ref=f1e5]:
+    - generic [ref=f1e6]:
+      - generic [ref=f1e17] [cursor=pointer]:
+        - generic [ref=f1e18]: LEKHTRA
+        - generic [ref=f1e20]: Smart Billing. Simple Business.
+      - navigation [ref=f1e21]:
+        - link "Products" [ref=f1e22] [cursor=pointer]:
+          - /url: "#product-showcase"
+        - link "Solutions" [ref=f1e23] [cursor=pointer]:
+          - /url: "#solutions"
+        - link "Features" [ref=f1e24] [cursor=pointer]:
+          - /url: "#features"
+        - link "Industries" [ref=f1e25] [cursor=pointer]:
+          - /url: "#industries"
+        - button "Pricing" [ref=f1e26] [cursor=pointer]
+        - button "Resources" [ref=f1e27] [cursor=pointer]
+      - generic [ref=f1e28]:
+        - button "Login" [ref=f1e29] [cursor=pointer]
+        - button "Book Demo" [ref=f1e30] [cursor=pointer]
+        - button "Start Free" [ref=f1e31] [cursor=pointer]
+  - generic [ref=f1e37]:
+    - generic [ref=f1e38]:
+      - generic [ref=f1e39]: Built for Indian Businesses
+      - heading "Simple Billing. Smarter Business. Meet Lekhtra." [level=1] [ref=f1e42]
+      - paragraph [ref=f1e43]: Create professional GST invoices, manage inventory, track payments, scan purchase bills and understand your business from one simple platform.
+      - generic [ref=f1e44]:
+        - button "Start Billing Free" [ref=f1e45] [cursor=pointer]
+        - button "Watch Demo" [ref=f1e49] [cursor=pointer]
+      - generic [ref=f1e53]:
+        - generic [ref=f1e54]: GST Ready
+        - generic [ref=f1e59]: Quick Setup
+        - generic [ref=f1e64]: Easy to Use
+    - generic [ref=f1e69]:
+      - generic [ref=f1e70]:
+        - generic [ref=f1e71]:
+          - generic [ref=f1e72]:
+            - generic [ref=f1e74]: LEKHTRA COMMAND CENTER
+            - generic [ref=f1e75]: LIVE
+          - button "+ Create Invoice" [ref=f1e76] [cursor=pointer]
+        - generic [ref=f1e78]:
+          - generic [ref=f1e79]:
+            - generic [ref=f1e80]: Total Sales
+            - generic [ref=f1e81]: ₹4,85,620
+            - generic [ref=f1e82]: ↑ +14.2% MoM
+          - generic [ref=f1e83]:
+            - generic [ref=f1e84]: Purchases
+            - generic [ref=f1e85]: ₹2,18,450
+            - generic [ref=f1e86]: 42 Vendor bills
+          - generic [ref=f1e87]:
+            - generic [ref=f1e88]: Receivables
+            - generic [ref=f1e89]: ₹93,240
+            - generic [ref=f1e90]: 8 Overdue (3d)
+          - generic [ref=f1e91]:
+            - generic [ref=f1e92]: Customers
+            - generic [ref=f1e93]: 1,248
+            - generic [ref=f1e94]: +18 this week
+        - generic [ref=f1e96]:
+          - generic [ref=f1e97]: Sales Overview
+          - generic [ref=f1e98]: Last 30 Days
+        - generic [ref=f1e104]:
+          - generic [ref=f1e105]:
+            - generic [ref=f1e106]:
+              - generic [ref=f1e107]: Recent Invoices
+              - generic [ref=f1e108]: View All
+            - generic [ref=f1e109]:
+              - generic [ref=f1e110]:
+                - generic [ref=f1e111]: INV-2026-089
+                - generic [ref=f1e112]: ₹18,500
+              - generic [ref=f1e113]:
+                - generic [ref=f1e114]: INV-2026-088
+                - generic [ref=f1e115]: ₹42,300
+          - generic [ref=f1e116]:
+            - generic [ref=f1e117]: Low Stock Alert
+            - generic [ref=f1e120]: 3 Products below reorder threshold (Copper Cables & 2 items).
+      - generic [ref=f1e122]:
+        - generic [ref=f1e123]: Lekhtra Mobile
+        - generic [ref=f1e126]:
+          - generic [ref=f1e127]: Today's Sales
+          - generic [ref=f1e128]: ₹28,450.00
+        - generic [ref=f1e129]:
+          - generic [ref=f1e130]: + New Invoice
+          - generic [ref=f1e131]: Scan Bill
+          - generic [ref=f1e132]: Customer
+          - generic [ref=f1e133]: Items
+  - generic [ref=f1e136]:
+    - generic [ref=f1e142]:
+      - heading "GST-Ready Invoicing" [level=4] [ref=f1e143]
+      - paragraph [ref=f1e144]: Create clear GST invoices with automated tax rates and HSN code lookups.
+    - generic [ref=f1e149]:
+      - heading "Secure Data Handling" [level=4] [ref=f1e150]
+      - paragraph [ref=f1e151]: Secure business data handling with available local backups and access controls.
+    - generic [ref=f1e156]:
+      - heading "Multi-Device Access" [level=4] [ref=f1e157]
+      - paragraph [ref=f1e158]: Access your business wherever supported across desktop, laptop, tablet, and mobile.
+    - generic [ref=f1e165]:
+      - heading "Made for Indian Businesses" [level=4] [ref=f1e166]
+      - paragraph [ref=f1e167]: Native UPI QR codes, invoice sharing, e-Way bills, and Indian Rupee formatting.
+  - generic [ref=f1e169]:
+    - generic [ref=f1e170]:
+      - text: VERSATILE COMMERCE ENGINE
+      - heading "One Lekhtra. Every Kind of Business." [level=2] [ref=f1e171]
+      - paragraph [ref=f1e172]: Tailored workflows for retail shops, wholesalers, service providers, and multi-branch enterprises across India.
+    - generic [ref=f1e173]:
+      - generic [ref=f1e180] [cursor=pointer]:
+        - heading "Retail" [level=3] [ref=f1e181]
+        - paragraph [ref=f1e182]: Quick POS & Barcode
+      - generic [ref=f1e188] [cursor=pointer]:
+        - heading "Grocery" [level=3] [ref=f1e189]
+        - paragraph [ref=f1e190]: FMCG Batch & Expiry
+      - generic [ref=f1e198] [cursor=pointer]:
+        - heading "Wholesale" [level=3] [ref=f1e199]
+        - paragraph [ref=f1e200]: Bulk Rates & Schemes
+      - generic [ref=f1e206] [cursor=pointer]:
+        - heading "Pharmacy" [level=3] [ref=f1e207]
+        - paragraph [ref=f1e208]: Schedule H & GST Drug codes
+      - generic [ref=f1e216] [cursor=pointer]:
+        - heading "Restaurant" [level=3] [ref=f1e217]
+        - paragraph [ref=f1e218]: Table & KOT Billing
+      - generic [ref=f1e223] [cursor=pointer]:
+        - heading "Clothing" [level=3] [ref=f1e224]
+        - paragraph [ref=f1e225]: Size, Color & Style Matrix
+      - generic [ref=f1e230] [cursor=pointer]:
+        - heading "Electronics" [level=3] [ref=f1e231]
+        - paragraph [ref=f1e232]: Serial & IMEI Tracking
+      - generic [ref=f1e238] [cursor=pointer]:
+        - heading "Jewellery" [level=3] [ref=f1e239]
+        - paragraph [ref=f1e240]: Purity, Weight & Hallmarking
+      - generic [ref=f1e245] [cursor=pointer]:
+        - heading "Manufacturing" [level=3] [ref=f1e246]
+        - paragraph [ref=f1e247]: BOM & Production Order
+      - generic [ref=f1e253] [cursor=pointer]:
+        - heading "Services" [level=3] [ref=f1e254]
+        - paragraph [ref=f1e255]: Retainers & SAC Code
+  - generic [ref=f1e257]:
+    - generic [ref=f1e258]:
+      - heading "Everything Your Business Needs — Without the Complexity" [level=2] [ref=f1e259]
+      - paragraph [ref=f1e260]: From your first invoice of the morning to your final sales report at night, Lekhtra keeps your business organised.
+    - generic [ref=f1e261]:
+      - generic [ref=f1e262]:
+        - generic [ref=f1e263]:
+          - generic [ref=f1e264]:
+            - generic [ref=f1e265]: L
+            - generic [ref=f1e266]:
+              - heading "Balaji Traders & Enterprises" [level=4] [ref=f1e267]
+              - text: "GSTIN: 27AABCB1234F1Z5 • Maharashtra"
+          - generic [ref=f1e268]:
+            - generic [ref=f1e269]: ✓ GST Active
+            - button "Open Live App →" [ref=f1e270] [cursor=pointer]
+        - generic [ref=f1e271]:
+          - generic [ref=f1e272]:
+            - text: Today's Billing Volume
+            - generic [ref=f1e273]: ₹1,24,900.00
+            - generic [ref=f1e274]: 18 invoices issued • GST-ready
+          - generic [ref=f1e275]:
+            - text: Collections Realized
+            - generic [ref=f1e276]: ₹98,500.00
+            - generic [ref=f1e277]: UPI & Bank direct settlements
+          - generic [ref=f1e278]:
+            - text: Stock Value at Cost
+            - generic [ref=f1e279]: ₹14,80,000.00
+            - generic [ref=f1e280]: 412 Active SKUs monitored
+      - generic [ref=f1e281]:
+        - generic [ref=f1e282]: GST Billing
+        - generic [ref=f1e287]: Inventory
+        - generic [ref=f1e293]: Payments
+        - generic [ref=f1e297]: Expenses
+        - generic [ref=f1e302]: Customers
+        - generic [ref=f1e309]: Reports
+        - generic [ref=f1e313]: Barcode
+        - generic [ref=f1e320]: OCR
+  - generic [ref=f1e326]:
+    - generic [ref=f1e327]:
+      - text: CORE ADVANTAGES
+      - heading "Powerful Billing Without Complicated Software" [level=2] [ref=f1e328]
+      - paragraph [ref=f1e329]: Designed from the ground up to eliminate accounting headaches, manual errors, and delayed payments.
+    - generic [ref=f1e330]:
+      - generic [ref=f1e331]:
+        - generic [ref=f1e332]:
+          - generic [ref=f1e333]: GST-Ready
+          - generic [ref=f1e339]:
+            - heading "GST Invoicing" [level=3] [ref=f1e340]
+            - paragraph [ref=f1e341]: Create GST-ready B2B and B2C invoices with automatic CGST, SGST, IGST calculations and HSN rate lookups in seconds.
+        - button "See Invoice Workflow" [ref=f1e343] [cursor=pointer]
+      - generic [ref=f1e347]:
+        - generic [ref=f1e348]:
+          - generic [ref=f1e349]: Stock Alerts
+          - generic [ref=f1e356]:
+            - heading "Inventory Management" [level=3] [ref=f1e357]
+            - paragraph [ref=f1e358]: Track real-time stock levels, receive low-stock alerts, set reorder points, and keep product records organized.
+        - button "Explore Stock Tools" [ref=f1e360] [cursor=pointer]
+      - generic [ref=f1e364]:
+        - generic [ref=f1e365]:
+          - generic [ref=f1e366]: Quick Counter
+          - generic [ref=f1e374]:
+            - heading "Barcode Billing" [level=3] [ref=f1e375]
+            - paragraph [ref=f1e376]: Connect standard barcode scanners or camera readers for quick barcode-based item entry directly on the billing screen.
+        - button "View POS Speed" [ref=f1e378] [cursor=pointer]
+      - generic [ref=f1e382]:
+        - generic [ref=f1e383]:
+          - generic [ref=f1e384]: OCR Bill Scanner
+          - generic [ref=f1e390]:
+            - heading "OCR Bill Scanner" [level=3] [ref=f1e391]
+            - paragraph [ref=f1e392]: Upload or capture vendor purchase bills to extract invoice numbers, line items, and taxes into structured purchase entries.
+        - button "Try Bill Scanner" [ref=f1e394] [cursor=pointer]
+      - generic [ref=f1e398]:
+        - generic [ref=f1e399]:
+          - generic [ref=f1e400]: Payment Ledger
+          - generic [ref=f1e405]:
+            - heading "Payment Tracking" [level=3] [ref=f1e406]
+            - paragraph [ref=f1e407]: Record cash, UPI, card, and bank transfers. Track pending balances and keep clear customer payment histories.
+        - button "Track Receivables" [ref=f1e409] [cursor=pointer]
+      - generic [ref=f1e413]:
+        - generic [ref=f1e414]:
+          - generic [ref=f1e415]: Instant Sharing
+          - generic [ref=f1e420]:
+            - heading "Invoice Sharing" [level=3] [ref=f1e421]
+            - paragraph [ref=f1e422]: Share clear PDF invoices and payment reminders directly with customers through WhatsApp or digital links.
+        - button "See Share Options" [ref=f1e424] [cursor=pointer]
+      - generic [ref=f1e428]:
+        - generic [ref=f1e429]:
+          - generic [ref=f1e430]: Business Reports
+          - generic [ref=f1e435]:
+            - heading "Business Reports" [level=3] [ref=f1e436]
+            - paragraph [ref=f1e437]: Understand sales trends, top products, customer balances, and day-to-day profit with clear visual summaries.
+        - button "View Business Reports" [ref=f1e439] [cursor=pointer]
+      - generic [ref=f1e443]:
+        - generic [ref=f1e444]:
+          - generic [ref=f1e445]: Expense Control
+          - generic [ref=f1e451]:
+            - heading "Expense Tracking" [level=3] [ref=f1e452]
+            - paragraph [ref=f1e453]: Record daily shop expenses, monitor vendor dues, and understand exact operating costs to protect your margins.
+        - button "Review Cash Control" [ref=f1e455] [cursor=pointer]
+  - generic [ref=f1e459]:
+    - generic [ref=f1e460]:
+      - generic [ref=f1e461]:
+        - text: BUILT FOR YOUR WORKDAY
+        - heading "Lekhtra Works With You All Day" [level=2] [ref=f1e462]
+        - paragraph [ref=f1e463]: From opening your shop to reviewing the day’s numbers, Lekhtra keeps billing, stock and payments organised.
+      - generic [ref=f1e466]:
+        - generic [ref=f1e467]:
+          - generic [ref=f1e468]: 9:00 AM
+          - heading "Open Your Business" [level=3] [ref=f1e476]
+          - paragraph [ref=f1e477]: Check sales, pending payments, stock alerts and important business information from your dashboard.
+          - generic [ref=f1e478]: "Feature: Dashboard"
+        - generic [ref=f1e479]:
+          - generic [ref=f1e480]: 11:30 AM
+          - heading "Start Billing" [level=3] [ref=f1e486]
+          - paragraph [ref=f1e487]: Select a customer, add items, apply GST or discounts and create a professional invoice.
+          - generic [ref=f1e488]: "Feature: Fast Billing"
+        - generic [ref=f1e489]:
+          - generic [ref=f1e490]: 2:00 PM
+          - heading "Receive New Stock" [level=3] [ref=f1e497]
+          - paragraph [ref=f1e498]: Record supplier purchases and automatically update your inventory.
+          - generic [ref=f1e499]: "Feature: Purchases + Inventory"
+        - generic [ref=f1e500]:
+          - generic [ref=f1e501]: 6:00 PM
+          - heading "Track Payments" [level=3] [ref=f1e506]
+          - paragraph [ref=f1e507]: See paid, partial and pending invoices and follow up with customers.
+          - generic [ref=f1e508]: "Feature: Receivables"
+        - generic [ref=f1e509]:
+          - generic [ref=f1e510]: 9:00 PM
+          - heading "Review Your Business" [level=3] [ref=f1e515]
+          - paragraph [ref=f1e516]: Check sales, expenses, profit, outstanding payments and stock performance.
+          - generic [ref=f1e517]: "Feature: Reports"
+    - generic [ref=f1e519]:
+      - generic [ref=f1e520]:
+        - text: WORK FROM ANYWHERE
+        - heading "Your Business Goes Wherever You Go" [level=2] [ref=f1e521]
+        - paragraph [ref=f1e522]: Access your business from desktop, laptop, tablet or mobile with a consistent Lekhtra experience.
+      - generic [ref=f1e523]:
+        - generic [ref=f1e524]:
+          - generic [ref=f1e525]: Desktop Dashboard
+          - generic [ref=f1e534]:
+            - generic [ref=f1e535]:
+              - generic [ref=f1e536]: Today Sales
+              - text: ₹48,200
+            - generic [ref=f1e537]:
+              - generic [ref=f1e538]: Receivables
+              - text: ₹93,240
+            - generic [ref=f1e539]:
+              - generic [ref=f1e540]: Expenses
+              - text: ₹14,500
+            - generic [ref=f1e541]:
+              - generic [ref=f1e542]: Low Stock
+              - text: 4 items
+          - generic [ref=f1e543]:
+            - generic [ref=f1e544]: Recent Invoices
+            - generic [ref=f1e545]:
+              - generic [ref=f1e546]: INV-1048 • Amit Traders
+              - generic [ref=f1e547]: ₹12,450
+        - generic [ref=f1e548]:
+          - generic [ref=f1e549]: Tablet Inventory
+          - generic [ref=f1e554]:
+            - generic [ref=f1e555]:
+              - generic [ref=f1e556]:
+                - generic [ref=f1e557]: Wireless Mouse
+                - text: ₹599 • 26 units
+              - generic [ref=f1e558]: In Stock
+            - generic [ref=f1e559]:
+              - generic [ref=f1e560]:
+                - generic [ref=f1e561]: USB Keyboard
+                - text: ₹899 • 8 units
+              - generic [ref=f1e562]: Low Stock
+        - generic [ref=f1e563]:
+          - generic [ref=f1e564]: Mobile Quick Actions
+          - generic [ref=f1e569]:
+            - generic [ref=f1e570]: New Invoice
+            - generic [ref=f1e571]: Scan Bill
+            - generic [ref=f1e572]: Customer
+            - generic [ref=f1e573]: Payment
+      - generic [ref=f1e574]:
+        - generic [ref=f1e575]:
+          - heading "Multi-Device Access" [level=4] [ref=f1e578]
+          - paragraph [ref=f1e579]: Use on your laptop, counter POS, or personal phone.
+        - generic [ref=f1e580]:
+          - heading "Secure Backup" [level=4] [ref=f1e583]
+          - paragraph [ref=f1e584]: Automated and on-demand local data backup export.
+        - generic [ref=f1e585]:
+          - heading "Connected Business Data" [level=4] [ref=f1e589]
+          - paragraph [ref=f1e590]: Sales, stock, and customer balances stay aligned.
+        - generic [ref=f1e591]:
+          - heading "Role-Based Staff Access" [level=4] [ref=f1e597]
+          - paragraph [ref=f1e598]: Assign cashier, accountant, or admin permissions.
+    - generic [ref=f1e599]:
+      - generic [ref=f1e600]:
+        - text: EXPLORE LEKHTRA
+        - heading "See How Simple Business Management Can Be" [level=2] [ref=f1e601]
+        - paragraph [ref=f1e602]: Explore some of Lekhtra’s most important workflows directly below.
+      - generic [ref=f1e604]:
+        - button "Create Invoice" [ref=f1e605] [cursor=pointer]
+        - button "Inventory" [ref=f1e606] [cursor=pointer]
+        - button "Reports" [ref=f1e607] [cursor=pointer]
+        - button "OCR Scanner" [ref=f1e608] [cursor=pointer]
+        - button "Payments" [ref=f1e609] [cursor=pointer]
+      - generic [ref=f1e610]:
+        - generic [ref=f1e611]:
+          - generic [ref=f1e612]:
+            - heading "Create Invoice" [level=3] [ref=f1e613]
+            - text: "Customer: Amit Traders • GSTIN: 27AABCT8921F1ZX"
+          - generic [ref=f1e614]:
+            - generic [ref=f1e615]: "Invoice No: INV-2026-1048"
+            - text: "Date: Today • Due: 15 Days"
+        - table [ref=f1e617]:
+          - rowgroup [ref=f1e618]:
+            - row [ref=f1e619]:
+              - columnheader "Item" [ref=f1e620]
+              - columnheader "HSN" [ref=f1e621]
+              - columnheader "Qty" [ref=f1e622]
+              - columnheader "Rate" [ref=f1e623]
+              - columnheader "GST" [ref=f1e624]
+              - columnheader "Amount" [ref=f1e625]
+          - rowgroup [ref=f1e626]:
+            - row [ref=f1e627]:
+              - cell "Wireless Mouse" [ref=f1e628]
+              - cell "8471" [ref=f1e629]
+              - cell "2" [ref=f1e630]
+              - cell "₹599.00" [ref=f1e631]
+              - cell "18%" [ref=f1e632]
+              - cell "₹1,198.00" [ref=f1e633]
+            - row [ref=f1e634]:
+              - cell "USB Keyboard" [ref=f1e635]
+              - cell "8471" [ref=f1e636]
+              - cell "1" [ref=f1e637]
+              - cell "₹899.00" [ref=f1e638]
+              - cell "18%" [ref=f1e639]
+              - cell "₹899.00" [ref=f1e640]
+            - row [ref=f1e641]:
+              - cell "HDMI Cable (1.5m)" [ref=f1e642]
+              - cell "8544" [ref=f1e643]
+              - cell "3" [ref=f1e644]
+              - cell "₹299.00" [ref=f1e645]
+              - cell "18%" [ref=f1e646]
+              - cell "₹897.00" [ref=f1e647]
+        - generic [ref=f1e648]:
+          - generic [ref=f1e649]:
+            - generic [ref=f1e650]: Payment Method
+            - generic [ref=f1e651]:
+              - generic [ref=f1e652]: UPI / QR
+              - generic [ref=f1e653]: Bank
+              - generic [ref=f1e654]: Cash
+          - generic [ref=f1e655]:
+            - generic [ref=f1e656]:
+              - generic [ref=f1e657]: Subtotal
+              - generic [ref=f1e658]: ₹2,994.00
+            - generic [ref=f1e659]:
+              - generic [ref=f1e660]: GST (CGST 9% + SGST 9%)
+              - generic [ref=f1e661]: ₹538.92
+            - generic [ref=f1e662]:
+              - generic [ref=f1e663]: Grand Total
+              - generic [ref=f1e664]: ₹3,532.92
+        - generic [ref=f1e665]:
+          - generic [ref=f1e666]:
+            - button "+ Add Item" [ref=f1e667]
+            - button "Scan Barcode" [ref=f1e668]
+          - button "Save & Share Invoice →" [ref=f1e670]
+    - generic [ref=f1e673]:
+      - generic [ref=f1e674]:
+        - generic [ref=f1e675]:
+          - generic [ref=f1e676]:
+            - generic [ref=f1e677]: TAX INVOICE
+            - heading "Lekhtra Sample Bill" [level=4] [ref=f1e678]
+          - generic [ref=f1e679]: INV-2026-042
+        - generic [ref=f1e680]:
+          - generic [ref=f1e681]:
+            - generic [ref=f1e682]: "Item 1: Commercial Router (HSN 8517)"
+            - generic [ref=f1e683]: ₹3,400.00
+          - generic [ref=f1e684]:
+            - generic [ref=f1e685]: "Item 2: Cat6 Network Cable (HSN 8544)"
+            - generic [ref=f1e686]: ₹1,200.00
+        - generic [ref=f1e687]:
+          - generic [ref=f1e688]:
+            - generic [ref=f1e689]: CGST 9% + SGST 9%
+            - generic [ref=f1e690]: ₹828.00
+          - generic [ref=f1e691]:
+            - generic [ref=f1e692]: Total Amount Due
+            - generic [ref=f1e693]: ₹5,428.00
+      - generic [ref=f1e694]:
+        - text: SMART BILLING
+        - heading "Create Professional Invoices in Seconds" [level=2] [ref=f1e695]
+        - paragraph [ref=f1e696]: Create clear GST and non-GST invoices with your products, customers, taxes, discounts and payment information in one simple workflow.
+        - generic [ref=f1e697]:
+          - generic [ref=f1e698]: GST & Non-GST Billing
+          - generic [ref=f1e702]: CGST / SGST / IGST Calculations
+          - generic [ref=f1e706]: HSN / SAC Fields
+          - generic [ref=f1e710]: Item-Level Discounts
+          - generic [ref=f1e714]: Invoice-Level Discounts
+          - generic [ref=f1e718]: Multiple Payment Methods
+          - generic [ref=f1e722]: Invoice Notes & Terms
+          - generic [ref=f1e726]: Custom Business Logo
+          - generic [ref=f1e730]: PDF Invoice Preview
+          - generic [ref=f1e734]: Print Invoice Support
+        - button "Create Invoice" [ref=f1e739]
+    - generic [ref=f1e741]:
+      - generic [ref=f1e742]:
+        - text: STOCK CONTROL
+        - heading "Know What You Have Before You Sell It" [level=2] [ref=f1e743]
+        - paragraph [ref=f1e744]: Keep product quantities, pricing and stock status organised as sales and purchases happen.
+        - generic [ref=f1e745]:
+          - generic [ref=f1e746]: Current Stock
+          - generic [ref=f1e750]: Low Stock Alerts
+          - generic [ref=f1e754]: Purchase Price
+          - generic [ref=f1e758]: Selling Price
+          - generic [ref=f1e762]: SKU & Barcode
+          - generic [ref=f1e766]: Categories & Units
+          - generic [ref=f1e770]: Stock Adjustment
+          - generic [ref=f1e774]: Product Import
+      - generic [ref=f1e778]:
+        - generic [ref=f1e779]:
+          - generic [ref=f1e780]: Live Stock Status
+          - generic [ref=f1e781]: Auto-updated
+        - generic [ref=f1e782]:
+          - generic [ref=f1e783]:
+            - generic [ref=f1e784]:
+              - generic [ref=f1e785]: Wireless Mouse
+              - text: "Selling: ₹599 • Stock: 26 units"
+            - generic [ref=f1e786]: In Stock
+          - generic [ref=f1e787]:
+            - generic [ref=f1e788]:
+              - generic [ref=f1e789]: USB Keyboard
+              - text: "Selling: ₹899 • Stock: 8 units"
+            - generic [ref=f1e790]: Low Stock
+          - generic [ref=f1e791]:
+            - generic [ref=f1e792]:
+              - generic [ref=f1e793]: HDMI Cable
+              - text: "Selling: ₹299 • Stock: 0 units"
+            - generic [ref=f1e794]: Out of Stock
+    - generic [ref=f1e796]:
+      - generic [ref=f1e797]:
+        - text: BUSINESS INSIGHTS
+        - heading "Understand Where Your Money Is Going" [level=2] [ref=f1e798]
+        - paragraph [ref=f1e799]: Turn everyday billing and expense records into useful business information.
+      - generic [ref=f1e800]:
+        - generic [ref=f1e801]:
+          - generic [ref=f1e802]: Sales Report
+          - generic [ref=f1e803]: Monthly, Quarterly
+        - generic [ref=f1e804]:
+          - generic [ref=f1e805]: Purchase Report
+          - generic [ref=f1e806]: Vendor Summaries
+        - generic [ref=f1e807]:
+          - generic [ref=f1e808]: Expense Report
+          - generic [ref=f1e809]: Category Breakdown
+        - generic [ref=f1e810]:
+          - generic [ref=f1e811]: Outstanding Report
+          - generic [ref=f1e812]: Age-wise Receivables
+        - generic [ref=f1e813]:
+          - generic [ref=f1e814]: Stock Report
+          - generic [ref=f1e815]: Fast & Slow Movers
+        - generic [ref=f1e816]:
+          - generic [ref=f1e817]: Payment Report
+          - generic [ref=f1e818]: UPI, Cash & Bank
+    - generic [ref=f1e820]:
+      - generic [ref=f1e821]:
+        - text: OCR WORKFLOW PREVIEW
+        - heading "Turn a Purchase Bill Into a Digital Entry" [level=2] [ref=f1e822]
+        - paragraph [ref=f1e823]: Upload or capture a supplier bill, review extracted information and create a purchase entry faster.
+      - generic [ref=f1e824]:
+        - generic [ref=f1e825]: 1. PHOTO / UPLOAD
+        - generic [ref=f1e826]: →
+        - generic [ref=f1e827]: 2. SCAN
+        - generic [ref=f1e828]: →
+        - generic [ref=f1e829]: 3. EXTRACT
+        - generic [ref=f1e830]: →
+        - generic [ref=f1e831]: 4. REVIEW
+        - generic [ref=f1e832]: →
+        - generic [ref=f1e833]: 5. SAVE PURCHASE
+      - generic [ref=f1e834]:
+        - generic [ref=f1e835]:
+          - generic [ref=f1e836]: Supplier Paper Bill (Sample)
+          - generic [ref=f1e837]:
+            - generic [ref=f1e838]: "INVOICE FROM: ABC TRADERS"
+            - generic [ref=f1e839]: "GSTIN: 27AABCT8921F1ZX • Date: 24 Sep 2026"
+            - generic [ref=f1e840]:
+              - generic [ref=f1e841]: Total Amount
+              - generic [ref=f1e842]: ₹11,958.00
+        - generic [ref=f1e843]:
+          - generic [ref=f1e844]: Extracted Form Fields
+          - generic [ref=f1e845]:
+            - generic [ref=f1e846]:
+              - generic [ref=f1e847]: Supplier Name
+              - text: ABC Traders
+            - generic [ref=f1e848]:
+              - generic [ref=f1e849]: Invoice Number
+              - text: INV-2841
+            - generic [ref=f1e850]:
+              - generic [ref=f1e851]: Items Detected
+              - text: 7 Line Items
+            - generic [ref=f1e852]:
+              - generic [ref=f1e853]: Tax Calculated
+              - text: ₹1,824.00
+    - generic [ref=f1e855]:
+      - generic [ref=f1e856]:
+        - text: FAST COUNTER BILLING
+        - heading "Built for Busy Billing Counters" [level=2] [ref=f1e857]
+        - paragraph [ref=f1e858]: Add products quickly, calculate totals and complete customer checkout with fewer clicks.
+        - generic [ref=f1e859]:
+          - generic [ref=f1e860]: Retail
+          - generic [ref=f1e861]: Grocery
+          - generic [ref=f1e862]: Pharmacy
+          - generic [ref=f1e863]: Clothing
+          - generic [ref=f1e864]: Electronics
+          - generic [ref=f1e865]: Wholesale
+      - generic [ref=f1e866]:
+        - generic [ref=f1e867]:
+          - generic [ref=f1e868]:
+            - button "all" [ref=f1e869] [cursor=pointer]
+            - button "grocery" [ref=f1e870] [cursor=pointer]
+            - button "beverages" [ref=f1e871] [cursor=pointer]
+            - button "electronics" [ref=f1e872] [cursor=pointer]
+            - button "clothing" [ref=f1e873] [cursor=pointer]
+          - generic [ref=f1e874]:
+            - generic [ref=f1e875] [cursor=pointer]:
+              - generic [ref=f1e876]:
+                - generic [ref=f1e877]: Wireless Mouse
+                - generic [ref=f1e878]: "Stock: 26"
+              - generic [ref=f1e879]:
+                - generic [ref=f1e880]: ₹599
+                - generic [ref=f1e881]: + Add
+            - generic [ref=f1e882] [cursor=pointer]:
+              - generic [ref=f1e883]:
+                - generic [ref=f1e884]: USB-C Cable
+                - generic [ref=f1e885]: "Stock: 45"
+              - generic [ref=f1e886]:
+                - generic [ref=f1e887]: ₹249
+                - generic [ref=f1e888]: + Add
+            - generic [ref=f1e889] [cursor=pointer]:
+              - generic [ref=f1e890]:
+                - generic [ref=f1e891]: Basmati Rice 5kg
+                - generic [ref=f1e892]: "Stock: 18"
+              - generic [ref=f1e893]:
+                - generic [ref=f1e894]: ₹480
+                - generic [ref=f1e895]: + Add
+            - generic [ref=f1e896] [cursor=pointer]:
+              - generic [ref=f1e897]:
+                - generic [ref=f1e898]: Organic Green Tea
+                - generic [ref=f1e899]: "Stock: 30"
+              - generic [ref=f1e900]:
+                - generic [ref=f1e901]: ₹220
+                - generic [ref=f1e902]: + Add
+            - generic [ref=f1e903] [cursor=pointer]:
+              - generic [ref=f1e904]:
+                - generic [ref=f1e905]: Cotton T-Shirt
+                - generic [ref=f1e906]: "Stock: 12"
+              - generic [ref=f1e907]:
+                - generic [ref=f1e908]: ₹399
+                - generic [ref=f1e909]: + Add
+            - generic [ref=f1e910] [cursor=pointer]:
+              - generic [ref=f1e911]:
+                - generic [ref=f1e912]: Energy Drink 250ml
+                - generic [ref=f1e913]: "Stock: 64"
+              - generic [ref=f1e914]:
+                - generic [ref=f1e915]: ₹110
+                - generic [ref=f1e916]: + Add
+        - generic [ref=f1e917]:
+          - generic [ref=f1e918]:
+            - generic [ref=f1e919]:
+              - generic [ref=f1e920]: Current Bill (Counter 1)
+              - generic [ref=f1e921]: Walk-in Customer
+            - generic [ref=f1e922]:
+              - generic [ref=f1e923]:
+                - generic [ref=f1e924]:
+                  - generic [ref=f1e925]: Wireless Mouse
+                  - generic [ref=f1e926]: ₹599 × 1
+                - generic [ref=f1e927]:
+                  - generic [ref=f1e928]: ₹599
+                  - button "×" [ref=f1e929]
+              - generic [ref=f1e930]:
+                - generic [ref=f1e931]:
+                  - generic [ref=f1e932]: USB-C Cable
+                  - generic [ref=f1e933]: ₹249 × 2
+                - generic [ref=f1e934]:
+                  - generic [ref=f1e935]: ₹498
+                  - button "×" [ref=f1e936]
+          - generic [ref=f1e937]:
+            - generic [ref=f1e938]:
+              - generic [ref=f1e939]: Subtotal
+              - generic [ref=f1e940]: ₹1097
+            - generic [ref=f1e941]:
+              - generic [ref=f1e942]: GST 18%
+              - generic [ref=f1e943]: ₹197
+            - generic [ref=f1e944]:
+              - generic [ref=f1e945]: Total Amount
+              - generic [ref=f1e946]: ₹1294
+            - generic [ref=f1e947]:
+              - button "Cash" [ref=f1e948]
+              - button "UPI" [ref=f1e949]
+              - button "Card" [ref=f1e950]
+    - generic [ref=f1e952]:
+      - generic [ref=f1e953]:
+        - text: SHARE & FOLLOW UP
+        - heading "Create the Invoice. Share It. Track the Payment." [level=2] [ref=f1e954]
+        - paragraph [ref=f1e955]: Dispatch invoice links directly to customer mobile numbers, follow up on pending dues, and record payment confirmations.
+        - generic [ref=f1e956]:
+          - generic [ref=f1e957]:
+            - generic [ref=f1e958]: "1"
+            - generic [ref=f1e959]: Invoice Created with GST details
+          - generic [ref=f1e960]:
+            - generic [ref=f1e961]: "2"
+            - generic [ref=f1e962]: Share Invoice link through WhatsApp or Email
+          - generic [ref=f1e963]:
+            - generic [ref=f1e964]: "3"
+            - generic [ref=f1e965]: Customer views PDF invoice & UPI QR code
+          - generic [ref=f1e966]:
+            - generic [ref=f1e967]: "4"
+            - generic [ref=f1e968]: "Track Payment Status: Pending → Received"
+      - generic [ref=f1e970]:
+        - generic [ref=f1e971]:
+          - generic [ref=f1e972]: LEKHTRA BILLING
+          - generic [ref=f1e973]: Invoice INV-1048 for Amit Traders
+          - generic [ref=f1e974]: "Amount: ₹12,450.00"
+          - generic [ref=f1e975]: View Invoice PDF →
+          - generic [ref=f1e976]: "Status: Pending"
+        - generic [ref=f1e977]:
+          - generic [ref=f1e978]: Payment Received
+          - generic [ref=f1e979]: ₹12,450.00 settled via UPI
+          - generic [ref=f1e980]: "Ref: UTR-9824109 • Invoice Settled"
+    - generic [ref=f1e982]:
+      - generic [ref=f1e983]:
+        - text: GET STARTED
+        - heading "Start Billing With Lekhtra in Four Simple Steps" [level=2] [ref=f1e984]
+        - paragraph [ref=f1e985]: No complex setup or training needed. Start issuing your first professional bill within minutes.
+      - generic [ref=f1e986]:
+        - generic [ref=f1e987]:
+          - generic [ref=f1e988]: STEP 01
+          - heading "Set Up Your Business" [level=3] [ref=f1e989]
+          - paragraph [ref=f1e990]: Add your business name, address, GST details and logo.
+        - generic [ref=f1e991]:
+          - generic [ref=f1e992]: STEP 02
+          - heading "Add Your Products" [level=3] [ref=f1e993]
+          - paragraph [ref=f1e994]: Create products manually or import available product data.
+        - generic [ref=f1e995]:
+          - generic [ref=f1e996]: STEP 03
+          - heading "Customize Your Invoice" [level=3] [ref=f1e997]
+          - paragraph [ref=f1e998]: Choose your business information, bank details and invoice preferences.
+        - generic [ref=f1e999]:
+          - generic [ref=f1e1000]: STEP 04
+          - heading "Create Your First Invoice" [level=3] [ref=f1e1001]
+          - paragraph [ref=f1e1002]: Select a customer, add products and generate the bill.
+      - button "Start Billing Free →" [ref=f1e1004]
+    - generic [ref=f1e1005]:
+      - generic [ref=f1e1006]:
+        - text: WHY LEKHTRA
+        - heading "Less Manual Work. More Control Over Your Business." [level=2] [ref=f1e1007]
+        - paragraph [ref=f1e1008]: Replace scattered paper ledgers and messy spreadsheets with a single organized system.
+      - generic [ref=f1e1009]:
+        - generic [ref=f1e1010]:
+          - heading "Faster Billing" [level=3] [ref=f1e1011]
+          - paragraph [ref=f1e1012]: Keep products and customers ready for repeat billing so checkout counters run smoothly.
+        - generic [ref=f1e1013]:
+          - heading "Clear Stock Visibility" [level=3] [ref=f1e1014]
+          - paragraph [ref=f1e1015]: See available and low-stock products more easily to reorder on time and avoid stock-outs.
+        - generic [ref=f1e1016]:
+          - heading "Better Payment Tracking" [level=3] [ref=f1e1017]
+          - paragraph [ref=f1e1018]: Keep pending and paid invoices organised to follow up timely and maintain healthy cashflow.
+        - generic [ref=f1e1019]:
+          - heading "Simpler Business Records" [level=3] [ref=f1e1020]
+          - paragraph [ref=f1e1021]: Keep sales, purchases and expenses together for easy tax preparation and year-end review.
+  - contentinfo [ref=f1e1022]:
+    - generic [ref=f1e1023]:
+      - generic [ref=f1e1024]:
+        - generic [ref=f1e1034]: LEKHTRA
+        - generic [ref=f1e1035]: • Smart Billing. Simple Business.
+      - generic [ref=f1e1036]:
+        - button "Privacy & Terms" [ref=f1e1037] [cursor=pointer]
+        - button "GST Verification" [ref=f1e1038] [cursor=pointer]
+        - button "Get Started Free →" [ref=f1e1039] [cursor=pointer]

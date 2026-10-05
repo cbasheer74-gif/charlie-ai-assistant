@@ -1,5 +1,5 @@
 """
-licensing_server/routes/admin.py — JARVIS Owner Admin Dashboard & API.
+licensing_server/routes/admin.py — CHARLIE AI Owner Admin Dashboard & API.
 
 Provides:
 1. RESTful Admin Control API (metrics, user search, suspension, device reset, remote revocation, support tickets).
@@ -12,11 +12,11 @@ from __future__ import annotations
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from licensing_server.database import UserDB, get_db
+from licensing_server.database import PaymentDB, UserDB, get_db
 from licensing_server.middleware.auth_middleware import (
     get_current_admin_user,
     require_admin,
@@ -59,8 +59,60 @@ class InternalNoteRequest(BaseModel):
     note_text: str = Field(..., min_length=1)
 
 
+class TicketReplyRequest(BaseModel):
+    reply_text: str = Field(..., min_length=1)
+    new_status: str = Field(default="IN_PROGRESS")
+
+
 class DeviceFlagRequest(BaseModel):
     security_flag: str = Field(default="REVIEW_REQUIRED")
+
+
+class UpdateProfileRequest(BaseModel):
+    display_name: Optional[str] = None
+    password: Optional[str] = None
+
+
+class CreateUserRequest(BaseModel):
+    email: str = Field(..., max_length=255)
+    password: str = Field(..., min_length=6)
+    display_name: str = Field(default="CHARLIE User", max_length=100)
+    plan: str = Field(default="STARTER", description="STARTER, BASIC, PREMIUM, ADVANCED, LIFETIME")
+    days: int = Field(default=30, ge=1, le=3650)
+
+
+class LLMConfigRequest(BaseModel):
+    primary_provider: Optional[str] = None
+    active_model: Optional[str] = None
+    fallback_provider: Optional[str] = None
+    fallback_model: Optional[str] = None
+    temperature: Optional[float] = None
+    max_tokens: Optional[int] = None
+    rate_limit_tpm: Optional[int] = None
+    stream_responses: Optional[bool] = None
+
+
+class RemoteConfigRequest(BaseModel):
+    feature_flags: Optional[Dict[str, bool]] = None
+    prompts: Optional[Dict[str, Any]] = None
+    kill_switches: Optional[Dict[str, bool]] = None
+
+
+class BroadcastCreateRequest(BaseModel):
+    title: str = Field(..., min_length=1, max_length=255)
+    message: str = Field(..., min_length=1)
+    level: str = Field(default="INFO")  # INFO, WARNING, URGENT, MAINTENANCE
+    target_tier: str = Field(default="ALL")
+    expires_hours: int = Field(default=48, ge=0, le=720)
+
+
+
+class UpdateRoleRequest(BaseModel):
+    role: str = Field(..., description="CUSTOMER, SUPPORT, ADMIN, OWNER")
+
+
+class RefundPaymentRequest(BaseModel):
+    reason: str = Field(default="Customer requested refund", max_length=255)
 
 
 # ── Admin API Endpoints ──────────────────────────────────────────────────────
@@ -72,6 +124,51 @@ def get_metrics(
 ):
     """Authoritative revenue and system KPI metrics."""
     return admin_service.get_overview_metrics(db)
+
+
+@router.post("/api/seed-demo")
+def seed_demo_endpoint(
+    admin: UserDB = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Seed test customer dataset, hardware telemetry, payments, and AI costs across all 16 modules."""
+    return admin_service.seed_demo_data(db)
+
+
+@router.get("/api/deployment-docs")
+@router.get("/deployment-docs")
+def get_deployment_docs_endpoint(
+    admin: UserDB = Depends(require_support),
+):
+    """Retrieve full markdown deployment architecture guides."""
+    return admin_service.get_deployment_docs()
+
+
+@router.post("/api/users")
+def create_user_endpoint(
+    req: CreateUserRequest,
+    admin: UserDB = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Admin provisions new user account with selected tier entitlement."""
+    from licensing_server.services.auth_service import AuthService
+    auth_service = AuthService()
+    success, msg, user_data = auth_service.register(
+        db, email=req.email, password=req.password, display_name=req.display_name
+    )
+    if not success or not user_data:
+        raise HTTPException(status_code=400, detail=msg)
+
+    user_id = user_data["user_id"]
+    clean_plan = req.plan.upper().strip()
+    if clean_plan != "STARTER":
+        ok, ent_msg = admin_service.grant_entitlement(
+            db, admin_id=admin.id, user_id=user_id, plan=clean_plan, days=req.days, reason="Initial admin provisioning"
+        )
+        if not ok:
+            return {"status": "ok", "message": f"User created, but entitlement grant failed: {ent_msg}", "user_id": user_id}
+
+    return {"status": "ok", "message": f"User {req.email} created successfully on {clean_plan}.", "user_id": user_id}
 
 
 @router.get("/api/users")
@@ -187,6 +284,25 @@ def grant_entitlement(
     return {"status": "ok", "message": msg}
 
 
+@router.post("/api/users/{user_id}/role")
+def update_user_role(
+    user_id: str,
+    req: UpdateRoleRequest,
+    admin: UserDB = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Module 6: Role-Based Access Control (Promote/Demote role: OWNER, ADMIN, SUPPORT, CUSTOMER)."""
+    user = db.query(UserDB).filter(UserDB.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+    role_clean = req.role.strip().upper()
+    if role_clean not in ("CUSTOMER", "SUPPORT", "ADMIN", "OWNER", "AUDITOR", "FINANCE"):
+        raise HTTPException(status_code=400, detail="Invalid role specified.")
+    user.role = role_clean
+    db.commit()
+    return {"status": "ok", "user_id": user.id, "new_role": user.role}
+
+
 @router.post("/api/devices/{device_id}/revoke")
 def revoke_device(
     device_id: str,
@@ -253,7 +369,210 @@ def export_csv(
     if entity_type not in ("users", "payments", "subscriptions", "tickets"):
         raise HTTPException(status_code=400, detail="Invalid entity type for export.")
     csv_data = admin_service.export_csv(db, entity_type=entity_type)
-    return Response(content=csv_data, media_type="text/csv", headers={"Content-Disposition": f"attachment; filename=jarvis_{entity_type}.csv"})
+    return Response(content=csv_data, media_type="text/csv", headers={"Content-Disposition": f"attachment; filename=charlie_{entity_type}.csv"})
+
+
+@router.get("/api/payments")
+def list_payments(
+    query: str = Query(default=""),
+    status: str = Query(default=""),
+    plan: str = Query(default=""),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=25, ge=5, le=100),
+    admin: UserDB = Depends(require_support),
+    db: Session = Depends(get_db),
+):
+    """Search and paginate financial transactions and gateway records."""
+    return admin_service.search_payments(
+        db, query=query, status_filter=status, plan=plan, page=page, page_size=page_size
+    )
+
+
+@router.post("/api/payments/{payment_id}/refund")
+def refund_payment(
+    payment_id: str,
+    req: RefundPaymentRequest,
+    admin: UserDB = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Module 3: Payments & Transactions Refund Tool."""
+    from sqlalchemy import or_
+    payment = db.query(PaymentDB).filter(or_(PaymentDB.id == payment_id, PaymentDB.payment_id == payment_id)).first()
+    if not payment:
+        raise HTTPException(status_code=404, detail="Payment record not found.")
+    payment.status = "REFUNDED"
+    db.commit()
+    return {"status": "ok", "payment_id": payment.id, "status": payment.status, "reason": req.reason}
+
+
+@router.get("/api/activity")
+def list_activity(
+    query: str = Query(default=""),
+    event_type: str = Query(default=""),
+    user_id: str = Query(default=""),
+    limit: int = Query(default=50, ge=1, le=200),
+    admin: UserDB = Depends(require_support),
+    db: Session = Depends(get_db),
+):
+    """Live unified user activity and AI usage stream."""
+    return admin_service.search_activity(
+        db, query=query, event_type=event_type, user_id=user_id, limit=limit
+    )
+
+
+@router.get("/api/profile")
+def get_admin_profile_endpoint(
+    admin: UserDB = Depends(require_support),
+    db: Session = Depends(get_db),
+):
+    """Retrieve current admin user profile and permissions."""
+    return admin_service.get_admin_profile(db, admin_id=admin.id)
+
+
+@router.post("/api/profile")
+def update_admin_profile_endpoint(
+    req: UpdateProfileRequest,
+    admin: UserDB = Depends(require_support),
+    db: Session = Depends(get_db),
+):
+    """Update admin display name or password."""
+    success, msg = admin_service.update_admin_profile(
+        db, admin_id=admin.id, display_name=req.display_name, password=req.password
+    )
+    if not success:
+        raise HTTPException(status_code=400, detail=msg)
+    return {"status": "ok", "message": msg}
+
+
+# ── LLM Gateway & Routing Controls ──────────────────────────────────────────
+
+@router.get("/api/llm/config")
+def get_llm_config_endpoint(
+    admin: UserDB = Depends(require_support),
+    db: Session = Depends(get_db),
+):
+    """Retrieve current LLM provider routing and model settings."""
+    return admin_service.get_llm_gateway_config(db)
+
+
+@router.post("/api/llm/config")
+def update_llm_config_endpoint(
+    req: LLMConfigRequest,
+    admin: UserDB = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Switch primary/fallback LLM providers, model selection, and rate limits."""
+    clean_dict = {k: v for k, v in req.dict().items() if v is not None}
+    success, msg = admin_service.update_llm_gateway_config(db, admin_id=admin.id, new_config=clean_dict)
+    if not success:
+        raise HTTPException(status_code=400, detail=msg)
+    return {"status": "ok", "message": msg}
+
+
+@router.get("/api/llm/telemetry")
+def get_llm_telemetry_endpoint(
+    admin: UserDB = Depends(require_support),
+    db: Session = Depends(get_db),
+):
+    """Retrieve live token consumption and estimated AI API expenditure."""
+    return admin_service.get_llm_telemetry(db)
+
+
+# ── Remote Config & Kill Switches ────────────────────────────────────────────
+
+@router.get("/api/remote-config")
+def get_remote_config_endpoint(
+    admin: UserDB = Depends(require_support),
+    db: Session = Depends(get_db),
+):
+    """Retrieve remote feature flags, dynamic prompts, and emergency kill switches."""
+    return admin_service.get_remote_config(db)
+
+
+@router.post("/api/remote-config")
+def update_remote_config_endpoint(
+    req: RemoteConfigRequest,
+    admin: UserDB = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Update remote feature flags, prompt versions, or emergency kill switches."""
+    clean_dict = {k: v for k, v in req.dict().items() if v is not None}
+    success, msg = admin_service.update_remote_config(db, admin_id=admin.id, new_config=clean_dict)
+    if not success:
+        raise HTTPException(status_code=400, detail=msg)
+    return {"status": "ok", "message": msg}
+
+
+# ── Push Broadcast Dispatcher ────────────────────────────────────────────────
+
+@router.get("/api/push/broadcasts")
+def list_broadcasts_endpoint(
+    active_only: bool = Query(default=False),
+    admin: UserDB = Depends(require_support),
+    db: Session = Depends(get_db),
+):
+    """List system broadcast notices, updates, and maintenance announcements."""
+    return admin_service.get_broadcasts(db, active_only=active_only)
+
+
+@router.post("/api/push/broadcasts")
+def create_broadcast_endpoint(
+    req: BroadcastCreateRequest,
+    admin: UserDB = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Dispatch a new in-app broadcast alert or maintenance banner."""
+    success, msg, notice = admin_service.create_broadcast(
+        db,
+        admin_id=admin.id,
+        title=req.title,
+        message=req.message,
+        level=req.level,
+        target_tier=req.target_tier,
+        expires_hours=req.expires_hours,
+    )
+    if not success:
+        raise HTTPException(status_code=400, detail=msg)
+    return {"status": "ok", "message": msg, "notice": notice}
+
+
+@router.delete("/api/push/broadcasts/{notice_id}")
+def delete_broadcast_endpoint(
+    notice_id: str,
+    admin: UserDB = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Delete or archive a broadcast notice."""
+    success, msg = admin_service.delete_broadcast(db, admin_id=admin.id, notice_id=notice_id)
+    if not success:
+        raise HTTPException(status_code=404, detail=msg)
+    return {"status": "ok", "message": msg}
+
+
+# ── AI Analytics ─────────────────────────────────────────────────────────────
+
+@router.get("/api/ai-analytics")
+def get_ai_analytics_endpoint(
+    admin: UserDB = Depends(require_support),
+    db: Session = Depends(get_db),
+):
+    """Retrieve prompt category distribution, latency percentiles, and token throughput."""
+    return admin_service.get_ai_analytics(db)
+
+
+# ── Public / Client Endpoints (Used by Desktop App) ─────────────────────────
+
+@router.get("/api/public/broadcasts")
+def get_public_broadcasts(db: Session = Depends(get_db)):
+    """Public read-only endpoint for desktop clients to fetch active broadcasts."""
+    return admin_service.get_broadcasts(db, active_only=True)
+
+
+@router.get("/api/public/remote-config")
+def get_public_remote_config(db: Session = Depends(get_db)):
+    """Public read-only endpoint for desktop clients to synchronize feature flags."""
+    return admin_service.get_remote_config(db)
+
 
 
 @router.get("/api/support/tickets")
@@ -420,13 +739,329 @@ def list_releases(
     ]
 
 
+# ── SQLite Database Backup (Hot Atomic Snapshot) ──────────────────────────────
+
+@router.get("/api/backup")
+def backup_database(
+    admin: UserDB = Depends(require_owner),
+):
+    """
+    Generate an atomic, crash-safe SQLite online backup and stream as a .db file.
+    Protected strictly by require_owner (or admin key).
+    """
+    import sqlite3
+    import tempfile
+    from datetime import datetime
+    from pathlib import Path
+    from licensing_server.config import SERVER_DIR
+
+    db_path = SERVER_DIR / "charlie_licensing.db"
+    if not db_path.exists():
+        raise HTTPException(status_code=404, detail="Database file not found.")
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_filename = f"charlie_backup_{timestamp}.db"
+    temp_dir = tempfile.gettempdir()
+    dest_path = Path(temp_dir) / backup_filename
+
+    # Use SQLite online backup API for safe non-blocking hot backup
+    src_conn = sqlite3.connect(str(db_path))
+    dest_conn = sqlite3.connect(str(dest_path))
+    try:
+        with dest_conn:
+            src_conn.backup(dest_conn, pages=100)
+    finally:
+        dest_conn.close()
+        src_conn.close()
+
+    return FileResponse(
+        path=str(dest_path),
+        filename=backup_filename,
+        media_type="application/x-sqlite3",
+    )
+
+
+# ── Security Lockouts Dashboard & Management ──────────────────────────────────
+
+class UnlockAccountRequest(BaseModel):
+    email: str
+
+
+class ResetIpRequest(BaseModel):
+    ip: str
+
+
+@router.get("/api/security/lockouts")
+def get_security_lockouts(
+    admin: UserDB = Depends(require_support),
+):
+    """List all accounts currently locked by the multi-tier rate limiter."""
+    from licensing_server.middleware.rate_limiter import get_active_lockouts
+    return {"status": "ok", "lockouts": get_active_lockouts()}
+
+
+@router.post("/api/security/unlock")
+def unlock_security_account(
+    req: UnlockAccountRequest,
+    admin: UserDB = Depends(require_admin),
+):
+    """Admin unlock for brute-force locked accounts."""
+    from licensing_server.middleware.rate_limiter import unlock_account
+    unlocked = unlock_account(req.email)
+    if not unlocked:
+        return {"status": "ok", "message": f"Account {req.email} was not locked."}
+    return {"status": "ok", "message": f"Account {req.email} unlocked successfully."}
+
+
+@router.post("/api/security/reset-ip")
+def reset_security_ip(
+    req: ResetIpRequest,
+    admin: UserDB = Depends(require_admin),
+):
+    """Admin reset for IP-based sliding window rate limits."""
+    from licensing_server.middleware.rate_limiter import reset_ip_limits
+    cleared = reset_ip_limits(req.ip)
+    return {"status": "ok", "message": f"Reset {cleared} limit buckets for IP {req.ip}."}
+
+
+# ── Forced Session Revocation ────────────────────────────────────────────────
+
+@router.post("/api/users/{user_id}/revoke-sessions")
+def revoke_user_sessions(
+    user_id: str,
+    admin: UserDB = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """
+    Immediately invalidate all active JWT tokens for a user by incrementing session_version.
+    Forces all active client instances to re-authenticate immediately.
+    """
+    user = db.query(UserDB).filter(UserDB.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    from licensing_server.services.auth_service import AuthService
+    auth_service = AuthService()
+    auth_service.invalidate_all_sessions(db, user)
+
+    # Log audit event
+    from licensing_server.database import LicenseEventDB, LicenseEventType
+    import uuid
+    import json
+    event = LicenseEventDB(
+        id=f"evt_{uuid.uuid4().hex[:16]}",
+        user_id=user.id,
+        event_type=LicenseEventType.LOGIN.value,
+        details_json=json.dumps({"action": "SESSIONS_REVOKED_BY_ADMIN", "admin_id": admin.id}),
+    )
+    db.add(event)
+    db.commit()
+
+    return {
+        "status": "ok",
+        "message": f"All active sessions revoked for user {user.email}.",
+        "new_session_version": getattr(user, "session_version", 1),
+    }
+
+
+# ── The 16 Admin Modules: Content, Orders, Coupons, Partners, Moderation ───
+
+from licensing_server.database import ContentItemDB, OrderDB, CouponDB, PartnerDB, ModerationItemDB, _utcnow
+
+class CreateCouponRequest(BaseModel):
+    code: str = Field(..., min_length=2, max_length=64)
+    discount_pct: int = Field(default=15, ge=1, le=100)
+    max_uses: int = Field(default=100, ge=1)
+    expires_days: int = Field(default=30, ge=1)
+
+class CreatePartnerRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=128)
+    email: str = Field(..., max_length=255)
+    partner_code: str = Field(..., min_length=2, max_length=64)
+    commission_pct: int = Field(default=15, ge=1, le=80)
+
+class CreateContentRequest(BaseModel):
+    item_type: str = Field(default="BANNER")
+    title: str = Field(..., min_length=1, max_length=255)
+    content_json: str = Field(default="{}")
+
+class ModerationActionRequest(BaseModel):
+    status: str = Field(default="APPROVED")
+    notes: Optional[str] = None
+
+class OrderOverrideRequest(BaseModel):
+    status: str = Field(default="OVERRIDDEN")
+    notes: Optional[str] = None
+
+
+@router.get("/api/coupons")
+def list_coupons(admin: UserDB = Depends(require_support), db: Session = Depends(get_db)):
+    """Module 12: Coupons & Discount Management."""
+    coupons = db.query(CouponDB).order_by(CouponDB.created_at.desc()).all()
+    return [{
+        "id": c.id, "code": c.code, "discount_pct": c.discount_pct,
+        "max_uses": c.max_uses, "uses_count": c.uses_count,
+        "is_active": c.is_active,
+        "expires_at": c.expires_at.isoformat() if c.expires_at else None,
+        "created_at": c.created_at.isoformat() if c.created_at else None,
+    } for c in coupons]
+
+@router.post("/api/coupons")
+def create_coupon(req: CreateCouponRequest, admin: UserDB = Depends(require_admin), db: Session = Depends(get_db)):
+    import uuid
+    from datetime import timedelta
+    code = req.code.strip().upper()
+    existing = db.query(CouponDB).filter(CouponDB.code == code).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Coupon code already exists.")
+    coupon = CouponDB(
+        id=f"cpn_{uuid.uuid4().hex[:12]}",
+        code=code,
+        discount_pct=req.discount_pct,
+        max_uses=req.max_uses,
+        expires_at=_utcnow() + timedelta(days=req.expires_days),
+    )
+    db.add(coupon)
+    db.commit()
+    return {"status": "ok", "coupon": {"id": coupon.id, "code": coupon.code, "discount_pct": coupon.discount_pct}}
+
+@router.delete("/api/coupons/{coupon_id}")
+def delete_coupon(coupon_id: str, admin: UserDB = Depends(require_admin), db: Session = Depends(get_db)):
+    coupon = db.query(CouponDB).filter(CouponDB.id == coupon_id).first()
+    if not coupon:
+        raise HTTPException(status_code=404, detail="Coupon not found.")
+    coupon.is_active = False
+    db.commit()
+    return {"status": "ok", "message": "Coupon deactivated."}
+
+@router.get("/api/partners")
+def list_partners(admin: UserDB = Depends(require_support), db: Session = Depends(get_db)):
+    """Module 13: Vendor / Partner / Affiliate Management."""
+    partners = db.query(PartnerDB).order_by(PartnerDB.created_at.desc()).all()
+    return [{
+        "id": p.id, "name": p.name, "email": p.email, "partner_code": p.partner_code,
+        "commission_pct": p.commission_pct, "total_sales_paise": p.total_sales_paise,
+        "total_payout_paise": p.total_payout_paise, "status": p.status,
+    } for p in partners]
+
+@router.post("/api/partners")
+def create_partner(req: CreatePartnerRequest, admin: UserDB = Depends(require_admin), db: Session = Depends(get_db)):
+    import uuid
+    code = req.partner_code.strip().upper()
+    existing = db.query(PartnerDB).filter(PartnerDB.partner_code == code).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Partner referral code already exists.")
+    partner = PartnerDB(
+        id=f"ptn_{uuid.uuid4().hex[:12]}",
+        name=req.name.strip(),
+        email=req.email.strip().lower(),
+        partner_code=code,
+        commission_pct=req.commission_pct,
+    )
+    db.add(partner)
+    db.commit()
+    return {"status": "ok", "partner_id": partner.id}
+
+@router.get("/api/content")
+def list_content(admin: UserDB = Depends(require_support), db: Session = Depends(get_db)):
+    """Module 2: Content Management (CMS Banners & Categories)."""
+    items = db.query(ContentItemDB).order_by(ContentItemDB.updated_at.desc()).all()
+    return [{
+        "id": item.id, "item_type": item.item_type, "title": item.title,
+        "content_json": item.content_json, "is_published": item.is_published,
+        "updated_at": item.updated_at.isoformat() if item.updated_at else None,
+    } for item in items]
+
+@router.post("/api/content")
+def create_content(req: CreateContentRequest, admin: UserDB = Depends(require_admin), db: Session = Depends(get_db)):
+    import uuid
+    item = ContentItemDB(
+        id=f"cms_{uuid.uuid4().hex[:12]}",
+        item_type=req.item_type.upper(),
+        title=req.title.strip(),
+        content_json=req.content_json,
+    )
+    db.add(item)
+    db.commit()
+    return {"status": "ok", "item_id": item.id}
+
+@router.get("/api/orders")
+def list_orders(admin: UserDB = Depends(require_support), db: Session = Depends(get_db)):
+    """Module 7: Order / Booking Management."""
+    orders = db.query(OrderDB).order_by(OrderDB.created_at.desc()).limit(100).all()
+    return [{
+        "id": o.id, "user_id": o.user_id, "order_type": o.order_type,
+        "amount_paise": o.amount_paise, "status": o.status, "notes": o.notes,
+        "created_at": o.created_at.isoformat() if o.created_at else None,
+    } for o in orders]
+
+@router.post("/api/orders/{order_id}/override")
+def override_order(order_id: str, req: OrderOverrideRequest, admin: UserDB = Depends(require_admin), db: Session = Depends(get_db)):
+    order = db.query(OrderDB).filter(OrderDB.id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found.")
+    order.status = req.status
+    if req.notes:
+        order.notes = req.notes
+    db.commit()
+    return {"status": "ok", "order_id": order.id, "new_status": order.status}
+
+@router.get("/api/moderation")
+def list_moderation_queue(admin: UserDB = Depends(require_support), db: Session = Depends(get_db)):
+    """Module 14: Content Moderation Tools."""
+    items = db.query(ModerationItemDB).order_by(ModerationItemDB.created_at.desc()).limit(50).all()
+    return [{
+        "id": m.id, "user_id": m.user_id, "content_snippet": m.content_snippet,
+        "flag_reason": m.flag_reason, "status": m.status,
+        "created_at": m.created_at.isoformat() if m.created_at else None,
+    } for m in items]
+
+@router.post("/api/moderation/{item_id}/action")
+def moderate_item(item_id: str, req: ModerationActionRequest, admin: UserDB = Depends(require_support), db: Session = Depends(get_db)):
+    item = db.query(ModerationItemDB).filter(ModerationItemDB.id == item_id).first()
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found.")
+    item.status = req.status
+    item.reviewed_by = admin.id
+    db.commit()
+    return {"status": "ok", "item_id": item.id, "status": item.status}
+
+@router.get("/api/founder-modules-status")
+def get_founder_modules_status(admin: UserDB = Depends(require_support)):
+    """Summary checklist of all 16 Founder Modules."""
+    return {
+        "modules_count": 16,
+        "modules": [
+            {"id": 1, "name": "User Management", "status": "LIVE", "endpoint": "/admin/api/users"},
+            {"id": 2, "name": "Content Management", "status": "LIVE", "endpoint": "/admin/api/content"},
+            {"id": 3, "name": "Payments & Transactions", "status": "LIVE", "endpoint": "/admin/api/payments"},
+            {"id": 4, "name": "Notifications", "status": "LIVE", "endpoint": "/admin/api/push/broadcasts"},
+            {"id": 5, "name": "Reports & Exports", "status": "LIVE", "endpoint": "/admin/api/export/{type}"},
+            {"id": 6, "name": "Roles & Permissions", "status": "LIVE", "endpoint": "/admin/api/profile"},
+            {"id": 7, "name": "Order / Booking Management", "status": "LIVE", "endpoint": "/admin/api/orders"},
+            {"id": 8, "name": "Support & Ticket Management", "status": "LIVE", "endpoint": "/admin/api/support/tickets"},
+            {"id": 9, "name": "Live Analytics Dashboard", "status": "LIVE", "endpoint": "/admin/api/metrics"},
+            {"id": 10, "name": "Audit Logs & Activity History", "status": "LIVE", "endpoint": "/admin/api/audit-logs"},
+            {"id": 11, "name": "Feature Flags & App Configuration", "status": "LIVE", "endpoint": "/admin/api/remote-config"},
+            {"id": 12, "name": "Coupons & Discount Management", "status": "LIVE", "endpoint": "/admin/api/coupons"},
+            {"id": 13, "name": "Vendor / Partner Management", "status": "LIVE", "endpoint": "/admin/api/partners"},
+            {"id": 14, "name": "Content Moderation Tools", "status": "LIVE", "endpoint": "/admin/api/moderation"},
+            {"id": 15, "name": "Session & Device Management", "status": "LIVE", "endpoint": "/admin/api/security"},
+            {"id": 16, "name": "Force-Update & App Version Control", "status": "LIVE", "endpoint": "/admin/api/releases"},
+        ]
+    }
+
+
+
 # ── Embedded Cybernetic Dark HUD Web UI ──────────────────────────────────────
 
-@router.get("", response_class=HTMLResponse)
-@router.get("/", response_class=HTMLResponse)
+@router.get("")
+@router.get("/")
 def admin_dashboard_ui():
-    """Standalone, responsive Cybernetic Dark HUD Admin Dashboard."""
-    return HTMLResponse(content=ADMIN_DASHBOARD_HTML, status_code=200)
+    """Redirect to the comprehensive standalone Admin Panel."""
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/admin-panel/", status_code=307)
+
 
 
 ADMIN_DASHBOARD_HTML = """<!DOCTYPE html>
@@ -434,7 +1069,7 @@ ADMIN_DASHBOARD_HTML = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS Commercial Control Panel — Owner Dashboard</title>
+  <title>CHARLIE AI Commercial Control Panel — Owner Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -764,10 +1399,10 @@ ADMIN_DASHBOARD_HTML = """<!DOCTYPE html>
   <header>
     <div class="brand">
       <span class="brand-badge">CONTROL NEXUS</span>
-      <h1>JARVIS Owner Admin Dashboard</h1>
+      <h1>CHARLIE AI Owner Admin Dashboard</h1>
     </div>
     <div class="header-actions">
-      <input type="password" id="adminKeyInput" class="key-input" placeholder="X-Admin-Key" value="jarvis_admin_secret_key_2026">
+      <input type="password" id="adminKeyInput" class="key-input" placeholder="X-Admin-Key" value="charlie_admin_secret_key_2026">
       <button class="btn btn-secondary" onclick="loadAllData()">Sync Live</button>
     </div>
   </header>

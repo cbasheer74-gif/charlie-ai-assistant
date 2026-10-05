@@ -1,0 +1,152 @@
+{
+  "verifygeneratedfile": {
+    "name": "VerifyGeneratedFile",
+    "workflow": "Intent: verify generated output file\nSteps: Verify Integrity",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "createbackup": {
+    "name": "CreateBackup",
+    "workflow": "Intent: create file or project backup\nSteps: Archive Files",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "openapplication": {
+    "name": "OpenApplication",
+    "workflow": "Intent: open desktop application\nSteps: Launch Process",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "findrecentfile": {
+    "name": "FindRecentFile",
+    "workflow": "Intent: find recent file\nSteps: Scan Filesystem",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "openantigravityproject": {
+    "name": "OpenAntigravityProject",
+    "workflow": "Intent: open project in antigravity ide\nSteps: Focus or Launch Antigravity",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "quickwebresearch": {
+    "name": "QuickWebResearch",
+    "workflow": "Intent: quick research on web\nSteps: Quick Search & Verify",
+    "updated": "2026-09-19T14:56:44+00:00",
+    "uses": 0
+  },
+  "factcheck": {
+    "name": "FactCheck",
+    "workflow": "Intent: fact check claim or statement\nSteps: Cross-Check Claim",
+    "updated": "2026-09-19T14:56:44+00:00",
+    "uses": 0
+  },
+  "fullprojectaudit": {
+    "name": "FullProjectAudit",
+    "workflow": "Intent: perform a full project code and security audit\nSteps: Map Project; Review Security Boundaries; Run Tests and Checks; Write Prioritized Report",
+    "updated": "2026-09-19T14:51:16+00:00",
+    "uses": 0
+  },
+  "researchtodecisionreport": {
+    "name": "ResearchToDecisionReport",
+    "workflow": "Intent: research a complex topic and create a decision report\nSteps: Frame the Decision; Gather Sources; Cross-check Evidence; Write Decision Report",
+    "updated": "2026-09-19T14:51:16+00:00",
+    "uses": 0
+  },
+  "researchsoftwaredocs": {
+    "name": "ResearchSoftwareDocs",
+    "workflow": "Intent: research software documentation and version\nSteps: Fetch Official Docs",
+    "updated": "2026-09-19T14:56:44+00:00",
+    "uses": 0
+  },
+  "createcontentbrief": {
+    "name": "CreateContentBrief",
+    "workflow": "Intent: create video content brief with fact lock\nSteps: Generate Brief & Lock Facts",
+    "updated": "2026-09-19T14:56:44+00:00",
+    "uses": 0
+  },
+  "buildreleasecandidate": {
+    "name": "BuildReleaseCandidate",
+    "workflow": "Intent: build and verify a release candidate\nSteps: Create Source Backup; Inspect Release Configuration; Run Tests; Package Application; Verify Release Artifact",
+    "updated": "2026-09-19T14:51:16+00:00",
+    "uses": 0
+  },
+  "deepresearch": {
+    "name": "DeepResearch",
+    "workflow": "Intent: deep comprehensive research report\nSteps: Deep Research Execution",
+    "updated": "2026-09-19T14:56:44+00:00",
+    "uses": 0
+  },
+  "researchtoexcel": {
+    "name": "ResearchToExcel",
+    "workflow": "Intent: research topic and export to excel\nSteps: Conduct Research; Export to Excel",
+    "updated": "2026-09-19T14:56:44+00:00",
+    "uses": 0
+  },
+  "monitortopic": {
+    "name": "MonitorTopic",
+    "workflow": "Intent: monitor topic for updates\nSteps: Inspect Changes",
+    "updated": "2026-09-19T14:56:45+00:00",
+    "uses": 0
+  },
+  "cleanexcelworkbook": {
+    "name": "CleanExcelWorkbook",
+    "workflow": "Intent: clean and normalize excel workbook\nSteps: Inspect Workbook; Normalize Data",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "createexcelreport": {
+    "name": "CreateExcelReport",
+    "workflow": "Intent: generate monthly excel report\nSteps: Inspect Workbook Structure; Calculate Totals & Build Summary",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "diagnosedevelopmenterror": {
+    "name": "DiagnoseDevelopmentError",
+    "workflow": "Intent: diagnose build or runtime error\nSteps: Analyze Trace & Diagnose",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "currenttrendresearch": {
+    "name": "CurrentTrendResearch",
+    "workflow": "Intent: find current trends\nSteps: Scan & Cluster Trends",
+    "updated": "2026-09-19T14:56:44+00:00",
+    "uses": 0
+  },
+  "researchyoutubetopic": {
+    "name": "ResearchYouTubeTopic",
+    "workflow": "Intent: research youtube topic for channel\nSteps: Evaluate Content Opportunity",
+    "updated": "2026-09-19T14:56:44+00:00",
+    "uses": 0
+  },
+  "researchtoshort": {
+    "name": "ResearchToShort",
+    "workflow": "Intent: research trend and make youtube short\nSteps: Research Trend & Brief; Create YouTube Short",
+    "updated": "2026-09-19T14:56:44+00:00",
+    "uses": 0
+  },
+  "runproject": {
+    "name": "RunProject",
+    "workflow": "Intent: run project development server\nSteps: Detect Stack; Execute Run Command",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "researchtopic": {
+    "name": "ResearchTopic",
+    "workflow": "Intent: research topic on web\nSteps: Web Search; Synthesize Research Brief",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "continuecodingproject": {
+    "name": "ContinueCodingProject",
+    "workflow": "Intent: continue coding implementation in project\nSteps: Inspect Codebase; Apply Code Changes",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  },
+  "createyoutubeshort": {
+    "name": "CreateYouTubeShort",
+    "workflow": "Intent: create youtube short video\nSteps: Research Trend & Hook; Write Script; Assemble 9:16 Video; Add Animated Captions; Export Final Video",
+    "updated": "2026-09-19T13:56:20+00:00",
+    "uses": 0
+  }
+}

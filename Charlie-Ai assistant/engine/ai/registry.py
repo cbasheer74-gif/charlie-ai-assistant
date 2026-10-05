@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Model, Provider, and Capability Registries
+CHARLIE Phase 11: Model, Provider, and Capability Registries
 Maintains available models, metadata, provider configurations, and capabilities.
 """
 
@@ -10,7 +10,7 @@ from typing import Dict, List, Optional
 
 from .models import DeploymentType, ModelCapability, ModelHealthState, ModelSpec
 
-logger = logging.getLogger("jarvis.ai.registry")
+logger = logging.getLogger("charlie.ai.registry")
 
 
 class CapabilityRegistry:
@@ -180,7 +180,54 @@ class ModelRegistry:
             priority=8,
         )
 
-        for m in [qwen35, m_local_small, m_local_code, m_cloud_strong, m_cloud_vision, m_cloud_fast]:
+        # 6. Groq Primary Quality Model (GPT-OSS 120B)
+        m_groq_primary = ModelSpec(
+            model_id="groq_primary",
+            provider="groq",
+            display_name="Groq Primary (GPT-OSS 120B)",
+            deployment_type=DeploymentType.CLOUD,
+            capabilities=[
+                ModelCapability.CHAT,
+                ModelCapability.CODING,
+                ModelCapability.REASONING,
+                ModelCapability.LONG_CONTEXT,
+                ModelCapability.STRUCTURED_OUTPUT,
+                ModelCapability.RESEARCH_SYNTHESIS,
+                ModelCapability.TOOL_USE,
+            ],
+            context_window=131072,
+            max_output=8192,
+            coding_strength="EXPERT",
+            reasoning_strength="EXPERT",
+            latency_tier="VERY_FAST",
+            cost_per_1k_input=0.0005,
+            cost_per_1k_output=0.0015,
+            priority=19,
+        )
+
+        # 7. Groq Fast / Cheap Model (GPT-OSS 20B)
+        m_groq_fast = ModelSpec(
+            model_id="groq_fast",
+            provider="groq",
+            display_name="Groq Fast (GPT-OSS 20B)",
+            deployment_type=DeploymentType.CLOUD,
+            capabilities=[
+                ModelCapability.CHAT,
+                ModelCapability.FAST_CLASSIFICATION,
+                ModelCapability.SUMMARIZATION,
+                ModelCapability.TOOL_USE,
+            ],
+            context_window=131072,
+            max_output=4096,
+            coding_strength="MEDIUM",
+            reasoning_strength="MEDIUM",
+            latency_tier="VERY_FAST",
+            cost_per_1k_input=0.0001,
+            cost_per_1k_output=0.0003,
+            priority=7,
+        )
+
+        for m in [qwen35, m_local_small, m_local_code, m_cloud_strong, m_cloud_vision, m_cloud_fast, m_groq_primary, m_groq_fast]:
             self.register_model(m)
 
     def register_model(self, model: ModelSpec):

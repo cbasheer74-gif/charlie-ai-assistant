@@ -6,22 +6,29 @@ from __future__ import annotations
 
 import os
 
-from fastapi import APIRouter, Depends, Request
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Header, Request
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
 
 from licensing_server.database import get_db
-from licensing_server.middleware.rate_limiter import limit_login
+from licensing_server.middleware.rate_limiter import (
+    limit_login, limit_password_reset, limit_register,
+    record_login_failure, record_login_success,
+)
 from licensing_server.services.auth_service import AuthService
+from licensing_server.services.email_service import EmailService
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 auth_service = AuthService()
+email_service = EmailService()
 
 
 class RegisterRequest(BaseModel):
     email: str = Field(..., min_length=5)
     password: str = Field(..., min_length=8)
-    display_name: str = Field(default="JARVIS User", max_length=128)
+    display_name: str = Field(default="CHARLIE User", max_length=128)
 
 
 class LoginRequest(BaseModel):
@@ -47,20 +54,37 @@ class VerifyEmailRequest(BaseModel):
 
 
 @router.post("/register")
-def register(req: RegisterRequest, db: Session = Depends(get_db)):
+def register(req: RegisterRequest, request: Request, db: Session = Depends(get_db)):
+    limit_register(request)
     ok, msg, data = auth_service.register(db, req.email, req.password, req.display_name)
     if not ok:
         return {"success": False, "error": msg}
+    # Dispatch email verification if token is generated
+    if data and "user_id" in data:
+        verify_token = auth_service.create_email_verification_token(str(data["user_id"]))
+        email_service.send_verification_email(req.email, verify_token)
     return {"success": True, "message": msg, "data": data}
 
 
 @router.post("/login")
 def login(req: LoginRequest, request: Request, db: Session = Depends(get_db)):
-    limit_login(request)
+    # Stage 1: IP sliding window + per-email lockout check
+    limit_login(request, email=req.email)
+    # Stage 2: Authenticate credentials
     ok, msg, data = auth_service.login(db, req.email, req.password)
     if not ok:
+        record_login_failure(req.email)   # increment failure counter / escalate lockout
         return {"success": False, "error": msg}
+    record_login_success(req.email)       # clear lockout state on success
     return {"success": True, "message": msg, "data": data}
+
+
+class LogoutRequest(BaseModel):
+    refresh_token: Optional[str] = None
+
+
+class ResendVerificationRequest(BaseModel):
+    email: str
 
 
 @router.post("/refresh")
@@ -72,28 +96,45 @@ def refresh(req: RefreshRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/logout")
-def logout():
-    # Client-side: discard tokens. Server-side: token blacklist optional for production.
-    return {"success": True, "message": "Logged out. Discard tokens on client."}
+def logout(
+    req: Optional[LogoutRequest] = None,
+    authorization: Optional[str] = Header(default=None),
+):
+    """Server-side JWT token invalidation via in-memory TTL blacklist."""
+    revoked_count = 0
+    # Revoke access token from Authorization header if present
+    if authorization and authorization.startswith("Bearer "):
+        token = authorization[7:].strip()
+        if auth_service.revoke_jwt(token):
+            revoked_count += 1
+
+    # Revoke refresh token if supplied in request body
+    if req and req.refresh_token:
+        if auth_service.revoke_jwt(req.refresh_token):
+            revoked_count += 1
+
+    return {
+        "success": True,
+        "message": "Logged out successfully. Tokens revoked server-side.",
+        "revoked_count": revoked_count,
+    }
 
 
 @router.post("/forgot-password")
-def forgot_password(req: ForgotPasswordRequest, db: Session = Depends(get_db)):
+def forgot_password(req: ForgotPasswordRequest, request: Request, db: Session = Depends(get_db)):
     """Request password reset token. Safe response avoids account enumeration."""
+    limit_password_reset(request)
     from licensing_server.database import UserDB
     user = db.query(UserDB).filter(UserDB.email == req.email.lower().strip()).first()
     if not user:
         return {"success": True, "message": "If account exists, password reset instructions sent."}
 
-    token = auth_service.create_password_reset_token(str(user.id))
-    res = {
+    token = auth_service.create_password_reset_token(str(user.id), session_version=getattr(user, "session_version", 1) or 1)
+    email_service.send_password_reset_email(str(user.email), token)
+    return {
         "success": True,
         "message": "If account exists, password reset instructions sent.",
     }
-    # In non-production/test environments, return token for test runners
-    if os.getenv("JARVIS_ENV", "development").lower() != "production":
-        res["reset_token"] = token
-    return res
 
 
 @router.post("/reset-password")
@@ -112,4 +153,19 @@ def verify_email(req: VerifyEmailRequest, db: Session = Depends(get_db)):
     if not ok:
         return {"success": False, "error": msg}
     return {"success": True, "message": msg}
+
+
+@router.post("/resend-verification")
+def resend_verification(req: ResendVerificationRequest, db: Session = Depends(get_db)):
+    """Resend email verification token for unverified accounts."""
+    from licensing_server.database import UserDB
+    user = db.query(UserDB).filter(UserDB.email == req.email.lower().strip()).first()
+    if not user:
+        return {"success": True, "message": "If account exists, verification email sent."}
+    if user.email_verified:
+        return {"success": True, "message": "Email is already verified."}
+
+    token = auth_service.create_email_verification_token(str(user.id))
+    email_service.send_verification_email(str(user.email), token)
+    return {"success": True, "message": "Verification email sent."}
 

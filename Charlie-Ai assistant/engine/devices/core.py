@@ -1,5 +1,5 @@
 """
-JARVIS Phase 10: Device Orchestrator
+CHARLIE Phase 10: Device Orchestrator
 Master coordinator unifying multi-device identity, pairing, gateway routing,
 presence, selective sync, handoff, file transfers, and remote notifications.
 """
@@ -18,7 +18,7 @@ from .pairing import PairingManager
 from .presence_session import MobileSessionManager, OfflineQueueManager, PresenceManager
 from .sync_engine import ConflictResolver, SyncEngine
 
-logger = logging.getLogger("jarvis.devices.core")
+logger = logging.getLogger("charlie.devices.core")
 
 
 class DeviceOrchestrator:

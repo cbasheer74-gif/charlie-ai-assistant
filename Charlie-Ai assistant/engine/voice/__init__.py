@@ -1,4 +1,6 @@
-"""engine.voice — Voice, Wake Word, Natural Conversation, and Real-Time Command Engine."""
+import sys
+from engine.voice import user_greeter_clean
+sys.modules["engine.voice.user_greeter"] = user_greeter_clean
 
 from engine.voice.audio_device_mgr import AudioDeviceManager
 from engine.voice.barge_in import BargeInManager, InterruptScope
@@ -35,6 +37,8 @@ from engine.voice.tts import (
 from engine.voice.vad import VoiceActivityDetector
 from engine.voice.wake_word import WakeWordEngine
 
+from engine.voice.streamer import AsyncAudioStreamer, get_audio_streamer
+
 __all__ = [
     "VoiceOrchestrator",
     "VoiceState",
@@ -60,6 +64,8 @@ __all__ = [
     "TTSProvider",
     "EdgeTTSProvider",
     "MockTTSProvider",
+    "AsyncAudioStreamer",
+    "get_audio_streamer",
     "BargeInManager",
     "InterruptScope",
     "ConversationTurnManager",
@@ -67,3 +73,4 @@ __all__ = [
     "VoicePermissionConfirmation",
     "AudioRecoveryEngine",
 ]
+

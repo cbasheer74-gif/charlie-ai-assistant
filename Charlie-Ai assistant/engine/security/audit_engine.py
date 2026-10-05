@@ -17,7 +17,9 @@ class AuditEngine:
 
     def __init__(self, audit_file: Optional[Path] = None):
         if audit_file is None:
-            a_dir = Path.home() / ".jarvis" / "audit"
+            legacy_dir = Path.home() / ".jarvis" / "audit"
+            default_dir = Path.home() / ".charlie" / "audit"
+            a_dir = legacy_dir if legacy_dir.exists() and not default_dir.exists() else default_dir
             a_dir.mkdir(parents=True, exist_ok=True)
             self.audit_file = a_dir / "audit_chain.jsonl"
         else:

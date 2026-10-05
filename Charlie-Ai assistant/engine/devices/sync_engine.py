@@ -1,5 +1,5 @@
 """
-JARVIS Phase 10: Selective Memory Sync & Conflict Resolver
+CHARLIE Phase 10: Selective Memory Sync & Conflict Resolver
 Handles selective syncing of project metadata, task statuses, user preferences, and skills.
 Strictly prevents synchronization of passwords, OAuth tokens, private keys, or credentials.
 Provides deterministic conflict resolution.
@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .models import SyncRecord, SyncScope
 
-logger = logging.getLogger("jarvis.devices.sync")
+logger = logging.getLogger("charlie.devices.sync")
 
 
 class SyncEngine:

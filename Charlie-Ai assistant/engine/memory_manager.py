@@ -1,4 +1,4 @@
-"""engine/memory_manager.py — Central Memory Engine for JARVIS.
+"""engine/memory_manager.py — Central Memory Engine for CHARLIE.
 
 Manages users, project states, task checkpoints, procedural memory,
 error solutions, semantic search, and deduplication/superseding.
@@ -218,23 +218,27 @@ class MemoryManager:
         goal: str,
         project_name: Optional[str] = None,
         project_id: Optional[str] = None,
+        task_id: Optional[str] = None,
     ) -> str:
         """Initialize a new durable task record."""
         now = utc_now_iso()
-        task_id = f"task_{uuid.uuid4().hex[:12]}"
+        task_id = task_id or f"task_{uuid.uuid4().hex[:12]}"
         proj_id = None
         target_proj = project_name or project_id
         if target_proj:
             proj = self.register_or_get_project(target_proj)
             proj_id = proj["id"]
 
-
         with get_db(self.db_path) as conn:
             conn.execute(
                 """
                 INSERT INTO task_memories (
                     id, project_id, task_name, goal, status, summary, started_at, last_checkpoint, next_action
-                ) VALUES (?, ?, ?, ?, 'RUNNING', '', ?, 'Started', '');
+                ) VALUES (?, ?, ?, ?, 'RUNNING', '', ?, 'Started', '')
+                ON CONFLICT(id) DO UPDATE SET
+                    project_id = coalesce(excluded.project_id, task_memories.project_id),
+                    task_name = excluded.task_name,
+                    goal = excluded.goal;
                 """,
                 (task_id, proj_id, task_name, goal, now),
             )
@@ -245,7 +249,6 @@ class MemoryManager:
         with get_db(self.db_path) as conn:
             row = conn.execute("SELECT * FROM task_memories WHERE id = ?;", (task_id,)).fetchone()
             return dict(row) if row else None
-
 
     def store_task_checkpoint(
         self,
@@ -262,7 +265,7 @@ class MemoryManager:
             checkpoint_name = json.dumps(checkpoint_data, ensure_ascii=False) if isinstance(checkpoint_data, (dict, list)) else str(checkpoint_data)
         checkpoint_val = checkpoint_name or "Checkpoint"
         with get_db(self.db_path) as conn:
-            completed_at = now if status in ("COMPLETED", "FAILED") else None
+            completed_at = now if status in ("COMPLETED", "FAILED", "CANCELLED") else None
             cur = conn.execute(
                 """
                 UPDATE task_memories
@@ -271,6 +274,16 @@ class MemoryManager:
                 """,
                 (checkpoint_val, summary, next_action, status, completed_at, task_id),
             )
+            if cur.rowcount == 0:
+                conn.execute(
+                    """
+                    INSERT INTO task_memories (
+                        id, project_id, task_name, goal, status, summary, started_at, last_checkpoint, next_action, completed_at
+                    ) VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?);
+                    """,
+                    (task_id, summary or "Autonomous Task", summary or "Autonomous Execution", status, summary, now, checkpoint_val, next_action, completed_at),
+                )
+                return True
             return cur.rowcount > 0
 
     def get_recent_task_context(self, project_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
@@ -281,11 +294,11 @@ class MemoryManager:
                     """
                     SELECT t.*, p.name as project_name
                     FROM task_memories t
-                    JOIN projects p ON t.project_id = p.id
-                    WHERE p.name = ?
+                    LEFT JOIN projects p ON t.project_id = p.id
+                    WHERE (p.name = ? OR p.id = ? OR t.project_id = ?)
                     ORDER BY t.started_at DESC LIMIT 1;
                     """,
-                    (project_name,),
+                    (project_name, project_name, project_name),
                 ).fetchone()
             else:
                 row = conn.execute(
@@ -300,7 +313,51 @@ class MemoryManager:
 
     def resume_task(self, project_name: Optional[str] = None, project_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Retrieve most recent incomplete or active task for resuming."""
-        return self.get_recent_task_context(project_name=project_name or project_id)
+        target = project_name or project_id
+        with get_db(self.db_path) as conn:
+            query = """
+                SELECT t.*, p.name as project_name
+                FROM task_memories t
+                LEFT JOIN projects p ON t.project_id = p.id
+                WHERE t.status NOT IN ('COMPLETED', 'CANCELLED')
+                  AND t.last_checkpoint IS NOT NULL
+                  AND t.last_checkpoint != ''
+            """
+            params: list[Any] = []
+            if target:
+                query += " AND (p.name = ? OR p.id = ? OR t.project_id = ?)"
+                params.extend([target, target, target])
+            query += " ORDER BY t.started_at DESC LIMIT 1;"
+            row = conn.execute(query, params).fetchone()
+            if row:
+                return dict(row)
+            # Fallback for backwards-compatibility
+            return self.get_recent_task_context(project_name=target)
+
+    def list_incomplete_tasks(self, project_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        """List all incomplete tasks that have a saved checkpoint."""
+        with get_db(self.db_path) as conn:
+            query = """
+                SELECT t.*, p.name as project_name
+                FROM task_memories t
+                LEFT JOIN projects p ON t.project_id = p.id
+                WHERE t.status NOT IN ('COMPLETED', 'CANCELLED')
+                  AND t.last_checkpoint IS NOT NULL
+                  AND t.last_checkpoint != ''
+            """
+            params: list[Any] = []
+            if project_id:
+                query += " AND (p.name = ? OR p.id = ? OR t.project_id = ?)"
+                params.extend([project_id, project_id, project_id])
+            query += " ORDER BY t.started_at DESC;"
+            rows = conn.execute(query, params).fetchall()
+            return [dict(r) for r in rows]
+
+    def cancel_task(self, task_id: str) -> bool:
+        """Mark task as CANCELLED in task_memories."""
+        with get_db(self.db_path) as conn:
+            cur = conn.execute("UPDATE task_memories SET status = 'CANCELLED' WHERE id = ?;", (task_id,))
+            return cur.rowcount > 0
 
 
     # ── Procedural & Error Memory ────────────────────────────────────────────

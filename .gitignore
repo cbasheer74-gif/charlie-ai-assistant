@@ -11,3 +11,15 @@ logs/
 .env.*
 licensing_server/keys/*.pem
 *.db
+*.db-shm
+*.db-wal
+node_modules/
+**/node_modules/
+charlie-3d/node_modules/
+charlie-3d/dist/
+**/config/api_keys.json
+config/api_keys.json
+scratch/
+.venv311/
+release/*.exe
+**/release/*.exe

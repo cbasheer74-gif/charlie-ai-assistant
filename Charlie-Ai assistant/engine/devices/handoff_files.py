@@ -1,5 +1,5 @@
 """
-JARVIS Phase 10: Task Handoff & Secure File Transfer Manager
+CHARLIE Phase 10: Task Handoff & Secure File Transfer Manager
 Manages continuity between devices (Phone <-> PC) and secure scoped file retrieval.
 """
 
@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .models import TaskHandoffPayload
 
-logger = logging.getLogger("jarvis.devices.handoff")
+logger = logging.getLogger("charlie.devices.handoff")
 
 
 class TaskHandoffManager:

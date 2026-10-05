@@ -6,8 +6,27 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
+
+
+def atomic_write_text(path: Path, content: str, encoding: str = "utf-8") -> None:
+    """Safely write text file atomically using temporary sibling file and replace."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = path.with_suffix(f"{path.suffix}.tmp_{os.getpid()}_{id(content)}")
+    try:
+        tmp_path.write_text(content, encoding=encoding)
+        os.replace(tmp_path, path)
+    except Exception:
+        if tmp_path.exists():
+            try:
+                tmp_path.unlink()
+            except Exception:
+                pass
+        raise
+
 
 from .billing_manager import BillingAuditManager, BillingManager, ReceiptManager
 from .cloud_policy import CloudUsagePolicy, QuotaManager
@@ -32,7 +51,7 @@ from .paywall_manager import PaywallManager, PricingUIManager
 from .plan_registry import PlanRegistry
 from .usage_meter import DailyUsageMeter
 
-logger = logging.getLogger("jarvis.commercial.core")
+logger = logging.getLogger("charlie.commercial.core")
 
 _GLOBAL_COMMERCIAL_ENGINE: Optional[CommercialEngine] = None
 
@@ -52,7 +71,9 @@ class CommercialEngine:
         audit_engine: Optional[Any] = None,
         signing_secret: Optional[str] = None,
     ):
-        self.base_dir = Path(base_dir) if base_dir else (Path.home() / ".jarvis" / "commercial")
+        legacy_dir = Path.home() / ".jarvis" / "commercial"
+        charlie_dir = Path.home() / ".charlie" / "commercial"
+        self.base_dir = Path(base_dir) if base_dir else (legacy_dir if (legacy_dir.exists() and not charlie_dir.exists()) else charlie_dir)
         self.base_dir.mkdir(parents=True, exist_ok=True)
 
         self.account_file = self.base_dir / "user_account.json"
@@ -88,7 +109,7 @@ class CommercialEngine:
         # 6. Usage Metering
         self.usage_meter = DailyUsageMeter(
             storage_path=self.base_dir / "daily_usage.json",
-            daily_limit_sec=600,  # 10 minutes
+            daily_limit_sec=1800,  # 30 minutes
         )
 
         # 7. Load cached entitlement token
@@ -140,10 +161,13 @@ class CommercialEngine:
         if self.account_file.exists():
             try:
                 data = json.loads(self.account_file.read_text(encoding="utf-8"))
+                disp = data.get("display_name", "CHARLIE User")
+                if "jarvis" in str(disp).lower():
+                    disp = "CHARLIE User"
                 account = UserAccount(
                     user_id=data["user_id"],
-                    display_name=data.get("display_name", "JARVIS User"),
-                    email=data.get("email", "user@jarvis.local"),
+                    display_name=disp,
+                    email=data.get("email", "user@charlie.local"),
                     plan=PlanTier(data.get("plan", PlanTier.STARTER.value)),
                     subscription_status=SubscriptionStatus(data.get("subscription_status", SubscriptionStatus.FREE.value)),
                     billing_customer_id=data.get("billing_customer_id"),
@@ -164,8 +188,8 @@ class CommercialEngine:
         # Default new installation: automatically assign STARTER
         default_account = UserAccount(
             user_id="usr_default_local",
-            display_name="JARVIS User",
-            email="user@jarvis.local",
+            display_name="CHARLIE User",
+            email="user@charlie.local",
             plan=PlanTier.STARTER,
             subscription_status=SubscriptionStatus.FREE,
         )
@@ -189,7 +213,7 @@ class CommercialEngine:
                 "cancel_at_period_end": account.cancel_at_period_end,
                 "activated_devices": account.activated_devices,
             }
-            self.account_file.write_text(json.dumps(raw, indent=2), encoding="utf-8")
+            atomic_write_text(self.account_file, json.dumps(raw, indent=2), encoding="utf-8")
             # Keep credit wallet in sync with plan
             if hasattr(self, "credit_mgr"):
                 plan_def = self.plan_registry.get_plan(account.plan)
@@ -248,14 +272,21 @@ class CommercialEngine:
 
         # Paid tiers with male + female voice unlocked
         if is_paid_active:
-            if account.plan in (PlanTier.ANNUAL_PRO, PlanTier.PRO, PlanTier.PRO_PLUS, PlanTier.PREMIUM, PlanTier.ADVANCED, PlanTier.LIFETIME):
+            if account.plan in (
+                PlanTier.ANNUAL_PRO,
+                PlanTier.PRO,
+                PlanTier.PRO_PLUS,
+                PlanTier.PREMIUM,
+                PlanTier.ADVANCED,
+                PlanTier.LIFETIME,
+            ):
                 if persona_clean in ("male", "default", "female"):
                     return True, f"{persona.title()} voice unlocked."
             elif account.plan == PlanTier.BASIC:
                 if persona_clean in ("male", "default"):
                     return True, "Male voice unlocked."
                 elif persona_clean == "female":
-                    return False, "Female voice requires Pro/Premium plan or higher."
+                    return False, "Female voice requires Pro/Growth/Premium plan or higher."
 
         # Default / Starter tier: Male voice is available on free tier, female is locked
         if persona_clean in ("male", "default"):
@@ -498,7 +529,7 @@ class CommercialEngine:
         self._cached_entitlement_token = token
         self.feature_gate.set_cached_token(token)
         try:
-            self._entitlement_cache_file.write_text(token, encoding="utf-8")
+            atomic_write_text(self._entitlement_cache_file, token, encoding="utf-8")
         except Exception as e:
             logger.error("Failed to cache entitlement token: %s", e)
 

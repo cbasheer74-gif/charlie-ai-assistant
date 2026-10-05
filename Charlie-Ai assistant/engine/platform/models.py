@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Developer Platform Models & Manifests
+CHARLIE Phase 12: Developer Platform Models & Manifests
 Defines contracts for plugins, tools, connectors, custom agents, events, webhooks, and permissions.
 """
 
@@ -89,10 +89,17 @@ class ExtensionManifest:
     capabilities: List[str] = field(default_factory=list)
     tools: List[str] = field(default_factory=list)
     credentials: List[str] = field(default_factory=list)
+    min_charlie_version: str = "1.0.0"
     min_jarvis_version: str = "1.0.0"
     publisher: str = "Community"
     signature: str = ""
     is_dev_mode: bool = False
+
+    def __post_init__(self):
+        if self.min_charlie_version != "1.0.0" and self.min_jarvis_version == "1.0.0":
+            self.min_jarvis_version = self.min_charlie_version
+        elif self.min_jarvis_version != "1.0.0" and self.min_charlie_version == "1.0.0":
+            self.min_charlie_version = self.min_jarvis_version
 
 
 @dataclass

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie & Storage Policy &middot; CHARLIE Desktop</title>
+  <meta name="description" content="Cookie and local storage policy for CHARLIE Desktop Assistant and licensing portal.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { background: #06080D; color: #E2E8F0; padding: 40px 20px; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .legal-container { max-width: 860px; margin: 0 auto; line-height: 1.7; }
+    h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; color: #FFFFFF; }
+    .meta-line { color: #94A3B8; font-size: 14px; margin-bottom: 32px; }
+    h2 { font-size: 20px; font-weight: 700; margin-top: 32px; margin-bottom: 12px; color: #00E5FF; }
+    p, li { color: #CBD5E1; font-size: 15px; margin-bottom: 14px; }
+    ul { padding-left: 20px; margin-bottom: 16px; }
+    .nav-bar { display: flex; justify-content: space-between; align-items: center; max-width: 860px; margin: 0 auto 40px auto; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .brand-link { color: #00E5FF; text-decoration: none; font-weight: 700; font-size: 18px; }
+    .back-link { color: #94A3B8; text-decoration: none; font-size: 14px; font-weight: 500; }
+    .back-link:hover { color: #FFFFFF; }
+    .card-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    th { color: #00E5FF; font-weight: 600; background: rgba(0, 229, 255, 0.05); }
+    td { color: #CBD5E1; }
+    code { font-family: monospace; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; color: #00E5FF; }
+  </style>
+</head>
+<body>
+  <div class="nav-bar">
+    <a href="index.html" class="brand-link">CHARLIE Desktop</a>
+    <a href="index.html" class="back-link">&larr; Back to Home</a>
+  </div>
+
+  <div class="legal-container">
+    <h1>Cookie & Local Storage Policy</h1>
+    <div class="meta-line">Effective Date: October 1, 2026 &bull; Version 1.0</div>
+
+    <div class="card-box">
+      <strong>Zero Marketing Tracking:</strong> CHARLIE's website and web portal operate on a strictly functional, privacy-first storage architecture. We do not use third-party advertising cookies, cross-site trackers, or behavioral analytics pixels.
+    </div>
+
+    <h2>1. What Technologies We Use</h2>
+    <p>When you visit the CHARLIE web portal, we utilize modern browser <code>localStorage</code>, <code>sessionStorage</code>, and secure HTTP cookies strictly necessary to provide authentication and manage commercial transactions.</p>
+
+    <h2>2. Inventory of Storage Items</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Key / Cookie</th>
+          <th>Storage Type</th>
+          <th>Purpose</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>charlie_access_token</code></td>
+          <td>localStorage</td>
+          <td>Cryptographic JWT token used to authorize API calls against the licensing server.</td>
+          <td>15 minutes (auto-refreshed)</td>
+        </tr>
+        <tr>
+          <td><code>charlie_refresh_token</code></td>
+          <td>localStorage</td>
+          <td>Secure refresh credential used to renew expired access sessions without re-login.</td>
+          <td>30 days</td>
+        </tr>
+        <tr>
+          <td><code>charlie_auth_user</code></td>
+          <td>localStorage</td>
+          <td>Caches display name, email, and subscription plan for instant portal UI rendering.</td>
+          <td>Persistent until logout</td>
+        </tr>
+        <tr>
+          <td><code>pending_checkout_plan</code></td>
+          <td>sessionStorage</td>
+          <td>Remembers user's selected tier across authentication redirects during checkout.</td>
+          <td>Current browser tab session</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. Why No Cookie Banner Is Required</h2>
+    <p>Under international privacy regulations (including GDPR Article 5(3) and the ePrivacy Directive), strictly necessary functional storage required to fulfill a user-requested service (such as maintaining an authenticated user account) is exempt from consent opt-in requirements.</p>
+
+    <h2>4. How to Manage Local Storage</h2>
+    <p>You can clear stored credentials at any time by clicking "Sign Out" in the Customer Portal or by clearing your browser cache and local storage in your browser settings.</p>
+
+    <h2>5. Contact Us</h2>
+    <p>For inquiries regarding this policy, visit our <a href="contact.html" style="color: #00E5FF;">Customer Support Center</a>.</p>
+  </div>
+</body>
+</html>

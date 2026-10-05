@@ -14,7 +14,7 @@ from typing import Any, Dict, Optional, Set, Tuple
 
 from .models import PaymentCheckoutSession, PaymentReceipt, PlanTier
 
-logger = logging.getLogger("jarvis.commercial.payment")
+logger = logging.getLogger("charlie.commercial.payment")
 
 
 class PaymentProvider(abc.ABC):
@@ -71,7 +71,7 @@ class MockPaymentProvider(PaymentProvider):
             order_id=order_id,
             plan=plan,
             amount_paise=amount_paise,
-            checkout_url=f"https://checkout.jarvis.local/pay/{order_id}",
+            checkout_url=f"https://checkout.charlie.local/pay/{order_id}",
         )
 
     def generate_valid_signature(self, order_id: str, payment_id: str) -> str:

@@ -1,5 +1,5 @@
 """
-JARVIS Phase 14: Master Deployment Platform
+CHARLIE Phase 14: Master Deployment Platform
 Unifies runtime, background service, installer building, onboarding,
 auto-updates, rollback, and diagnostic bundle generation.
 """
@@ -19,6 +19,7 @@ from engine.deployment.models import (
 )
 from engine.deployment.paths import DeploymentPathManager, PortManager
 from engine.deployment.runtime import (
+    CharlieUserAgent,
     CrashManager,
     JarvisUserAgent,
     SingleInstanceManager,
@@ -53,7 +54,7 @@ class DeploymentPlatform:
         self.ports = PortManager()
         self.single_instance = SingleInstanceManager(self.paths.get_sub_dir("checkpoints"))
         self.service_mgr = WindowsServiceManager(self.paths)
-        self.user_agent = JarvisUserAgent(self.paths)
+        self.user_agent = CharlieUserAgent(self.paths)
         self.startup_mgr = StartupManager()
         self.crash_mgr = CrashManager(self.paths)
         self.first_run_mgr = FirstRunManager(self.paths)

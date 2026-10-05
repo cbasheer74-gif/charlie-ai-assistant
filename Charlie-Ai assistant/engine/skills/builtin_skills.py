@@ -1,4 +1,4 @@
-"""engine/skills/builtin_skills.py — Standard Modular Starter Skills for JARVIS.
+"""engine/skills/builtin_skills.py — Standard Modular Starter Skills for CHARLIE.
 
 Provides foundational and advanced procedural skills out-of-the-box across Windows, Files,
 Spreadsheet, YouTube/Video, Coding, Antigravity, and Research.

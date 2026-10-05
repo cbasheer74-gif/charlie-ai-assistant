@@ -1,5 +1,5 @@
 """
-JARVIS Phase 13: Golden Master Scenarios Runner
+CHARLIE Phase 13: Golden Master Scenarios Runner
 Executes the 15 Golden Master Scenarios across all phases and records verifiable evidence in EvidenceRegistry.
 """
 
@@ -12,7 +12,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from .evidence import EvidenceRegistry
 from .models import CertificationStatus, EvaluationResult, GoldenScenario
 
-logger = logging.getLogger("jarvis.qa.scenarios")
+logger = logging.getLogger("charlie.qa.scenarios")
 
 
 class GoldenScenarioRunner:

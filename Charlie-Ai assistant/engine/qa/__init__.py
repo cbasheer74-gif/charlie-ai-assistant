@@ -1,5 +1,5 @@
 """
-JARVIS Phase 13: QA, Observability & Certification Package
+CHARLIE Phase 13: QA, Observability & Certification Package
 Exposes QualityPlatform, EvidenceRegistry, TraceManager, MetricsManager, Evaluators, and CertificationEngine.
 """
 

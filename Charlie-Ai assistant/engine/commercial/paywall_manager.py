@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 from .models import Entitlement, GateResult, PlanTier
 from .plan_registry import PlanRegistry
 
-logger = logging.getLogger("jarvis.commercial.paywall")
+logger = logging.getLogger("charlie.commercial.paywall")
 
 
 class PaywallManager:

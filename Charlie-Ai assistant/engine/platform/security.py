@@ -1,5 +1,5 @@
 """
-JARVIS Phase 12: Extension Security, Sandbox & Credential Binding
+CHARLIE Phase 12: Extension Security, Sandbox & Credential Binding
 Enforces strict sandboxing, domain allowlists, path isolation, and scoped credential injection.
 """
 
@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .models import ExtensionManifest, PermissionManifest
 
-logger = logging.getLogger("jarvis.platform.security")
+logger = logging.getLogger("charlie.platform.security")
 
 
 class PluginSecurityScanner:

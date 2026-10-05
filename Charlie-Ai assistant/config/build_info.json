@@ -1,0 +1,9 @@
+{
+  "app_version": "1.2.4",
+  "build_number": 109,
+  "build_date": "2026-10-05T08:12:48.979953+00:00",
+  "schema_version": 1,
+  "protocol_version": "1.0.0",
+  "plugin_sdk_version": "1.0.0",
+  "environment": "PRODUCTION"
+}

@@ -33,6 +33,7 @@ from engine.permissions import PermissionManager, RiskLevel
 from engine.rollback import RollbackManager
 from engine.router import AgentRouter
 from engine.tool_registry import ToolRegistry
+from engine.autonomy.cost_guard import CostGuard, CostLimitExceeded
 from engine.verification import VerificationEngine
 
 
@@ -50,6 +51,9 @@ class ActionBudget:
     max_runtime_sec: float = 600.0
     max_retries_per_node: int = 2
     max_file_changes: int = 20
+    # Cost guard ceilings — set either or both; None = unlimited
+    max_tokens: int = 100_000       # ~$0.04 at flash pricing
+    max_cost_usd: float = 0.50      # hard USD ceiling per autonomy run
 
 
 class AutonomyOrchestrator:
@@ -157,6 +161,45 @@ class AutonomyOrchestrator:
 
         return graph
 
+    def resume_execution(
+        self,
+        task_id: Optional[str] = None,
+        project_id: Optional[str] = None,
+        budget: Optional[ActionBudget] = None,
+        on_progress: Optional[Callable[[Dict[str, Any]], None]] = None,
+    ) -> Dict[str, Any]:
+        """Restore and run an interrupted task graph from its durable checkpoint."""
+        res = self.resumer.get_resumable_task(task_id=task_id, project_id=project_id)
+        if not res:
+            return {
+                "status": "NOT_FOUND",
+                "message": "No resumable task found in durable memory.",
+            }
+
+        graph, context, stage = res
+        self._active_graph = graph
+        self._active_context = context
+        self._is_paused = False
+
+        budget = budget or ActionBudget()
+        start_time = time.time()
+
+        if on_progress:
+            on_progress({**graph.get_progress(), "resumed_stage": stage, "status": "RESUMED"})
+
+        return self._run_execution_loop(
+            graph=graph,
+            context=context,
+            budget=budget,
+            on_progress=on_progress,
+            start_time=start_time,
+            execution_errors=[],
+            task_id=graph.graph_id,
+            user_goal=context.goal or graph.goal,
+            complexity="resumed",
+            resumed_from_stage=stage,
+        )
+
     def execute_goal(
         self,
         user_goal: str,
@@ -166,6 +209,14 @@ class AutonomyOrchestrator:
     ) -> Dict[str, Any]:
         """Main autonomy execution loop."""
         budget = budget or ActionBudget()
+        low_goal = user_goal.strip().lower()
+
+        # Check for explicit resume intent
+        if low_goal in ("resume", "continue", "resume task", "continue task", "pick up task", "resume last app"):
+            res = self.resumer.get_resumable_task(project_id=active_project)
+            if res:
+                return self.resume_execution(project_id=active_project, budget=budget, on_progress=on_progress)
+
         start_time = time.time()
         task_id = f"autotask_{uuid.uuid4().hex[:10]}"
 
@@ -200,40 +251,88 @@ class AutonomyOrchestrator:
         self._active_graph = graph
         self._active_context = context
 
+        # Register task in durable memory & initial checkpoint
+        self.memory.create_task(
+            task_name=f"Autonomy: {interpreted.primary_goal[:40]}",
+            goal=interpreted.primary_goal,
+            project_name=project_id,
+            project_id=project_id,
+            task_id=task_id,
+        )
+        self.checkpointer.save_checkpoint(graph, context, "Started")
+
         # Enqueue task
         self.queue_mgr.enqueue(task_id, interpreted.primary_goal, TaskPriority.NORMAL, project_id)
 
-        # Loop detector instance for this run
+        complexity = interpreted.complexity.value.lower() if hasattr(interpreted, "complexity") else "standard"
+        return self._run_execution_loop(
+            graph=graph,
+            context=context,
+            budget=budget,
+            on_progress=on_progress,
+            start_time=start_time,
+            execution_errors=[],
+            task_id=task_id,
+            user_goal=user_goal,
+            complexity=complexity,
+        )
+
+    def _run_execution_loop(
+        self,
+        graph: TaskGraph,
+        context: ExecutionContext,
+        budget: ActionBudget,
+        on_progress: Optional[Callable[[Dict[str, Any]], None]],
+        start_time: float,
+        execution_errors: List[str],
+        task_id: str,
+        user_goal: str,
+        complexity: str = "standard",
+        resumed_from_stage: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        # Loop detector + cost guard instances for this run
         loop_detector = LoopDetector(max_identical_threshold=budget.max_retries_per_node)
+        cost_guard = CostGuard(
+            max_tokens=budget.max_tokens,
+            max_cost_usd=budget.max_cost_usd,
+        )
 
         step_count = 0
-        execution_errors: List[str] = []
 
-        # 4. Main Autonomy Loop
+        # Main Autonomy Loop
         try:
             while not graph.is_completed():
                 if self._is_paused:
-                    return {"task_id": task_id, "status": "PAUSED", "progress": graph.get_progress()}
+                    res_paused = {"task_id": task_id, "status": "PAUSED", "progress": graph.get_progress()}
+                    if resumed_from_stage:
+                        res_paused["resumed_from_stage"] = resumed_from_stage
+                    return res_paused
 
                 # Enforce action budget
                 step_count += 1
                 if step_count > budget.max_steps:
                     self.checkpointer.save_checkpoint(graph, context, "Budget Exceeded")
-                    return {
+                    res_part = {
                         "task_id": task_id,
                         "status": "PARTIAL",
                         "reason": "Max autonomous steps exceeded. Durable checkpoint saved.",
                         "progress": graph.get_progress(),
                     }
+                    if resumed_from_stage:
+                        res_part["resumed_from_stage"] = resumed_from_stage
+                    return res_part
 
                 if time.time() - start_time > budget.max_runtime_sec:
                     self.checkpointer.save_checkpoint(graph, context, "Timeout")
-                    return {
+                    res_timeout = {
                         "task_id": task_id,
                         "status": "PARTIAL",
                         "reason": "Max runtime exceeded. Durable checkpoint saved.",
                         "progress": graph.get_progress(),
                     }
+                    if resumed_from_stage:
+                        res_timeout["resumed_from_stage"] = resumed_from_stage
+                    return res_timeout
 
                 # Retrieve ready nodes
                 ready_nodes = graph.get_ready_nodes()
@@ -254,21 +353,85 @@ class AutonomyOrchestrator:
                     if on_progress:
                         on_progress(graph.get_progress())
 
-                    # Check loop detector
+                    # Loop detection (replan on first loop; hard-stop on repeated)
                     is_loop, loop_reason = loop_detector.is_looping()
                     if is_loop:
-                        # Trigger replanner to switch strategy
-                        self.replanner.replan_on_failure(graph, node.id, loop_reason)
-                        loop_detector.reset()
-                        continue
+                        execution_errors.append(f"LOOP: {loop_reason}")
+                        # First occurrence: try replanning
+                        if execution_errors.count(f"LOOP: {loop_reason}") < 2:
+                            self.replanner.replan_on_failure(graph, node.id, loop_reason)
+                            loop_detector.reset()
+                            continue
+                        # Repeated loop — hard stop
+                        self.checkpointer.save_checkpoint(graph, context, "Loop Hard-Stop")
+                        user_msg = f"Task stopped: {loop_reason} Checkpoint saved."
+                        if on_progress:
+                            on_progress({**graph.get_progress(), "stopped_reason": user_msg})
+                        res_stop = {
+                            "task_id": task_id,
+                            "status": "STOPPED",
+                            "reason": user_msg,
+                            "progress": graph.get_progress(),
+                            "errors": execution_errors,
+                        }
+                        if resumed_from_stage:
+                            res_stop["resumed_from_stage"] = resumed_from_stage
+                        return res_stop
+
+                    # Cost guard pre-check (before expensive dispatch)
+                    if cost_guard.is_exceeded():
+                        exc = cost_guard.make_exception()
+                        self.checkpointer.save_checkpoint(graph, context, "Cost Hard-Stop")
+                        user_msg = exc.user_message()
+                        if on_progress:
+                            on_progress({**graph.get_progress(), "stopped_reason": user_msg})
+                        res_cost = {
+                            "task_id": task_id,
+                            "status": "STOPPED",
+                            "reason": user_msg,
+                            "cost_snapshot": str(cost_guard.snapshot()),
+                            "progress": graph.get_progress(),
+                            "errors": execution_errors,
+                        }
+                        if resumed_from_stage:
+                            res_cost["resumed_from_stage"] = resumed_from_stage
+                        return res_cost
 
                     # Delegate to specialist agent
                     agent_res = self._dispatch_agent(node, context)
+
+                    # Record usage in cost guard
+                    _prompt_text = str(node.description or "") + str(node.inputs or "")
+                    _output_text = str(agent_res.output or "")
+                    cost_guard.record(
+                        prompt=_prompt_text,
+                        completion=_output_text,
+                        model=getattr(agent_res, "model", "gemini-1.5-flash"),
+                    )
 
                     # Record step in loop detector & context
                     success = (agent_res.status == "SUCCESS")
                     loop_detector.record_step(node.tool or node.agent, node.inputs, agent_res.output, success=success)
                     context.record_action(node.agent, node.tool or "", node.inputs, agent_res.output, agent_res.status)
+
+                    # Cost guard post-check (after potentially large output)
+                    if cost_guard.is_exceeded():
+                        exc = cost_guard.make_exception()
+                        self.checkpointer.save_checkpoint(graph, context, "Cost Hard-Stop")
+                        user_msg = exc.user_message()
+                        if on_progress:
+                            on_progress({**graph.get_progress(), "stopped_reason": user_msg})
+                        res_cost = {
+                            "task_id": task_id,
+                            "status": "STOPPED",
+                            "reason": user_msg,
+                            "cost_snapshot": str(cost_guard.snapshot()),
+                            "progress": graph.get_progress(),
+                            "errors": execution_errors,
+                        }
+                        if resumed_from_stage:
+                            res_cost["resumed_from_stage"] = resumed_from_stage
+                        return res_cost
 
                     if success:
                         # Verification step
@@ -280,16 +443,13 @@ class AutonomyOrchestrator:
 
                         if v_pass:
                             graph.mark_completed(node.id, outputs=agent_res.output if isinstance(agent_res.output, dict) else {}, evidence=v_msg or "Verified")
-                            # If checkpoint required, persist immediately
                             if node.checkpoint_required:
                                 self.checkpointer.save_checkpoint(graph, context, f"Completed: {node.name}")
                         else:
-                            # Verification failed: attempt recovery
                             graph.mark_recovering(node.id)
                             context.record_error(node.agent, node.tool or "", f"Verification failed: {v_msg}")
                             self.replanner.replan_on_failure(graph, node.id, v_msg)
                     else:
-                        # Execution failed: attempt recovery or replan
                         err_str = "; ".join(agent_res.errors) if agent_res.errors else "Unknown agent failure"
                         execution_errors.append(err_str)
                         context.record_error(node.agent, node.tool or "", err_str)
@@ -305,25 +465,23 @@ class AutonomyOrchestrator:
             # Always release all locks acquired during this run
             self.lock_mgr.release_all(task_id)
 
-        # 5. Final Evaluation & Durable Learning
+        # Final Evaluation & Durable Learning
         final_progress = graph.get_progress()
         is_fully_complete = graph.is_completed()
 
         if is_fully_complete:
-            # Store successful procedural workflow in procedural_memories
             self.memory.store_successful_procedure(
-                name=f"workflow_{interpreted.complexity.value.lower()}_{graph.graph_id[:8]}",
+                name=f"workflow_{complexity}_{graph.graph_id[:8]}",
                 intent=user_goal,
                 steps=[n.name for n in graph.nodes.values()],
             )
-            # Final checkpoint
             self.checkpointer.save_checkpoint(graph, context, "Completed")
             status = "COMPLETED"
         else:
             status = "PARTIAL" if final_progress["completed"] > 0 else "FAILED"
             self.checkpointer.save_checkpoint(graph, context, f"Halted ({status})")
 
-        return {
+        res_final = {
             "task_id": task_id,
             "status": status,
             "goal": user_goal,
@@ -331,6 +489,9 @@ class AutonomyOrchestrator:
             "artifacts_created": context.artifacts.to_dict_list(),
             "errors": execution_errors,
         }
+        if resumed_from_stage:
+            res_final["resumed_from_stage"] = resumed_from_stage
+        return res_final
 
     def _dispatch_agent(self, node: TaskNode, context: ExecutionContext) -> AgentResult:
         """Route and execute node through specialized agent."""

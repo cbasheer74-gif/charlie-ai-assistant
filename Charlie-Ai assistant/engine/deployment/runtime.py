@@ -1,8 +1,10 @@
 """
-JARVIS Phase 14: Runtime and Lifecycle Management
+CHARLIE Phase 14: Runtime and Lifecycle Management
 Manages single instance enforcement, user session agent, background service,
 startup configuration, and crash detection with safe mode protection.
 """
+
+from __future__ import annotations
 
 import os
 import re
@@ -23,9 +25,9 @@ from engine.deployment.paths import DeploymentPathManager
 
 
 class SingleInstanceManager:
-    """Ensures only a single instance of JARVIS runs per user session."""
+    """Ensures only a single instance of CHARLIE runs per user session."""
 
-    def __init__(self, lock_dir: Optional[Path] = None, lock_name: str = "jarvis.lock"):
+    def __init__(self, lock_dir: Optional[Path] = None, lock_name: str = "charlie.lock"):
         self.lock_dir = lock_dir or DeploymentPathManager().get_sub_dir("checkpoints")
         self.lock_file = self.lock_dir / lock_name
         self._acquired = False
@@ -85,13 +87,13 @@ class SingleInstanceManager:
 class WindowsServiceManager:
     """Non-interactive background service coordinator.
     Reserved strictly for background sync, health checks, and update coordination.
-    Interactive automation is strictly isolated to JarvisUserAgent.
+    Interactive automation is strictly isolated to CharlieUserAgent.
     """
 
     def __init__(self, path_manager: Optional[DeploymentPathManager] = None):
         self.paths = path_manager or DeploymentPathManager()
         self.is_running = False
-        self.service_name = "JARVIS_Background_Service"
+        self.service_name = "CHARLIE_Background_Service"
 
     def start_service(self) -> Dict[str, Any]:
         self.is_running = True
@@ -120,7 +122,7 @@ class WindowsServiceManager:
         }
 
 
-class JarvisUserAgent:
+class CharlieUserAgent:
     """Interactive user-session agent.
     Runs inside the logged-in desktop session to handle UI automation,
     voice recognition, computer control, screen capture, and tray icons.
@@ -146,10 +148,13 @@ class JarvisUserAgent:
         self.tray_active = active
 
 
+JarvisUserAgent = CharlieUserAgent
+
+
 class StartupManager:
     """Manages Windows startup registration (Run registry key / scheduled task)."""
 
-    def __init__(self, app_name: str = "JARVIS", exe_path: Optional[str] = None):
+    def __init__(self, app_name: str = "CHARLIE", exe_path: Optional[str] = None):
         self.app_name = app_name
         self.exe_path = exe_path or sys.executable
         self._mock_store_file = DeploymentPathManager().get_sub_dir("config") / "startup_registry.json"
@@ -221,7 +226,7 @@ class GlobalExceptionHandler:
             component="core_process",
             error=exc_value,
             stack_trace=tb_str,
-            build_info=BuildInfo(app_version="1.0.0", build_number=100),
+            build_info=BuildInfo(app_version="1.3.0", build_number=130),
         )
         if self._orig_excepthook and self._orig_excepthook != self._handle_sys_exception:
             self._orig_excepthook(exc_type, exc_value, exc_traceback)
@@ -233,7 +238,7 @@ class GlobalExceptionHandler:
             component=f"thread_{args.thread.name if args.thread else 'unknown'}",
             error=args.exc_value,
             stack_trace=tb_str,
-            build_info=BuildInfo(app_version="1.0.0", build_number=100),
+            build_info=BuildInfo(app_version="1.3.0", build_number=130),
         )
 
 
@@ -271,7 +276,7 @@ class CrashManager:
         build_info: BuildInfo,
     ) -> CrashReport:
         """Log crash, generate friendly crash ID, and determine whether Safe Mode should be triggered."""
-        report_id = f"JARVIS-CRASH-{uuid.uuid4().hex[:6].upper()}"
+        report_id = f"CHARLIE-CRASH-{uuid.uuid4().hex[:6].upper()}"
         now = datetime.now(timezone.utc).isoformat()
 
         clean_msg = self.redact_secrets(str(error))

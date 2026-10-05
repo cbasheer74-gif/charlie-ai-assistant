@@ -14,6 +14,10 @@ class TestObservability(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(app)
 
+    def tearDown(self):
+        if hasattr(self, "client"):
+            self.client.close()
+
     def test_request_id_generated_when_missing(self):
         """Verify request ID is generated and returned in headers."""
         res = self.client.get("/")

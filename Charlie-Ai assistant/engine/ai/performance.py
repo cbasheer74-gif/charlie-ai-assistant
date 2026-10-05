@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Model Performance Tracker & Routing Learning
+CHARLIE Phase 11: Model Performance Tracker & Routing Learning
 Tracks empirical success, latency, and cost per task type to learn optimal routing weights.
 """
 
@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 
 from .models import ModelBenchmarkResult
 
-logger = logging.getLogger("jarvis.ai.performance")
+logger = logging.getLogger("charlie.ai.performance")
 
 
 class ModelPerformanceTracker:

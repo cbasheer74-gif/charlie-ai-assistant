@@ -211,7 +211,7 @@ PORTAL_DASHBOARD_HTML = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS Customer Portal — Account & License</title>
+  <title>CHARLIE AI Customer Portal — Account & License</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -365,7 +365,7 @@ PORTAL_DASHBOARD_HTML = """<!DOCTYPE html>
 <body>
   <header>
     <div class="brand">
-      <span class="brand-badge">JARVIS PORTAL</span>
+      <span class="brand-badge">CHARLIE PORTAL</span>
       <h1>Customer Account & Licensing</h1>
     </div>
     <div id="authHeader" style="display:none; align-items:center; gap:1rem;">
@@ -432,15 +432,15 @@ PORTAL_DASHBOARD_HTML = """<!DOCTYPE html>
     <!-- Installer Download -->
     <div class="card">
       <div class="card-title">
-        <span>Official JARVIS Production Installer</span>
+        <span>Official CHARLIE Production Installer</span>
         <span style="font-size:0.8rem;color:var(--cyan);font-family:var(--font-mono);">v1.0.0 Verified</span>
       </div>
       <p style="font-size:0.85rem;color:var(--text-dim);">
         Download the standalone production installer for Windows 10 & 11 (64-bit). Includes runtime, AI engine, and full offline verification.
       </p>
       <div>
-        <a id="downloadInstallerBtn" href="/downloads/JARVIS-Setup.exe" class="btn" download>
-          Download JARVIS-Setup.exe (151 MB)
+        <a id="downloadInstallerBtn" href="/downloads/CHARLIE-Setup.exe" class="btn" download>
+          Download CHARLIE-Setup.exe (187 MB)
         </a>
       </div>
     </div>
@@ -469,7 +469,7 @@ PORTAL_DASHBOARD_HTML = """<!DOCTYPE html>
   </main>
 
   <script>
-    let token = localStorage.getItem('jarvis_portal_token');
+    let token = localStorage.getItem('charlie_portal_token');
 
     async function submitLogin() {
       const email = document.getElementById('loginEmail').value.trim();
@@ -485,7 +485,7 @@ PORTAL_DASHBOARD_HTML = """<!DOCTYPE html>
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || 'Login failed');
         token = data.access_token;
-        localStorage.setItem('jarvis_portal_token', token);
+        localStorage.setItem('charlie_portal_token', token);
         initPortal();
       } catch (e) {
         alert(e.message);
@@ -535,7 +535,7 @@ PORTAL_DASHBOARD_HTML = """<!DOCTYPE html>
     }
 
     async function deactivateDevice() {
-      if (!confirm('Deactivate your current PC? You can reactivate anytime by logging into the JARVIS app.')) return;
+      if (!confirm('Deactivate your current PC? You can reactivate anytime by logging into the CHARLIE app.')) return;
       try {
         const res = await fetch('/portal/api/device/deactivate', {
           method: 'POST',
@@ -603,7 +603,7 @@ PORTAL_DASHBOARD_HTML = """<!DOCTYPE html>
     }
 
     function logoutUser() {
-      localStorage.removeItem('jarvis_portal_token');
+      localStorage.removeItem('charlie_portal_token');
       token = null;
       initPortal();
     }

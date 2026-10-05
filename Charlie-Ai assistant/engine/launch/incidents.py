@@ -1,5 +1,5 @@
 """
-JARVIS Phase 15: Production Incident Management & Automated Containment
+CHARLIE Phase 15: Production Incident Management & Automated Containment
 Manages SEV0-SEV3 incidents, automated containment (quarantine, rollout pause),
 timeline audit logging, and blame-free postmortems.
 """

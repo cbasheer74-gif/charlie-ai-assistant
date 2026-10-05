@@ -1,0 +1,10 @@
+{
+  "user_id": "u1",
+  "plan_tier": "PRO",
+  "subscription_credits": 1500,
+  "purchased_credits": 9000,
+  "daily_messages_used": 0,
+  "billing_cycle_start": null,
+  "billing_cycle_end": null,
+  "last_reset_at": null
+}

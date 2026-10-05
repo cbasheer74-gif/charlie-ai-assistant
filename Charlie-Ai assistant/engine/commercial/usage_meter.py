@@ -14,17 +14,17 @@ from typing import Callable, Dict, List, Optional
 
 from .models import UsageState, UserAccount
 
-logger = logging.getLogger("jarvis.commercial.usage_meter")
+logger = logging.getLogger("charlie.commercial.usage_meter")
 
 
 class DailyUsageMeter:
-    """Accurately meters active JARVIS usage for free/starter accounts.
+    """Accurately meters active CHARLIE usage for free/starter accounts.
 
     Crucial rule: IDLE application window time is NEVER charged against quota.
     Only ACTIVE processing, speech synthesis, and task execution consume seconds.
     """
 
-    DEFAULT_DAILY_LIMIT_SEC = 600  # 10 minutes = 600 seconds
+    DEFAULT_DAILY_LIMIT_SEC = 1800  # 30 minutes = 1,800 seconds
 
     def __init__(
         self,
@@ -54,7 +54,8 @@ class DailyUsageMeter:
 
     @staticmethod
     def _get_current_day_str() -> str:
-        return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        """Return local date (YYYY-MM-DD) based on user's country GMT / local timezone to refresh after 12:00 AM midnight."""
+        return datetime.now().astimezone().strftime("%Y-%m-%d")
 
     def _check_and_reset_day(self) -> None:
         """Reset usage if a new entitlement day has arrived (UTC)."""

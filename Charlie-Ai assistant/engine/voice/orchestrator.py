@@ -26,9 +26,18 @@ from engine.voice.tts import TextToSpeechManager
 from engine.voice.vad import VoiceActivityDetector
 from engine.voice.wake_word import WakeWordEngine
 
+# Lazy import — facial rig is optional; engine works without it
+try:
+    from engine.avatar.bone_controller import FacialAnimationController, _approximate_timeline
+    _FACIAL_AVAILABLE = True
+except ImportError:
+    _FACIAL_AVAILABLE = False
+    FacialAnimationController = None  # type: ignore
+    _approximate_timeline = None      # type: ignore
+
 
 class VoiceOrchestrator:
-    """End-to-End Voice Interaction Coordinator for JARVIS."""
+    """End-to-End Voice Interaction Coordinator for CHARLIE."""
 
     def __init__(
         self,
@@ -36,11 +45,21 @@ class VoiceOrchestrator:
         device_manager: Optional[AudioDeviceManager] = None,
         stt_manager: Optional[SpeechRecognitionManager] = None,
         tts_manager: Optional[TextToSpeechManager] = None,
+        facial_ctrl: Optional["FacialAnimationController"] = None,
     ):
         self.settings = settings or VoiceSettings()
         self.device_manager = device_manager or AudioDeviceManager()
         self.stt_manager = stt_manager or SpeechRecognitionManager()
         self.tts_manager = tts_manager or TextToSpeechManager()
+
+        # Facial animation controller — auto-initialised if avatar module is present
+        if facial_ctrl is not None:
+            self.facial_ctrl: Optional[FacialAnimationController] = facial_ctrl
+        elif _FACIAL_AVAILABLE:
+            self.facial_ctrl = FacialAnimationController()  # type: ignore
+            self.facial_ctrl.start_auto_blink()
+        else:
+            self.facial_ctrl = None
 
         self.vad = VoiceActivityDetector(
             energy_threshold=self.settings.energy_threshold,
@@ -62,8 +81,28 @@ class VoiceOrchestrator:
         self._emergency_stop_triggered: bool = False
 
         self.barge_in.set_emergency_stop_callback(self.emergency_stop)
+        self.capture.add_frame_callback(self._on_audio_frame)
+
+    def _on_audio_frame(self, chunk: np.ndarray) -> None:
+        """Processes incoming audio frame for acoustic barge-in, VAD, and backchanneling."""
+        if chunk is None or len(chunk) == 0:
+            return
+
+        energy = self.vad.calculate_energy(chunk)
+
+        # 1. Instant Acoustic Barge-In (<50ms cutoff during assistant speech)
+        if self.tts_manager.is_speaking():
+            self.barge_in.process_acoustic_frame(energy)
+
+        # 2. Backchanneling evaluation during user speech
+        is_voice = energy >= self.vad.energy_threshold
+        backchannel_event = self.vad.check_backchannel(is_voice)
+        if backchannel_event and backchannel_event.get("visual_nod"):
+            if self.facial_ctrl and hasattr(self.facial_ctrl, "set_expression"):
+                self.facial_ctrl.set_expression("brow_raise", 0.3)
 
     def _on_wake_detected(self) -> None:
+
         if self.current_state != VoiceState.SPEAKING:
             self.current_state = VoiceState.WAKE_DETECTED
 
@@ -83,6 +122,9 @@ class VoiceOrchestrator:
         """Immediately aborts all voice actions, stops TTS, and flags emergency stop."""
         self._emergency_stop_triggered = True
         self.tts_manager.stop()
+        if self.facial_ctrl:
+            self.facial_ctrl.stop()
+            self.facial_ctrl.set_expression("neutral", 0.0, smooth=False)
         self.current_state = VoiceState.INTERRUPTED
         self.capture.stop()
 
@@ -99,10 +141,14 @@ class VoiceOrchestrator:
                 self.emergency_stop()
                 return {"status": "EMERGENCY_STOP_TRIGGERED", "state": self.current_state.value}
             elif interrupt_scope == InterruptScope.STOP_CURRENT_TASK:
+                if self.facial_ctrl:
+                    self.facial_ctrl.stop()
                 self.current_state = VoiceState.PAUSED
                 self.active_task_paused = True
                 return {"status": "TASK_STOPPED", "state": self.current_state.value}
             elif interrupt_scope == InterruptScope.STOP_TTS_ONLY:
+                if self.facial_ctrl:
+                    self.facial_ctrl.stop()
                 self.current_state = VoiceState.SLEEPING
                 return {"status": "TTS_STOPPED", "state": self.current_state.value}
 
@@ -111,15 +157,18 @@ class VoiceOrchestrator:
         in_follow_up = self.conversation.is_in_follow_up_window()
 
         if not is_wake and not in_follow_up:
-            # Utterance ignored because not addressed to JARVIS
+            # Utterance ignored because not addressed to CHARLIE
             self.current_state = VoiceState.SLEEPING
             return {"status": "IGNORED_NO_WAKE", "state": self.current_state.value}
 
-        # 2.5 Pure Wake Word Utterance (e.g. "Hey Charlie", "Charlie", or "Hey Jarvis")
-        cleaned_no_wake = re.sub(r"^(hey\s+|hello\s+)?(charlie|jarvis)[\s,!.?]*", "", raw_transcript.strip(), flags=re.I).strip()
+        # 2.5 Pure Wake Word Utterance (e.g. "Hey Charlie", "Hello Charlie")
+        cleaned_no_wake = re.sub(r"^(hey\s+|hello\s+)?charlie[\s,!.?]*", "", raw_transcript.strip(), flags=re.I).strip()
         if not cleaned_no_wake:
             self.current_state = VoiceState.LISTENING
             self.conversation.update_activity()
+            # Show listening expression on avatar
+            if self.facial_ctrl:
+                self.facial_ctrl.set_expression("brow_raise", 0.3)
             return {
                 "status": "WAKE_DETECTED",
                 "state": self.current_state.value,
@@ -158,17 +207,36 @@ class VoiceOrchestrator:
         speech_text = result.get("speech_response", "")
         if speech_text and not self.settings.quiet_mode:
             self.current_state = VoiceState.SPEAKING
-            self.wake_engine.set_jarvis_speaking(True)
+            self.wake_engine.set_charlie_speaking(True)
+
+            # ── Facial animation: pick expression from result or default ──
+            expression = result.get("emotion", "neutral")
+            if self.facial_ctrl and _approximate_timeline:
+                phoneme_tl = result.get("phoneme_timeline") or _approximate_timeline(speech_text)
+                self.facial_ctrl.play_phoneme_timeline(
+                    phoneme_tl,
+                    expression=expression,
+                    expression_weight=0.45,
+                    blocking=False,
+                )
 
             def _on_finish():
-                self.wake_engine.set_jarvis_speaking(False)
+                self.wake_engine.set_charlie_speaking(False)
                 self.current_state = VoiceState.SLEEPING
                 self.conversation.update_activity()
+                # Reset rig to neutral after speech finishes
+                if self.facial_ctrl:
+                    self.facial_ctrl.set_expression(expression, 0.0, smooth=True, duration=0.4)
 
-            self.tts_manager.speak(speech_text, on_complete=_on_finish)
+            # Adapt silence timeout for subsequent turn based on input text
+            self.vad.adapt_timeout(resolved_command)
+
+            self.tts_manager.speak(speech_text, on_complete=_on_finish, emotion=expression)
         else:
             self.current_state = VoiceState.SLEEPING
             self.conversation.update_activity()
+            self.vad.adapt_timeout(resolved_command)
+
 
         result["voice_state"] = self.current_state.value
         result["resolved_command"] = resolved_command

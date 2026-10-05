@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Offline AI Manager
+CHARLIE Phase 11: Offline AI Manager
 Detects network connectivity, switches gracefully to local AI models, and prevents crashes during internet outage.
 """
 
@@ -10,7 +10,7 @@ from typing import Any, Dict, Optional, Tuple
 
 from .models import NetworkState
 
-logger = logging.getLogger("jarvis.ai.offline")
+logger = logging.getLogger("charlie.ai.offline")
 
 
 class OfflineAIManager:

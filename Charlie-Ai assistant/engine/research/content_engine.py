@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import time
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -15,6 +16,7 @@ from engine.research.models import (
     TrendCandidate,
     VerificationStatus,
 )
+
 
 
 class HookGenerator:
@@ -69,8 +71,17 @@ class YouTubeIntelligenceEngine:
         self.hook_gen = HookGenerator()
         self.title_intel = TitleIntelligence()
 
+    @contextmanager
+    def _connection(self):
+        conn = sqlite3.connect(self.db_path)
+        try:
+            with conn:
+                yield conn
+        finally:
+            conn.close()
+
     def _init_db(self) -> None:
-        with sqlite3.connect(self.db_path) as conn:
+        with self._connection() as conn:
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS content_library (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -139,7 +150,7 @@ class YouTubeIntelligenceEngine:
 
     def check_is_duplicate(self, topic: str) -> bool:
         norm = topic.lower().strip()
-        with sqlite3.connect(self.db_path) as conn:
+        with self._connection() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT topic FROM content_library;")
             rows = cursor.fetchall()
@@ -211,7 +222,7 @@ class YouTubeIntelligenceEngine:
         cid = f"content_{int(time.time())}_{abs(hash(brief.topic)) % 1000}"
         now_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
-        with sqlite3.connect(self.db_path) as conn:
+        with self._connection() as conn:
             conn.execute("""
                 INSERT INTO content_library (
                     content_id, topic, angle, format, script_path, video_path, created_at, sources

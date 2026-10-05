@@ -1,4 +1,4 @@
-"""engine/research/models.py — Data Models and Enums for JARVIS Research Intelligence Engine."""
+"""engine/research/models.py — Data Models and Enums for CHARLIE Research Intelligence Engine."""
 
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 """
-JARVIS Phase 13: Observability, Distributed Tracing & Metrics
+CHARLIE Phase 13: Observability, Distributed Tracing & Metrics
 Provides full distributed execution tracing, performance timers, and real engineering SLIs/SLOs.
 """
 
@@ -12,11 +12,11 @@ from typing import Any, Dict, List, Optional
 
 from .models import MetricRecord, TraceSpan
 
-logger = logging.getLogger("jarvis.qa.observability")
+logger = logging.getLogger("charlie.qa.observability")
 
 
 class TraceManager:
-    """Manages distributed execution spans across JARVIS components without logging secrets."""
+    """Manages distributed execution spans across CHARLIE components without logging secrets."""
 
     def __init__(self):
         # trace_id -> list of TraceSpan

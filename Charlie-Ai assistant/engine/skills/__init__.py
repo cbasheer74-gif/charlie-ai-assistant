@@ -1,4 +1,4 @@
-"""engine.skills — Skill Learning, Workflow Building, and Procedural Intelligence for JARVIS."""
+"""engine.skills — Skill Learning, Workflow Building, and Procedural Intelligence for CHARLIE."""
 
 from engine.skills.models import (
     Skill,

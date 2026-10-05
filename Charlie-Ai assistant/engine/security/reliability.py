@@ -20,7 +20,9 @@ class DownloadSecurityEngine:
 
     def __init__(self, download_dir: Optional[Path] = None):
         if download_dir is None:
-            self.download_dir = Path.home() / ".jarvis" / "downloads"
+            legacy_dir = Path.home() / ".jarvis" / "downloads"
+            default_dir = Path.home() / ".charlie" / "downloads"
+            self.download_dir = legacy_dir if legacy_dir.exists() and not default_dir.exists() else default_dir
         else:
             self.download_dir = Path(download_dir)
         self.download_dir.mkdir(parents=True, exist_ok=True)

@@ -1,5 +1,5 @@
 """
-licensing_server/run.py — Entry point for the JARVIS licensing server.
+licensing_server/run.py — Entry point for the CHARLIE AI licensing server.
 
 Usage:
   python -m licensing_server.run

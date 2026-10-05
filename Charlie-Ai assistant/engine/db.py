@@ -1,4 +1,4 @@
-"""engine/db.py — Persistent SQLite storage for JARVIS Intelligence Engine.
+"""engine/db.py — Persistent SQLite storage for CHARLIE Intelligence Engine.
 
 Provides thread-safe connections, schema management, and secret redaction.
 """
@@ -22,9 +22,11 @@ def get_base_dir() -> Path:
     return Path(__file__).resolve().parent.parent
 
 
+from core.app_paths import get_memory_dir
+
 BASE_DIR = get_base_dir()
-DB_PATH = BASE_DIR / "memory" / "charlie_memory.db"
-_LEGACY_DB_PATH = BASE_DIR / "memory" / "jarvis_memory.db"
+DB_PATH = get_memory_dir() / "charlie_memory.db"
+_LEGACY_DB_PATH = get_memory_dir() / "jarvis_memory.db"
 if not DB_PATH.exists() and _LEGACY_DB_PATH.exists():
     try:
         import shutil

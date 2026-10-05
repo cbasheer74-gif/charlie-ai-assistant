@@ -1,0 +1,13 @@
+{
+  "mode": "pomodoro",
+  "task": "Deep Work",
+  "work_min": 25,
+  "break_min": 5,
+  "started": 1791027569.1456702,
+  "end_epoch": 1791029069.1456704,
+  "cycle": 1,
+  "phase": "work",
+  "paused": false,
+  "pause_start": null,
+  "total_pause": 0.0
+}

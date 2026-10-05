@@ -1,0 +1,268 @@
+setup.py:50: print(f"\n? Python {v[0]}.{v[1]} detected ? JARVIS needs at "
+setup.py:70: print(f"?  JARVIS setup ? detected OS: {OS or 'unknown'}, "
+actions\browser_control.py:128: if not fallback.exists() and (home / ".jarvis_profiles" / browser).exists():
+actions\browser_control.py:129: fallback = home / ".jarvis_profiles" / browser
+actions\code_helper.py:63: return DESKTOP / f"jarvis_code{ext}"
+actions\code_helper.py:103: screenshot_path = Path.home() / "Desktop" / f"jarvis_debug_{int(time.time())}.png"
+actions\device_control.py:2: JARVIS Phase 10: Device Control Actions
+actions\device_control.py:12: """High-level actions exposed to JARVIS for managing multi-device system."""
+actions\dev_agent.py:17: PROJECTS_DIR     = Path.home() / "Desktop" / "JarvisProjects"
+actions\dev_agent.py:468: proj_name    = project_name or plan.get("project_name", "jarvis_project")
+actions\excel_worker.py:13: return source.with_name(f"{source.stem}_jarvis_{stamp}{source.suffix}")
+actions\excel_worker.py:59: destination = Path(str(params.get("file_path") or "Jarvis_Workbook.xlsx")).expanduser()
+actions\file_controller.py:98: JARVIS is a personal desktop assistant, so limiting it to the user profile
+actions\file_controller.py:345: detail=(f"JARVIS will move this item to the Recycle Bin:\n{target}\n\n"
+actions\file_controller.py:346: "You can restore it from the Recycle Bin or use JARVIS undo."),
+actions\file_processor.py:2: file_processor.py ? JARVIS Universal File Processor
+actions\flight_finder.py:240: "JARVIS ? Flight Search Results",
+actions\game_room.py:1: """Voice tool for JARVIS Game Room."""
+actions\game_room.py:46: "Play and persist JARVIS voice games: Mystery Adventure, 20 Questions, Quiz Battle, "
+actions\game_updater.py:813: task_name   = "JARVIS_GameUpdater"
+actions\game_updater.py:829: plist_path  = plist_dir / "com.jarvis.gameupdater.plist"
+actions\game_updater.py:835: <key>Label</key><string>com.jarvis.gameupdater</string>
+actions\game_updater.py:863: marker      = "# JARVIS_GameUpdater"
+actions\game_updater.py:883: ["schtasks", "/Delete", "/TN", "JARVIS_GameUpdater", "/F"],
+actions\game_updater.py:889: plist_path = Path.home() / "Library" / "LaunchAgents" / "com.jarvis.gameupdater.plist"
+actions\game_updater.py:899: if "JARVIS_GameUpdater" not in l]
+actions\game_updater.py:910: ["schtasks", "/Query", "/TN", "JARVIS_GameUpdater", "/FO", "LIST"],
+actions\game_updater.py:922: / "com.jarvis.gameupdater.plist")
+actions\game_updater.py:928: if "JARVIS_GameUpdater" in result.stdout:
+actions\game_updater.py:930: if "JARVIS_GameUpdater" in line:
+actions\intelligence_engine.py:1: """actions/intelligence_engine.py ? JARVIS Intelligence & Task Planning Engine Action.
+actions\intelligence_engine.py:161: f"JARVIS Health: {h['status']}\n"
+actions\launch_control.py:2: JARVIS Phase 15: Launch & Release Operations Control Actions
+actions\learning_brain.py:1: """Voice-facing router for JARVIS's ten adaptive learning capabilities."""
+actions\learning_brain.py:154: "JARVIS adaptive learning brain. Use for explicit corrections; recording/replaying a task "
+actions\learning_brain.py:187: "follow_up": {"type": "STRING", "description": "Something JARVIS should ask about later."},
+actions\manage_skills.py:1: """Persistent, user-taught workflows and procedural skills for JARVIS.
+actions\manage_skills.py:95: fd, temp = tempfile.mkstemp(prefix="jarvis-skills-", suffix=".json", dir=store.parent)
+actions\manage_skills.py:125: "Jarvis actions. When finished, ask me to stop teaching and save it."
+actions\manage_skills.py:149: return "No successful Jarvis actions were captured yet. Perform the workflow or cancel Teach Mode."
+actions\manage_skills.py:266: "Teach Jarvis a reusable workflow by recording real tool actions. Use start_teach with a name "
+actions\model_control.py:2: JARVIS Phase 11: Model Control Actions
+actions\ollama_agent.py:1: """Local Qwen 3.5 agent bridge for JARVIS."""
+actions\ollama_agent.py:36: "You are the local Qwen 3.5 agent inside JARVIS. Be precise, practical, "
+actions\ollama_agent.py:39: "the computer unless JARVIS confirms it. Current specialist role: " + role
+actions\ollama_agent.py:59: "This agent does not directly change the computer; use Jarvis's guarded tools for actions."
+actions\personal_hub.py:228: "Manages JARVIS personal companion behavior, goals, calendar events, daily tasks/plans, learning coaching, "
+actions\personal_hub.py:229: "meeting capture/summaries, and private family profiles. Use it whenever the user asks Jarvis "
+actions\platform_control.py:2: JARVIS Phase 12: Platform Control Actions
+actions\proactive.py:11: Decides when JARVIS should speak unprompted and builds a context-rich prompt.
+actions\proactive.py:18: - Smarter silence gate    (doesn't fire while JARVIS is speaking)
+actions\qa_control.py:2: JARVIS Phase 13: QA & Certification Control Actions
+actions\qa_control.py:30: "version": report.jarvis_version,
+actions\rag_search.py:3: Allows JARVIS voice and text agents to:
+actions\remember_correction.py:28: "Store an explicit correction from the user so JARVIS avoids repeating "
+actions\reminder.py:31: d = Path.home() / ".jarvis" / "reminders"
+actions\reminder.py:207: label     = f"com.jarvis.reminder.{task_name}"
+actions\reminder.py:311: task_name  = f"JARVISReminder_{target_dt.strftime('%Y%m%d_%H%M%S')}"
+actions\research_engine.py:1: """actions/research_engine.py ? JARVIS Research and Content Intelligence Tool Action.
+actions\screen_ocr.py:3: Enables JARVIS voice and text agents to:
+actions\screen_processor.py:2: Screen & webcam capture for JARVIS vision.
+actions\security_control.py:1: """actions/security_control.py ? JARVIS Security Dashboard & Emergency Control Actions."""
+actions\security_control.py:14: """Security management and emergency control action for JARVIS (Phase 9)."""
+actions\voice_control.py:1: """actions/voice_control.py ? JARVIS Voice, Wake Word, and Audio Device Control Action.
+actions\voice_control.py:24: """Entry point action for controlling JARVIS voice engine and microphone settings."""
+actions\voice_control.py:37: f"### JARVIS Voice Subsystem Status:\n"
+actions\voice_control.py:48: return "Microphone has been muted. JARVIS will not capture audio."
+actions\weather_report.py:49: player.write_log(f"JARVIS: {message}")
+actions\youtube_video.py:195: "You are JARVIS, an AI assistant. "
+actions\youtube_video.py:216: f"JARVIS ? YouTube Summary\n"
+dashboard\server.py:41: PORT        = int(os.environ.get("CHARLIE_PORT", os.environ.get("JARVIS_PORT", os.environ.get("PORT", 1901))))
+dashboard\server.py:74: _AES_SALT = b'JARVIS-DASHBOARD-v1'
+dashboard\server.py:373: legacy_key = certs / "jarvis.key"
+dashboard\server.py:374: legacy_crt = certs / "jarvis.crt"
+dashboard\server.py:491: k = certs / "charlie.key" if (certs / "charlie.key").exists() else certs / "jarvis.key"
+dashboard\server.py:492: c = certs / "charlie.crt" if (certs / "charlie.crt").exists() else certs / "jarvis.crt"
+dashboard\server.py:501: has_legacy = (certs / "jarvis.key").exists() and (certs / "jarvis.crt").exists()
+dashboard\server.py:674: sessionStorage.setItem('jarvis_token','{tok}');
+dashboard\server.py:675: sessionStorage.setItem('jarvis_key','{key}');
+dashboard\server.py:676: localStorage.setItem('jarvis_device_token','{dev_tok}');
+dashboard\static\app.html:157: const _authToken  = sessionStorage.getItem('charlie_token') || sessionStorage.getItem('jarvis_token');
+dashboard\static\app.html:158: const _sessionKey = sessionStorage.getItem('charlie_key') || sessionStorage.getItem('jarvis_key');
+dashboard\static\app.html:171: const _AES_SALT = 'JARVIS-DASHBOARD-v1';
+dashboard\static\app.html:235: if (speaker === 'charlie' || speaker === 'jarvis') {
+dashboard\static\login.html:158: const devTok = localStorage.getItem('charlie_device_token') || localStorage.getItem('jarvis_device_token');
+dashboard\static\login.html:171: sessionStorage.setItem('jarvis_key', d.key);
+dashboard\static\login.html:172: sessionStorage.setItem('jarvis_token', d.token);
+dashboard\static\login.html:179: localStorage.removeItem('jarvis_device_token');
+dashboard\static\login.html:210: sessionStorage.setItem('jarvis_key', key);
+dashboard\static\login.html:211: sessionStorage.setItem('jarvis_token', data.token);
+engine\context_builder.py:1: """engine/context_builder.py ? Dynamic Context Builder for JARVIS.
+engine\db.py:1: """engine/db.py ? Persistent SQLite storage for JARVIS Intelligence Engine.
+engine\db.py:27: _LEGACY_DB_PATH = BASE_DIR / "memory" / "jarvis_memory.db"
+engine\db.py:50: legacy_p_db = profile_dir() / "jarvis_memory.db"
+engine\error_recovery.py:1: """engine/error_recovery.py ? Error Recovery Engine for JARVIS.
+engine\memory_manager.py:1: """engine/memory_manager.py ? Central Memory Engine for JARVIS.
+engine\agents\contract.py:3: Defines the standard execution, verification, and recovery interface for all JARVIS
+engine\agents\contract.py:37: """Universal contract for specialized agents in JARVIS autonomous orchestration."""
+engine\agents\__init__.py:1: """engine/agents/__init__.py ? Specialized Agents for JARVIS Intelligence Engine."""
+engine\ai\cache.py:2: JARVIS Phase 11: Response Cache & File Context Invalidation
+engine\ai\cache.py:13: logger = logging.getLogger("jarvis.ai.cache")
+engine\ai\compiler_validator.py:2: JARVIS Phase 11: Modular Prompt Compiler & Response Validator
+engine\ai\compiler_validator.py:13: logger = logging.getLogger("jarvis.ai.compiler")
+engine\ai\context_budget.py:2: JARVIS Phase 11: Context & Token Budget Managers, Cost Tracker & Semantic Compressor
+engine\ai\context_budget.py:14: logger = logging.getLogger("jarvis.ai.budget")
+engine\ai\core.py:2: JARVIS Phase 11: Master AI Orchestration Layer
+engine\ai\core.py:36: logger = logging.getLogger("jarvis.ai.core")
+engine\ai\core.py:40: """Master Multi-Model Intelligence Layer for JARVIS."""
+engine\ai\hardware.py:2: JARVIS Phase 11: Hardware Profiler
+engine\ai\hardware.py:13: logger = logging.getLogger("jarvis.ai.hardware")
+engine\ai\health_fallback.py:2: JARVIS Phase 11: Model Health Manager & Fallback Chain
+engine\ai\health_fallback.py:14: logger = logging.getLogger("jarvis.ai.health")
+engine\ai\models.py:2: JARVIS Phase 11: Multi-Model AI Enums and Dataclasses
+engine\ai\offline.py:2: JARVIS Phase 11: Offline AI Manager
+engine\ai\offline.py:13: logger = logging.getLogger("jarvis.ai.offline")
+engine\ai\performance.py:2: JARVIS Phase 11: Model Performance Tracker & Routing Learning
+engine\ai\performance.py:14: logger = logging.getLogger("jarvis.ai.performance")
+engine\ai\profiler.py:2: JARVIS Phase 11: Task Profiler, Complexity Estimator & Privacy Classifier
+engine\ai\profiler.py:16: logger = logging.getLogger("jarvis.ai.profiler")
+engine\ai\providers.py:2: JARVIS Phase 11: AI Providers & Adapters
+engine\ai\providers.py:18: logger = logging.getLogger("jarvis.ai.providers")
+engine\ai\providers.py:49: """Read Jarvis's live local-model settings without duplicating config paths."""
+engine\ai\registry.py:2: JARVIS Phase 11: Model, Provider, and Capability Registries
+engine\ai\registry.py:13: logger = logging.getLogger("jarvis.ai.registry")
+engine\ai\router.py:2: JARVIS Phase 11: Model Router, Routing Policies & Vision Router
+engine\ai\router.py:24: logger = logging.getLogger("jarvis.ai.router")
+engine\commercial\billing_manager.py:16: logger = logging.getLogger("jarvis.commercial.billing")
+engine\commercial\cloud_policy.py:14: logger = logging.getLogger("jarvis.commercial.cloud_policy")
+engine\commercial\core.py:54: logger = logging.getLogger("jarvis.commercial.core")
+engine\commercial\core.py:74: self.base_dir = Path(base_dir) if base_dir else (Path.home() / ".jarvis" / "commercial")
+engine\commercial\core.py:164: display_name=data.get("display_name", "JARVIS User"),
+engine\commercial\core.py:165: email=data.get("email", "user@jarvis.local"),
+engine\commercial\core.py:186: display_name="JARVIS User",
+engine\commercial\core.py:187: email="user@jarvis.local",
+engine\commercial\device_identity.py:23: logger = logging.getLogger("jarvis.commercial.device_identity")
+engine\commercial\device_identity.py:26: PRODUCT_SALT = "jarvis_mark_liv_2026"
+engine\commercial\device_identity.py:42: self.data_dir = data_dir or (Path.home() / ".jarvis" / "identity")
+engine\commercial\entitlement_verifier.py:17: logger = logging.getLogger("jarvis.commercial.entitlement_verifier")
+engine\commercial\feature_gate.py:15: logger = logging.getLogger("jarvis.commercial.feature_gate")
+engine\commercial\license_manager.py:18: logger = logging.getLogger("jarvis.commercial.license_manager")
+engine\commercial\license_manager.py:36: raw_secret = secret or "jarvis_offline_license_secret_key"
+engine\commercial\licensing_client.py:2: engine/commercial/licensing_client.py ? HTTPS client for communicating with the JARVIS licensing server.
+engine\commercial\licensing_client.py:16: logger = logging.getLogger("jarvis.commercial.licensing_client")
+engine\commercial\licensing_client.py:49: """Desktop client for the JARVIS licensing server API."""
+engine\commercial\licensing_client.py:53: self.data_dir = data_dir or (Path.home() / ".jarvis" / "licensing")
+engine\commercial\licensing_client.py:62: def register(self, email: str, password: str, display_name: str = "JARVIS User") -> AuthResult:
+engine\commercial\payment_provider.py:17: logger = logging.getLogger("jarvis.commercial.payment")
+engine\commercial\payment_provider.py:74: checkout_url=f"https://checkout.jarvis.local/pay/{order_id}",
+engine\commercial\paywall_manager.py:14: logger = logging.getLogger("jarvis.commercial.paywall")
+engine\commercial\usage_meter.py:17: logger = logging.getLogger("jarvis.commercial.usage_meter")
+engine\commercial\usage_meter.py:21: """Accurately meters active JARVIS usage for free/starter accounts.
+engine\deployment\core.py:24: JarvisUserAgent,
+engine\deployment\paths.py:20: elif "JARVIS_DATA_DIR" in os.environ:
+engine\deployment\paths.py:21: self._data_dir = Path(os.environ["JARVIS_DATA_DIR"]).resolve()
+engine\deployment\paths.py:26: jarvis_dir = Path(appdata) / "JARVIS"
+engine\deployment\paths.py:27: self._data_dir = charlie_dir if (charlie_dir.exists() or not jarvis_dir.exists()) else jarvis_dir
+engine\deployment\paths.py:62: jarvis_log = log_dir / "jarvis.log"
+engine\deployment\paths.py:63: if not charlie_log.exists() and jarvis_log.exists():
+engine\deployment\paths.py:64: return jarvis_log
+engine\deployment\paths.py:70: jarvis_cfg = cfg_dir / "jarvis_config.json"
+engine\deployment\paths.py:71: if not charlie_cfg.exists() and jarvis_cfg.exists():
+engine\deployment\paths.py:72: return jarvis_cfg
+engine\deployment\runtime.py:149: JarvisUserAgent = CharlieUserAgent
+engine\deployment\__init__.py:25: JarvisUserAgent,
+engine\deployment\__init__.py:69: "JarvisUserAgent",
+engine\devices\core.py:2: JARVIS Phase 10: Device Orchestrator
+engine\devices\core.py:21: logger = logging.getLogger("jarvis.devices.core")
+engine\devices\gateway.py:2: JARVIS Phase 10: Remote Command Gateway & Router
+engine\devices\gateway.py:4: checks per-device permissions, and dispatches structured intents to JARVIS execution engines.
+engine\devices\gateway.py:17: logger = logging.getLogger("jarvis.devices.gateway")
+engine\devices\gateway.py:143: "LOCKDOWN_JARVIS": RemotePermission.LOCKDOWN,
+engine\devices\gateway.py:160: Dispatches validated intents to JARVIS task graph, projects, and autonomous systems.
+engine\devices\handoff_files.py:2: JARVIS Phase 10: Task Handoff & Secure File Transfer Manager
+engine\devices\handoff_files.py:17: logger = logging.getLogger("jarvis.devices.handoff")
+engine\devices\identity_registry.py:2: JARVIS Phase 10: Device Registry & Revocation Manager
+engine\devices\identity_registry.py:17: logger = logging.getLogger("jarvis.devices.registry")
+engine\devices\models.py:2: JARVIS Phase 10: Multi-Device Models & Envelopes
+engine\devices\notifications.py:2: JARVIS Phase 10: Notification & Remote Confirmation Manager
+engine\devices\notifications.py:16: logger = logging.getLogger("jarvis.devices.notifications")
+engine\devices\notifications.py:132: NotificationCategory.TASK_COMPLETE: "JARVIS: Task finished.",
+engine\devices\notifications.py:133: NotificationCategory.TASK_FAILED: "JARVIS: Task encountered an issue.",
+engine\devices\notifications.py:134: NotificationCategory.CONFIRMATION_REQUIRED: "JARVIS: Authorization required.",
+engine\devices\notifications.py:135: NotificationCategory.SECURITY_ALERT: "JARVIS: Security alert.",
+engine\devices\notifications.py:136: NotificationCategory.MEETING: "JARVIS: Upcoming schedule event.",
+engine\devices\notifications.py:137: NotificationCategory.BACKUP_FAILURE: "JARVIS: Backup notice.",
+engine\devices\notifications.py:138: NotificationCategory.EXPORT_COMPLETE: "JARVIS: Export finished.",
+engine\devices\notifications.py:139: NotificationCategory.PROJECT_BLOCKED: "JARVIS: Project requires attention.",
+engine\devices\notifications.py:141: return mapping.get(category, "JARVIS notification.")
+engine\devices\pairing.py:2: JARVIS Phase 10: Secure Pairing Manager
+engine\devices\pairing.py:20: logger = logging.getLogger("jarvis.devices.pairing")
+engine\devices\pairing.py:24: """Manages short-lived, rate-limited pairing sessions between desktop JARVIS and mobile."""
+engine\devices\presence_session.py:2: JARVIS Phase 10: Presence, Session & Offline Queue Management
+engine\devices\presence_session.py:17: logger = logging.getLogger("jarvis.devices.presence")
+engine\devices\sync_engine.py:2: JARVIS Phase 10: Selective Memory Sync & Conflict Resolver
+engine\devices\sync_engine.py:18: logger = logging.getLogger("jarvis.devices.sync")
+engine\devices\__init__.py:2: JARVIS Phase 10: Multi-Device Package
+engine\intelligence\core.py:42: """Central Intelligence coordinator for JARVIS Phase 8."""
+engine\intelligence\knowledge_graph.py:26: db_dir = Path.home() / ".jarvis"
+engine\intelligence\models.py:1: """engine/intelligence/models.py ? Data Models and Enums for JARVIS Phase 8 Intelligence Core."""
+engine\intelligence\__init__.py:1: """engine/intelligence/__init__.py ? Public Exports for JARVIS Phase 8 Intelligence Core."""
+engine\launch\core.py:2: JARVIS Phase 15: Master Launch Operations Platform
+engine\launch\freeze.py:2: JARVIS Phase 15: Scope Lock & Release Freeze Policy Engine
+engine\launch\incidents.py:2: JARVIS Phase 15: Production Incident Management & Automated Containment
+engine\launch\models.py:2: JARVIS Phase 15: Launch Operations Platform Models
+engine\launch\readiness.py:2: JARVIS Phase 15: Launch Readiness, Go/No-Go Decision, Staged Rollout & Post-Launch Monitoring
+engine\launch\readiness.py:228: return f"""# JARVIS v{version} Release Notes
+engine\launch\readiness.py:238: "Welcome to JARVIS v1.0. Your personal AI desktop assistant is ready. "
+engine\launch\readiness.py:239: "Press Ctrl+Space or say 'Hey Jarvis' to start. Emergency stop is always available via Esc or 'Stop'."
+engine\launch\support.py:75: RUNBOOKS["JARVIS_WONT_START"] = RUNBOOKS["CHARLIE_WONT_START"]
+engine\launch\triage_issues.py:2: JARVIS Phase 15: Bug Triage, Issue Registry, and Hotfix Management
+engine\launch\uat_pilot.py:2: JARVIS Phase 15: User Acceptance Testing (UAT) & Pilot Program Engine
+engine\launch\uat_pilot.py:70: steps=["Run JARVIS-Setup.exe", "Complete onboarding", "Ask to open Notepad", "Exit JARVIS"],
+engine\launch\uat_pilot.py:102: steps=["Say 'Hey Jarvis, Chrome kholo'", "Say 'Stop'"],
+engine\launch\__init__.py:2: JARVIS Phase 15: Launch Operations Package
+engine\platform\agent_builder.py:2: JARVIS Phase 12: Custom Agent Builder & Templates
+engine\platform\agent_builder.py:13: logger = logging.getLogger("jarvis.platform.agent_builder")
+engine\platform\connectors.py:2: JARVIS Phase 12: Connectors & OpenAPI Importer
+engine\platform\connectors.py:14: logger = logging.getLogger("jarvis.platform.connectors")
+engine\platform\core.py:2: JARVIS Phase 12: Master Developer Platform Architecture
+engine\platform\core.py:30: logger = logging.getLogger("jarvis.platform.core")
+engine\platform\core.py:34: """Master Developer Platform integrating extensible capabilities into JARVIS."""
+engine\platform\events_webhooks.py:2: JARVIS Phase 12: Event Bus, Webhook Gateway & Automation Builder
+engine\platform\events_webhooks.py:16: logger = logging.getLogger("jarvis.platform.events")
+engine\platform\mcp.py:2: JARVIS Phase 12: Model Context Protocol (MCP) Gateway & Client Manager
+engine\platform\mcp.py:14: logger = logging.getLogger("jarvis.platform.mcp")
+engine\platform\models.py:2: JARVIS Phase 12: Developer Platform Models & Manifests
+engine\platform\models.py:92: min_jarvis_version: str = "1.0.0"
+engine\platform\registry.py:2: JARVIS Phase 12: Plugin Registry & Extension Health Manager
+engine\platform\registry.py:15: logger = logging.getLogger("jarvis.platform.registry")
+engine\platform\sdk.py:2: JARVIS Phase 12: Extension SDK
+engine\platform\sdk.py:14: logger = logging.getLogger("jarvis.platform.sdk")
+engine\platform\security.py:2: JARVIS Phase 12: Extension Security, Sandbox & Credential Binding
+engine\platform\security.py:13: logger = logging.getLogger("jarvis.platform.security")
+engine\platform\tool_resolver.py:2: JARVIS Phase 12: Tool Resolver & Dynamic Tool Loader
+engine\platform\tool_resolver.py:13: logger = logging.getLogger("jarvis.platform.tool_resolver")
+engine\platform\__init__.py:2: JARVIS Phase 12: Developer Platform Package
+engine\qa\certification.py:2: JARVIS Phase 13: Quality Gates, Regression Engine & Production Certification
+engine\qa\certification.py:23: logger = logging.getLogger("jarvis.qa.certification")
+engine\qa\certification.py:97: jarvis_version: str = "1.0.0",
+engine\qa\certification.py:123: jarvis_version=jarvis_version,
+engine\qa\core.py:2: JARVIS Phase 13: Master Quality & Certification Platform
+engine\qa\core.py:32: logger = logging.getLogger("jarvis.qa.core")
+engine\qa\core.py:36: """Master Quality & Production Certification Platform for JARVIS."""
+engine\qa\evaluators.py:2: JARVIS Phase 13: Subsystem Evaluators & Chaos Testing
+engine\qa\evaluators.py:14: logger = logging.getLogger("jarvis.qa.evaluators")
+engine\qa\evidence.py:2: JARVIS Phase 13: Evidence Registry
+engine\qa\evidence.py:19: logger = logging.getLogger("jarvis.qa.evidence")
+engine\qa\models.py:2: JARVIS Phase 13: QA, Observability & Certification Models
+engine\qa\models.py:134: jarvis_version: str
+engine\qa\observability.py:2: JARVIS Phase 13: Observability, Distributed Tracing & Metrics
+engine\qa\observability.py:15: logger = logging.getLogger("jarvis.qa.observability")
+engine\qa\observability.py:19: """Manages distributed execution spans across JARVIS components without logging secrets."""
+engine\qa\scenarios.py:2: JARVIS Phase 13: Golden Master Scenarios Runner
+engine\qa\scenarios.py:15: logger = logging.getLogger("jarvis.qa.scenarios")
+engine\qa\__init__.py:2: JARVIS Phase 13: QA, Observability & Certification Package
+engine\research\engine.py:37: """Core coordinator for JARVIS Phase 5 Deep Research & Internet Intelligence."""
+engine\research\models.py:1: """engine/research/models.py ? Data Models and Enums for JARVIS Research Intelligence Engine."""
+engine\security\audit_engine.py:20: legacy_dir = Path.home() / ".jarvis" / "audit"
+engine\security\backup_recovery.py:21: legacy_dir = Path.home() / ".jarvis" / "backups"
+engine\security\file_safety.py:30: legacy_dir = Path.home() / ".jarvis" / "JARVIS_QUARANTINE"
+engine\security\reliability.py:23: legacy_dir = Path.home() / ".jarvis" / "downloads"
+engine\voice\orchestrator.py:118: # 2.5 Pure Wake Word Utterance (e.g. "Hey Charlie", "Charlie", "Hey Jarvis")
+engine\voice\orchestrator.py:119: cleaned_no_wake = re.sub(r"^(hey\s+|hello\s+)?(charlie|jarvis)[\s,!.?]*", "", raw_transcript.strip(), flags=re.I).strip()
+engine\voice\wake_word.py:33: def _is_jarvis_speaking(self) -> bool:
+engine\voice\wake_word.py:36: @_is_jarvis_speaking.setter
+engine\voice\wake_word.py:37: def _is_jarvis_speaking(self, value: bool) -> None:
+engine\voice\wake_word.py:47: def set_jarvis_speaking(self, speaking: bool) -> None:
+landing_page\disclaimer.html:64: <p>Any historical, colloquial, or community references to "JARVIS" or "Mark" designations are strictly generic technical shorthand and do not imply any affiliation, sponsorship, or licensing relationship with any external rights holders. All third-party trademarks, company names, and logos belong strictly to their respective owners.</p>

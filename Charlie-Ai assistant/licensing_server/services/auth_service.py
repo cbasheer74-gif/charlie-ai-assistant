@@ -6,6 +6,7 @@ Passwords NEVER stored in plaintext. Uses bcrypt with automatic salt.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -13,6 +14,7 @@ from typing import Optional, Tuple
 
 import bcrypt
 import jwt
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from licensing_server.config import config
@@ -25,6 +27,7 @@ from licensing_server.database import (
     SubscriptionStatus,
     UserDB,
 )
+from licensing_server.middleware.token_blacklist import is_token_revoked, revoke_token
 
 
 class AuthService:
@@ -43,6 +46,7 @@ class AuthService:
     @staticmethod
     def create_access_token(user_id: str, email: str, role: str = "USER", session_version: int = 1) -> str:
         payload = {
+            "jti": f"jti_{uuid.uuid4().hex}",
             "sub": user_id,
             "email": email,
             "role": role,
@@ -56,6 +60,7 @@ class AuthService:
     @staticmethod
     def create_refresh_token(user_id: str, session_version: int = 1) -> str:
         payload = {
+            "jti": f"jti_{uuid.uuid4().hex}",
             "sub": user_id,
             "sv": session_version,
             "type": "refresh",
@@ -66,16 +71,46 @@ class AuthService:
 
     @staticmethod
     def decode_token(token: str) -> Optional[dict]:
-        """Decode and validate JWT. Returns None on any failure."""
+        """Decode and validate JWT. Returns None on any failure or if blacklisted."""
         try:
-            return jwt.decode(token, config.JWT_SECRET, algorithms=[config.JWT_ALGORITHM])
+            payload = jwt.decode(token, config.JWT_SECRET, algorithms=[config.JWT_ALGORITHM])
+            jti = payload.get("jti")
+            if jti and is_token_revoked(jti):
+                return None
+            token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+            if is_token_revoked(token_hash):
+                return None
+            return payload
         except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
             return None
 
-    def register(self, db: Session, email: str, password: str, display_name: str = "JARVIS User") -> Tuple[bool, str, Optional[dict]]:
+    @staticmethod
+    def revoke_jwt(token: str) -> bool:
+        """Revoke a token by JTI or token hash until its natural expiration."""
+        try:
+            payload = jwt.decode(
+                token,
+                config.JWT_SECRET,
+                algorithms=[config.JWT_ALGORITHM],
+                options={"verify_exp": False},
+            )
+            exp = float(payload.get("exp", 0))
+            if not exp:
+                exp = (datetime.now(timezone.utc) + timedelta(hours=24)).timestamp()
+            jti = payload.get("jti")
+            if jti:
+                revoke_token(jti, exp)
+            token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+            revoke_token(token_hash, exp)
+            return True
+        except Exception:
+            return False
+
+    def register(self, db: Session, email: str, password: str, display_name: str = "CHARLIE User") -> Tuple[bool, str, Optional[dict]]:
         """Create new user account with STARTER subscription."""
+        clean_email = email.lower().strip()
         # Check duplicate
-        existing = db.query(UserDB).filter(UserDB.email == email).first()
+        existing = db.query(UserDB).filter(UserDB.email == clean_email).first()
         if existing:
             return False, "Email already registered.", None
 
@@ -84,10 +119,11 @@ class AuthService:
 
         user = UserDB(
             id=user_id,
-            email=email.lower().strip(),
+            email=clean_email,
             password_hash=self.hash_password(password),
             display_name=display_name,
             account_status=AccountStatus.ACTIVE.value,
+            email_verified=False,
         )
 
         subscription = SubscriptionDB(
@@ -98,18 +134,23 @@ class AuthService:
             device_limit=1,
         )
 
-        db.add(user)
-        db.add(subscription)
-        db.commit()
+        try:
+            db.add(user)
+            db.add(subscription)
+            db.commit()
+        except IntegrityError:
+            db.rollback()
+            return False, "Email already registered.", None
 
-        access_token = self.create_access_token(user_id, email)
+        access_token = self.create_access_token(user_id, clean_email)
         refresh_token = self.create_refresh_token(user_id)
 
         return True, "Account created.", {
             "user_id": user_id,
-            "email": email,
+            "email": clean_email,
             "display_name": display_name,
             "plan": PlanTier.STARTER.value,
+            "email_verified": False,
             "access_token": access_token,
             "refresh_token": refresh_token,
         }
@@ -209,10 +250,11 @@ class AuthService:
         db.commit()
 
     @staticmethod
-    def create_password_reset_token(user_id: str) -> str:
-        """Generate time-limited password reset token (15 mins)."""
+    def create_password_reset_token(user_id: str, session_version: int = 1) -> str:
+        """Generate time-limited password reset token (15 mins) bound to session version."""
         payload = {
             "sub": user_id,
+            "sv": session_version,
             "type": "password_reset",
             "exp": datetime.now(timezone.utc) + timedelta(minutes=15),
             "iat": datetime.now(timezone.utc),
@@ -231,6 +273,11 @@ class AuthService:
         user = db.query(UserDB).filter(UserDB.id == payload["sub"]).first()
         if not user:
             return False, "User not found."
+
+        user_sv = getattr(user, "session_version", 1) or 1
+        token_sv = payload.get("sv")
+        if token_sv is not None and token_sv != user_sv:
+            return False, "Password reset token has already been used."
 
         user.password_hash = self.hash_password(new_password)
         user.session_version = (getattr(user, "session_version", 1) or 1) + 1
@@ -257,6 +304,8 @@ class AuthService:
         user = db.query(UserDB).filter(UserDB.id == payload["sub"]).first()
         if not user:
             return False, "User not found."
+
+        user.email_verified = True
 
         # Audit event
         event = LicenseEventDB(

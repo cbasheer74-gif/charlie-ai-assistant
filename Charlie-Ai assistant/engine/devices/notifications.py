@@ -1,5 +1,5 @@
 """
-JARVIS Phase 10: Notification & Remote Confirmation Manager
+CHARLIE Phase 10: Notification & Remote Confirmation Manager
 Handles privacy-safe notifications (lock screen masking), remote approvals, and deduplication.
 """
 
@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .models import NotificationCategory, NotificationPayload
 
-logger = logging.getLogger("jarvis.devices.notifications")
+logger = logging.getLogger("charlie.devices.notifications")
 
 
 class NotificationManager:
@@ -129,13 +129,13 @@ class NotificationManager:
 
     def _generate_default_safe_text(self, category: NotificationCategory) -> str:
         mapping = {
-            NotificationCategory.TASK_COMPLETE: "JARVIS: Task finished.",
-            NotificationCategory.TASK_FAILED: "JARVIS: Task encountered an issue.",
-            NotificationCategory.CONFIRMATION_REQUIRED: "JARVIS: Authorization required.",
-            NotificationCategory.SECURITY_ALERT: "JARVIS: Security alert.",
-            NotificationCategory.MEETING: "JARVIS: Upcoming schedule event.",
-            NotificationCategory.BACKUP_FAILURE: "JARVIS: Backup notice.",
-            NotificationCategory.EXPORT_COMPLETE: "JARVIS: Export finished.",
-            NotificationCategory.PROJECT_BLOCKED: "JARVIS: Project requires attention.",
+            NotificationCategory.TASK_COMPLETE: "CHARLIE: Task finished.",
+            NotificationCategory.TASK_FAILED: "CHARLIE: Task encountered an issue.",
+            NotificationCategory.CONFIRMATION_REQUIRED: "CHARLIE: Authorization required.",
+            NotificationCategory.SECURITY_ALERT: "CHARLIE: Security alert.",
+            NotificationCategory.MEETING: "CHARLIE: Upcoming schedule event.",
+            NotificationCategory.BACKUP_FAILURE: "CHARLIE: Backup notice.",
+            NotificationCategory.EXPORT_COMPLETE: "CHARLIE: Export finished.",
+            NotificationCategory.PROJECT_BLOCKED: "CHARLIE: Project requires attention.",
         }
-        return mapping.get(category, "JARVIS notification.")
+        return mapping.get(category, "CHARLIE notification.")

@@ -1,0 +1,19 @@
+{
+  "product": "Charlie AI Desktop",
+  "version": "1.2.4",
+  "build_number": 109,
+  "release_date": "2026-10-05T00:00:00Z",
+  "platform": "windows",
+  "architecture": "x86_64",
+  "installer_filename": "Charlie-AI-Desktop-1.2.4-Setup.exe",
+  "installer_size_bytes": 201209720,
+  "installer_size_mb": 191.89,
+  "installed_size_mb": 788.38,
+  "sha256": "d4d99628fa47f416da2c17a9ce3d3d24c9549e2c68bf97e1080dcbb70d62acbf",
+  "signed": false,
+  "installation_model": "PER_USER",
+  "default_install_path": "{userpf}\\CHARLIE",
+  "runtime_data_path": "%APPDATA%\\CHARLIE",
+  "credential_vault_path": "%LOCALAPPDATA%\\CharlieAI",
+  "release_status": "READY_FOR_PUBLICATION"
+}

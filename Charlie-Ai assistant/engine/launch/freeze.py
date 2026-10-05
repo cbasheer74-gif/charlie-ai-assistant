@@ -1,5 +1,5 @@
 """
-JARVIS Phase 15: Scope Lock & Release Freeze Policy Engine
+CHARLIE Phase 15: Scope Lock & Release Freeze Policy Engine
 Enforces v1.0 scope lock, manages code freeze transitions, and validates freeze exceptions.
 """
 

@@ -109,7 +109,7 @@ class UpdateService:
                 "update_available": False,
                 "current_version": client_version,
                 "latest_version": client_version,
-                "message": "JARVIS is up to date.",
+                "message": "CHARLIE AI is up to date.",
             }
 
         r = latest_eligible_release

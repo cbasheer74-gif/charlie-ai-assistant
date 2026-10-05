@@ -1,0 +1,30 @@
+{
+  "method": "Real speaker playback and production HUD; full-transcript heuristic vs word-timed estimated shapes.",
+  "limits": "Not a Gemini network session, phoneme ground truth, physical audio loopback or perceptual confirmation.",
+  "results": [
+    {
+      "persona": "male",
+      "voice": "en-US-GuyNeural",
+      "words": 13,
+      "speech_seconds": 8.544,
+      "speaker_playback_completed": true,
+      "audio_statuses": [],
+      "reference_shape_mismatch_percent": 88.6,
+      "remaining_text_shapes": 0,
+      "ui_event_gap_p95_ms": 71.6,
+      "exact_live_gemini_sync_confirmed": false
+    },
+    {
+      "persona": "female",
+      "voice": "en-US-JennyNeural",
+      "words": 13,
+      "speech_seconds": 8.28,
+      "speaker_playback_completed": true,
+      "audio_statuses": [],
+      "reference_shape_mismatch_percent": 93.2,
+      "remaining_text_shapes": 0,
+      "ui_event_gap_p95_ms": 64.8,
+      "exact_live_gemini_sync_confirmed": false
+    }
+  ]
+}

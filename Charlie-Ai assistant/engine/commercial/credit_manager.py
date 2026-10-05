@@ -5,13 +5,32 @@ engine/commercial/credit_manager.py — Client-side Credit System & Operation Ac
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 from .models import CreditTransaction, CreditWallet, PlanTier
 
-CONFIG_DIR = Path(__file__).resolve().parent.parent.parent / "config"
+def _atomic_write_text(path: Path, content: str, encoding: str = "utf-8") -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = path.with_suffix(f"{path.suffix}.tmp_{os.getpid()}_{id(content)}")
+    try:
+        tmp_path.write_text(content, encoding=encoding)
+        os.replace(tmp_path, path)
+    except Exception:
+        if tmp_path.exists():
+            try:
+                tmp_path.unlink()
+            except Exception:
+                pass
+        raise
+
+
+from core.app_paths import get_config_dir
+
+CONFIG_DIR = get_config_dir()
 CREDIT_CACHE_FILE = CONFIG_DIR / "credit_wallet.json"
 
 
@@ -95,7 +114,7 @@ class CreditManager:
             "billing_cycle_end": self._wallet.billing_cycle_end.isoformat() if self._wallet.billing_cycle_end else None,
             "last_reset_at": self._wallet.last_reset_at.isoformat() if self._wallet.last_reset_at else None,
         }
-        self.wallet_file.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        _atomic_write_text(self.wallet_file, json.dumps(data, indent=2), encoding="utf-8")
 
     def create_wallet(self, user_id: str, plan_tier: PlanTier = PlanTier.STARTER) -> CreditWallet:
         wallet = CreditWallet(user_id=user_id, plan_tier=plan_tier)

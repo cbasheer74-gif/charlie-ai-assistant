@@ -1,4 +1,4 @@
-"""engine/intelligence/__init__.py — Public Exports for JARVIS Phase 8 Intelligence Core."""
+"""engine/intelligence/__init__.py — Public Exports for CHARLIE Phase 8 Intelligence Core."""
 
 from engine.intelligence.core import IntelligenceCore
 from engine.intelligence.context_fusion import ContextFusionEngine

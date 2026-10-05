@@ -1,4 +1,4 @@
-"""engine/error_recovery.py — Error Recovery Engine for JARVIS.
+"""engine/error_recovery.py — Error Recovery Engine for CHARLIE.
 
 Captures tool and execution failures, consults ErrorMemory for known fixes,
 and enforces the 2-strike policy (stops repeating identical actions after 2 failures).

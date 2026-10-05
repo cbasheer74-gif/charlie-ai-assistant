@@ -24,12 +24,12 @@ class ServerConfig:
     """Central server configuration. All secrets from environment variables."""
 
     # Database
-    DATABASE_URL: str = os.getenv("CHARLIE_DB_URL", os.getenv("JARVIS_DB_URL", f"sqlite:///{SERVER_DIR / 'charlie_licensing.db'}"))
+    DATABASE_URL: str = os.getenv("CHARLIE_DB_URL", f"sqlite:///{SERVER_DIR / 'charlie_licensing.db'}")
 
     # JWT
-    JWT_SECRET: str = os.getenv("CHARLIE_JWT_SECRET", os.getenv("JARVIS_JWT_SECRET", "charlie_jwt_dev_secret_change_in_production"))
-    JWT_ACCESS_EXPIRY_MINUTES: int = int(os.getenv("JARVIS_JWT_ACCESS_EXPIRY", "60"))
-    JWT_REFRESH_EXPIRY_DAYS: int = int(os.getenv("JARVIS_JWT_REFRESH_EXPIRY", "30"))
+    JWT_SECRET: str = os.getenv("CHARLIE_JWT_SECRET", "charlie_jwt_dev_secret_change_in_production")
+    JWT_ACCESS_EXPIRY_MINUTES: int = int(os.getenv("CHARLIE_JWT_ACCESS_EXPIRY", "60"))
+    JWT_REFRESH_EXPIRY_DAYS: int = int(os.getenv("CHARLIE_JWT_REFRESH_EXPIRY", "30"))
     JWT_ALGORITHM: str = "HS256"
 
     # Razorpay
@@ -38,16 +38,16 @@ class ServerConfig:
     RAZORPAY_WEBHOOK_SECRET: str = os.getenv("RAZORPAY_WEBHOOK_SECRET", "")
 
     # Rate Limiting
-    LOGIN_RATE_LIMIT: int = int(os.getenv("JARVIS_LOGIN_RATE_LIMIT", "10"))  # per minute
-    ACTIVATION_RATE_LIMIT: int = int(os.getenv("JARVIS_ACTIVATION_RATE_LIMIT", "5"))  # per minute
-    TRANSFER_RATE_LIMIT: int = int(os.getenv("JARVIS_TRANSFER_RATE_LIMIT", "3"))  # per hour
+    LOGIN_RATE_LIMIT: int = int(os.getenv("CHARLIE_LOGIN_RATE_LIMIT", "10"))  # per minute
+    ACTIVATION_RATE_LIMIT: int = int(os.getenv("CHARLIE_ACTIVATION_RATE_LIMIT", "5"))  # per minute
+    TRANSFER_RATE_LIMIT: int = int(os.getenv("CHARLIE_TRANSFER_RATE_LIMIT", "3"))  # per hour
 
     # Device Transfer
-    MAX_TRANSFERS_PER_MONTH: int = int(os.getenv("JARVIS_MAX_TRANSFERS_MONTH", "3"))
+    MAX_TRANSFERS_PER_MONTH: int = int(os.getenv("CHARLIE_MAX_TRANSFERS_MONTH", "3"))
 
     # Offline Grace (days)
-    MONTHLY_OFFLINE_GRACE_DAYS: int = int(os.getenv("JARVIS_MONTHLY_OFFLINE_DAYS", "14"))
-    LIFETIME_OFFLINE_GRACE_DAYS: int = int(os.getenv("JARVIS_LIFETIME_OFFLINE_DAYS", "90"))
+    MONTHLY_OFFLINE_GRACE_DAYS: int = int(os.getenv("CHARLIE_MONTHLY_OFFLINE_DAYS", "14"))
+    LIFETIME_OFFLINE_GRACE_DAYS: int = int(os.getenv("CHARLIE_LIFETIME_OFFLINE_DAYS", "90"))
 
     # Product
     PRODUCT_SALT: str = os.getenv("CHARLIE_PRODUCT_SALT", "charlie_ai_2026")
@@ -57,11 +57,28 @@ class ServerConfig:
     ADMIN_API_KEY: str = os.getenv("CHARLIE_ADMIN_KEY", "charlie_admin_secret_key_2026" if ENVIRONMENT != "production" else "")
     LATEST_APP_VERSION: str = os.getenv("CHARLIE_LATEST_VERSION", "1.2.3")
     INSTALLER_DOWNLOAD_URL: str = os.getenv("CHARLIE_INSTALLER_URL", "/downloads/CHARLIE-Setup-1.2.3.exe")
+    REQUIRE_EMAIL_VERIFICATION: bool = os.getenv("CHARLIE_REQUIRE_EMAIL_VERIFICATION", "true" if ENVIRONMENT == "production" else "false").lower() in ("true", "1", "yes")
 
     # Server
-    HOST: str = os.getenv("JARVIS_SERVER_HOST", "0.0.0.0")
-    PORT: int = int(os.getenv("JARVIS_SERVER_PORT", "8400"))
-    DEBUG: bool = os.getenv("JARVIS_DEBUG", "false").lower() == "true"
+    HOST: str = os.getenv("CHARLIE_SERVER_HOST", "0.0.0.0")
+    PORT: int = int(os.getenv("CHARLIE_SERVER_PORT", "8400"))
+    DEBUG: bool = os.getenv("CHARLIE_DEBUG", "false").lower() == "true"
+
+    # Transactional Email (SMTP)
+    SMTP_HOST: str = os.getenv("CHARLIE_SMTP_HOST", os.getenv("SMTP_HOST", ""))
+    SMTP_PORT: int = int(os.getenv("CHARLIE_SMTP_PORT", os.getenv("SMTP_PORT", "587")))
+    SMTP_USER: str = os.getenv("CHARLIE_SMTP_USER", os.getenv("SMTP_USER", ""))
+    SMTP_PASSWORD: str = os.getenv("CHARLIE_SMTP_PASSWORD", os.getenv("SMTP_PASSWORD", ""))
+    SMTP_FROM_EMAIL: str = os.getenv("CHARLIE_SMTP_FROM", os.getenv("SMTP_FROM", "noreply@charlie.ai"))
+    SMTP_USE_TLS: bool = os.getenv("CHARLIE_SMTP_TLS", "true").lower() == "true"
+
+    # Corporate & Owner Metadata
+    COMPANY_NAME: str = os.getenv("CHARLIE_COMPANY_NAME", "Anees Chaudhary / CHARLIE AI Assistant")
+    COMPANY_ADDRESS: str = os.getenv("CHARLIE_COMPANY_ADDRESS", "Technology Park, Okhla Phase III, New Delhi 110020, India")
+    LEGAL_JURISDICTION: str = os.getenv("CHARLIE_LEGAL_JURISDICTION", "New Delhi, India")
+    SECURITY_PGP_FINGERPRINT: str = os.getenv("CHARLIE_PGP_FINGERPRINT", "D84F B27A 9C01 88EE 4172  A36B 79E2 0D5F 4C8A 119B")
+    SUPPORT_EMAIL: str = os.getenv("CHARLIE_SUPPORT_EMAIL", "support@charlie.ai")
+    SECURITY_EMAIL: str = os.getenv("CHARLIE_SECURITY_EMAIL", "security@charlie.ai")
 
 
 def ensure_rsa_keypair() -> tuple[str, str]:

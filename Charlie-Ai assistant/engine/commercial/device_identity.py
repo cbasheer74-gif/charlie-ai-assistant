@@ -20,10 +20,10 @@ import uuid
 from pathlib import Path
 from typing import Optional, Tuple
 
-logger = logging.getLogger("jarvis.commercial.device_identity")
+logger = logging.getLogger("charlie.commercial.device_identity")
 
 # Product salt — not a secret, just prevents cross-product fingerprint reuse
-PRODUCT_SALT = "jarvis_mark_liv_2026"
+PRODUCT_SALT = "charlie_core_2026"
 
 
 class DeviceIdentityManager:
@@ -39,7 +39,9 @@ class DeviceIdentityManager:
     """
 
     def __init__(self, data_dir: Optional[Path] = None):
-        self.data_dir = data_dir or (Path.home() / ".jarvis" / "identity")
+        legacy_dir = Path.home() / ".jarvis" / "identity"
+        charlie_dir = Path.home() / ".charlie" / "identity"
+        self.data_dir = data_dir or (legacy_dir if (legacy_dir.exists() and not charlie_dir.exists()) else charlie_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self._device_id_file = self.data_dir / "device_id.txt"
         self._public_key_file = self.data_dir / "device_public.pem"

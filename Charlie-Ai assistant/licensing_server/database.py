@@ -20,6 +20,7 @@ from sqlalchemy import (
     String,
     Text,
     create_engine,
+    text,
 )
 from sqlalchemy.orm import DeclarativeBase, Session, relationship, sessionmaker
 
@@ -28,6 +29,11 @@ from .config import config
 
 class Base(DeclarativeBase):
     pass
+
+
+def _utcnow() -> datetime:
+    """Current timezone-aware UTC datetime."""
+    return datetime.now(timezone.utc)
 
 
 # ── Enums ────────────────────────────────────────────────────────────────────
@@ -81,6 +87,8 @@ class UserRole(str, enum.Enum):
     OWNER = "OWNER"
     ADMIN = "ADMIN"
     SUPPORT = "SUPPORT"
+    AUDITOR = "AUDITOR"
+    FINANCE = "FINANCE"
     CUSTOMER = "CUSTOMER"
     USER = "USER"  # Backward compatibility alias for CUSTOMER
 
@@ -152,10 +160,11 @@ class UserDB(Base):
     id = Column(String(64), primary_key=True)
     email = Column(String(255), unique=True, nullable=False, index=True)
     password_hash = Column(String(255), nullable=False)
-    display_name = Column(String(128), default="JARVIS User")
+    display_name = Column(String(128), default="CHARLIE User")
     role = Column(String(20), default=UserRole.CUSTOMER.value)  # OWNER, ADMIN, SUPPORT, CUSTOMER, USER
     session_version = Column(Integer, default=1)
     account_status = Column(String(20), default=AccountStatus.ACTIVE.value)
+    email_verified = Column(Boolean, default=False)
     internal_notes = Column(Text, nullable=True)  # Admin/Staff notes only
     tags = Column(String(255), nullable=True)  # VIP, Beta Tester, etc.
     created_at = Column(DateTime(timezone=True), default=_utcnow)
@@ -428,13 +437,123 @@ class RazorpayEventDB(Base):
     processed_at = Column(DateTime(timezone=True), default=_utcnow)
 
 
+class SystemSettingDB(Base):
+    """Dynamic persistent system configurations (LLM Gateway, Remote Config, Feature Flags)."""
+    __tablename__ = "system_settings"
+
+    key = Column(String(64), primary_key=True)
+    value_json = Column(Text, nullable=False)
+    updated_at = Column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow)
+    updated_by = Column(String(64), nullable=True)
+
+
+class BroadcastNoticeDB(Base):
+    """Push notifications, in-app alerts, maintenance notices, and update announcements."""
+    __tablename__ = "broadcast_notices"
+
+    id = Column(String(64), primary_key=True)
+    title = Column(String(255), nullable=False)
+    message = Column(Text, nullable=False)
+    level = Column(String(32), default="INFO")  # INFO, WARNING, URGENT, MAINTENANCE
+    target_tier = Column(String(32), default="ALL")  # ALL, STARTER, PRO, etc.
+    is_active = Column(Boolean, default=True, index=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow)
+    expires_at = Column(DateTime(timezone=True), nullable=True)
+
+
+class ContentItemDB(Base):
+    """Module 2: Content Management (CMS Banners, categories, announcements)."""
+    __tablename__ = "cms_content"
+
+    id = Column(String(64), primary_key=True)
+    item_type = Column(String(32), default="BANNER")  # BANNER, CATEGORY, LISTING, PROMO
+    title = Column(String(255), nullable=False)
+    content_json = Column(Text, default="{}")
+    is_published = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow)
+    updated_at = Column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow)
+
+
+class OrderDB(Base):
+    """Module 7: Order / Booking / Subscription Management."""
+    __tablename__ = "orders"
+
+    id = Column(String(64), primary_key=True)
+    user_id = Column(String(64), ForeignKey("users.id"), nullable=False, index=True)
+    order_type = Column(String(32), default="SUBSCRIPTION")  # SUBSCRIPTION, CREDITS, ADDON
+    amount_paise = Column(Integer, default=0)
+    status = Column(String(32), default="COMPLETED")  # COMPLETED, PENDING, DISPUTED, REFUNDED, OVERRIDDEN
+    notes = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow)
+
+
+class CouponDB(Base):
+    """Module 12: Coupons & Discount Management."""
+    __tablename__ = "coupons"
+
+    id = Column(String(64), primary_key=True)
+    code = Column(String(64), unique=True, nullable=False, index=True)
+    discount_pct = Column(Integer, default=10)
+    max_uses = Column(Integer, default=100)
+    uses_count = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)
+    expires_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow)
+
+
+class PartnerDB(Base):
+    """Module 13: Vendor / Partner / Affiliate Management."""
+    __tablename__ = "partners"
+
+    id = Column(String(64), primary_key=True)
+    name = Column(String(128), nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
+    partner_code = Column(String(64), unique=True, nullable=False, index=True)
+    commission_pct = Column(Integer, default=15)
+    total_sales_paise = Column(Integer, default=0)
+    total_payout_paise = Column(Integer, default=0)
+    status = Column(String(32), default="ACTIVE")  # ACTIVE, PENDING, SUSPENDED
+    created_at = Column(DateTime(timezone=True), default=_utcnow)
+
+
+class ModerationItemDB(Base):
+    """Module 14: Content Moderation Tools."""
+    __tablename__ = "moderation_queue"
+
+    id = Column(String(64), primary_key=True)
+    user_id = Column(String(64), ForeignKey("users.id"), nullable=True)
+    content_snippet = Column(Text, nullable=False)
+    flag_reason = Column(String(128), default="SUSPICIOUS_PROMPT")
+    status = Column(String(32), default="PENDING")  # PENDING, APPROVED, REMOVED, WARNED
+    reviewed_by = Column(String(64), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=_utcnow)
+
+
+
 import json
 import logging
 import time
 from sqlalchemy import event
 
-engine = create_engine(config.DATABASE_URL, echo=config.DEBUG, future=True)
+connect_args = {}
+if config.DATABASE_URL.startswith("sqlite"):
+    connect_args = {"check_same_thread": False, "timeout": 30.0}
+
+engine = create_engine(
+    config.DATABASE_URL,
+    connect_args=connect_args,
+    echo=config.DEBUG,
+    future=True,
+)
 SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
+
+if config.DATABASE_URL.startswith("sqlite"):
+    @event.listens_for(engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL")
+        cursor.execute("PRAGMA synchronous=NORMAL")
+        cursor.close()
 
 db_logger = logging.getLogger("licensing_server.db")
 SLOW_QUERY_THRESHOLD_MS = 50.0
@@ -453,7 +572,7 @@ def after_cursor_execute(conn, cursor, statement, parameters, context, executema
                 json.dumps({
                     "timestamp": _utcnow().isoformat(),
                     "level": "WARN",
-                    "service": "jarvis-licensing-db",
+                    "service": "charlie-licensing-db",
                     "event": "SLOW_QUERY",
                     "duration_ms": duration_ms,
                     "statement": str(statement)[:200],
@@ -461,8 +580,59 @@ def after_cursor_execute(conn, cursor, statement, parameters, context, executema
             )
 
 def init_db() -> None:
-    """Create all tables if they don't exist."""
+    """Create all tables if they don't exist and run automated schema migrations."""
     Base.metadata.create_all(bind=engine)
+    
+    # Run Alembic migrations programmatically if alembic is installed
+    try:
+        from alembic.config import Config as AlembicConfig
+        from alembic import command as alembic_command
+        from pathlib import Path
+
+        alembic_ini = Path(__file__).resolve().parent / "alembic.ini"
+        if alembic_ini.exists():
+            cfg = AlembicConfig(str(alembic_ini))
+            alembic_command.upgrade(cfg, "head")
+            db_logger.info("Alembic schema migrations completed successfully.")
+    except Exception as alembic_err:
+        db_logger.debug("Alembic auto-upgrade skipped or falling back to inline DDL: %s", alembic_err)
+
+    # Inline non-destructive DDL fallback
+    try:
+        with engine.begin() as conn:
+            def add_column_if_missing(table: str, column: str, col_type: str):
+                try:
+                    res = conn.execute(text(f"PRAGMA table_info({table})")).fetchall()
+                    existing_cols = [r[1] for r in res]
+                    if existing_cols and column not in existing_cols:
+                        conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}"))
+                except Exception:
+                    pass
+
+            add_column_if_missing("users", "internal_notes", "TEXT")
+            add_column_if_missing("users", "tags", "VARCHAR(255)")
+            add_column_if_missing("users", "email_verified", "BOOLEAN DEFAULT 0")
+            add_column_if_missing("payments", "idempotency_key", "VARCHAR(128)")
+            add_column_if_missing("devices", "security_flag", "VARCHAR(32) DEFAULT 'NORMAL'")
+            add_column_if_missing("subscriptions", "legacy_lifetime", "BOOLEAN DEFAULT 0")
+            add_column_if_missing("subscriptions", "billing_interval", "VARCHAR(20) DEFAULT 'monthly'")
+            add_column_if_missing("subscriptions", "credits_allocated", "INTEGER DEFAULT 0")
+            add_column_if_missing("subscriptions", "payment_reference", "VARCHAR(128)")
+            add_column_if_missing("subscriptions", "device_limit", "INTEGER DEFAULT 1")
+            add_column_if_missing("subscriptions", "active_device_id", "VARCHAR(64)")
+            add_column_if_missing("support_tickets", "ticket_number", "VARCHAR(32)")
+            add_column_if_missing("support_tickets", "error_id", "VARCHAR(64)")
+            add_column_if_missing("support_tickets", "related_crash_id", "VARCHAR(64)")
+            add_column_if_missing("support_tickets", "related_incident_id", "VARCHAR(64)")
+            add_column_if_missing("support_tickets", "app_version", "VARCHAR(20) DEFAULT '1.0.0'")
+            add_column_if_missing("support_tickets", "os_version", "VARCHAR(64) DEFAULT 'Windows'")
+            add_column_if_missing("support_tickets", "subscription_status", "VARCHAR(30)")
+            add_column_if_missing("support_tickets", "diagnostics_json", "TEXT DEFAULT '{}'")
+            add_column_if_missing("support_tickets", "user_reply", "TEXT")
+            add_column_if_missing("support_tickets", "admin_reply", "TEXT")
+            add_column_if_missing("support_tickets", "internal_notes", "TEXT")
+    except Exception:
+        pass
 
 
 def get_db() -> Session:
@@ -470,5 +640,8 @@ def get_db() -> Session:
     db = SessionLocal()
     try:
         yield db
+    except Exception:
+        db.rollback()
+        raise
     finally:
         db.close()

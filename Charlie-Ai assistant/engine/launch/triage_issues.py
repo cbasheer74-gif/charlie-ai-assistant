@@ -1,5 +1,5 @@
 """
-JARVIS Phase 15: Bug Triage, Issue Registry, and Hotfix Management
+CHARLIE Phase 15: Bug Triage, Issue Registry, and Hotfix Management
 Enforces bug reproduction before fixing, blocks v1.0 release on open P0s,
 and governs post-launch emergency hotfix protocols.
 """

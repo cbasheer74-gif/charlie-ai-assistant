@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found (404) &middot; CHARLIE Desktop</title>
+  <meta name="description" content="The requested destination does not exist.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 32px 20px;
+      background: #06080D;
+      background-image: 
+        radial-gradient(circle at 50% 25%, rgba(0, 229, 255, 0.1) 0%, transparent 60%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #E2E8F0;
+    }
+    .status-container {
+      max-width: 580px;
+      margin: 60px auto;
+      text-align: center;
+    }
+    .error-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 88px;
+      font-weight: 800;
+      color: #00E5FF;
+      line-height: 1;
+      margin-bottom: 16px;
+      letter-spacing: -0.05em;
+      text-shadow: 0 0 35px rgba(0, 229, 255, 0.4);
+    }
+    h1 { font-size: 26px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px; }
+    p.lead { font-size: 15px; color: #94A3B8; line-height: 1.6; margin-bottom: 32px; }
+    .nav-shortcuts {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+    .nav-shortcuts h3 { font-size: 13px; color: #00E5FF; text-transform: uppercase; margin-top: 0; margin-bottom: 12px; letter-spacing: 0.05em; }
+    .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .nav-grid a { color: #CBD5E1; text-decoration: none; font-size: 14px; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.15s; }
+    .nav-grid a:hover { color: #00E5FF; background: rgba(0, 229, 255, 0.06); border-color: rgba(0, 229, 255, 0.2); }
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #00E5FF;
+      color: #06080D;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      transition: transform 0.15s;
+    }
+    .btn-home:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <div style="max-width: 860px; margin: 0 auto; width: 100%;">
+    <a href="index.html" style="color: #00E5FF; text-decoration: none; font-weight: 700; font-size: 18px;">CHARLIE Desktop</a>
+  </div>
+
+  <main class="status-container">
+    <div class="error-code">404</div>
+    <h1>Destination Not Found</h1>
+    <p class="lead">The page or resource you requested does not exist or has been moved. Use the quick links below to navigate back to safety.</p>
+
+    <div class="nav-shortcuts">
+      <h3>Helpful Destinations</h3>
+      <div class="nav-grid">
+        <a href="index.html">&rarr; Home Overview</a>
+        <a href="index.html#pricing">&rarr; Pricing & Plans</a>
+        <a href="login.html">&rarr; Customer Portal</a>
+        <a href="contact.html">&rarr; Support Desk</a>
+        <a href="security.html">&rarr; Security Architecture</a>
+        <a href="privacy.html">&rarr; Privacy Policy</a>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn-home">&larr; Return to Home Page</a>
+  </main>
+
+  <footer style="text-align: center; color: #64748B; font-size: 13px;">
+    &copy; 2026 CHARLIE Desktop Assistant
+  </footer>
+</body>
+</html>

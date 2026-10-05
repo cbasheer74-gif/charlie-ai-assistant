@@ -1,4 +1,4 @@
-"""engine/task_planner.py — Task Planner and Durable Checkpointing for JARVIS.
+"""engine/task_planner.py — Task Planner and Durable Checkpointing for CHARLIE.
 
 Decomposes complex requests into stateful steps, persists checkpoints to SQLite,
 and supports resuming from interruptions ("continue", "resume", "where did we stop").

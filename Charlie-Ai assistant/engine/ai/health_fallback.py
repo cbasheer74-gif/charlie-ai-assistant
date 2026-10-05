@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Model Health Manager & Fallback Chain
+CHARLIE Phase 11: Model Health Manager & Fallback Chain
 Monitors provider health, trips circuit breakers on repeated errors, and executes fallbacks seamlessly.
 """
 
@@ -11,7 +11,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from .models import ModelHealthState, ModelSpec
 
-logger = logging.getLogger("jarvis.ai.health")
+logger = logging.getLogger("charlie.ai.health")
 
 
 class ModelHealthManager:

@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <title>CHARLIE AI — Commercial Admin & Control Platform</title>
+  <meta name="description" content="CHARLIE AI commercial licensing authority, subscriber analytics, payment records, and system control platform.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=3.9">
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('charlie_admin_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo-container" title="CHARLIE Neural Assistant">
+          <svg class="brand-logo" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ch-logo-grad-side" x1="5.5" y1="8.5" x2="27" y2="31.5" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#00F5FF"/>
+                <stop offset="35%" stop-color="#00D2FF"/>
+                <stop offset="70%" stop-color="#2563EB"/>
+                <stop offset="100%" stop-color="#8B5CF6"/>
+              </linearGradient>
+              <linearGradient id="ch-logo-spark-side" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FFFFFF"/>
+                <stop offset="60%" stop-color="#00F5FF"/>
+                <stop offset="100%" stop-color="#0099FF"/>
+              </linearGradient>
+              <filter id="ch-logo-glow-side" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="1.5" stdDeviation="2.2" flood-color="#00E5FF" flood-opacity="0.6"/>
+              </filter>
+            </defs>
+            <rect width="36" height="36" rx="8.5" fill="#0A0E17" stroke="rgba(0, 245, 255, 0.45)" stroke-width="0.8"/>
+            <g filter="url(#ch-logo-glow-side)">
+              <path d="M 23 8.5 C 24.38 8.5 25.5 9.62 25.5 11 C 25.5 12.38 24.38 13.5 23 13.5 H 17 C 13.41 13.5 10.5 16.41 10.5 20 C 10.5 23.59 13.41 26.5 17 26.5 H 23 C 24.38 26.5 25.5 27.62 25.5 29 C 25.5 30.38 24.38 31.5 23 31.5 H 17 C 10.65 31.5 5.5 26.35 5.5 20 C 5.5 13.65 10.65 8.5 17 8.5 H 23 Z" fill="url(#ch-logo-grad-side)"/>
+              <circle cx="26" cy="7" r="2.4" fill="url(#ch-logo-spark-side)"/>
+            </g>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title-row">
+            <h2>CHARLIE</h2>
+            <span class="brand-badge-ai">AI</span>
+          </div>
+          <span class="brand-sub">CONTROL CENTER</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="server-status-card" id="serverStatusBadge">
+          <div class="status-indicator online"></div>
+          <div class="status-info">
+            <span class="status-label">LICENSING AUTHORITY</span>
+            <span class="status-endpoint" id="activeServerUrl">http://localhost:8400</span>
+          </div>
+        </div>
+
+        <div class="nav-section-label">CORE OPERATIONS</div>
+        <button class="nav-item active" data-tab="overview" id="nav-overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Dashboard & KPIs</span>
+        </button>
+        <button class="nav-item" data-tab="users" id="nav-users">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Users & Plans</span>
+          <span class="nav-badge" id="badgeTotalUsers">0</span>
+        </button>
+        <button class="nav-item" data-tab="payments" id="nav-payments">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <span>Payments Record</span>
+          <span class="nav-badge highlight" id="badgePaymentsCount">₹0</span>
+        </button>
+        <button class="nav-item" data-tab="activity" id="nav-activity">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span>User Activity</span>
+          <span class="live-dot" title="Live streaming"></span>
+        </button>
+
+        <div class="nav-section-label">MANAGEMENT & CARE</div>
+        <button class="nav-item" data-tab="tickets" id="nav-tickets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Support Tickets</span>
+          <span class="nav-badge alert" id="badgeOpenTickets">0</span>
+        </button>
+        <button class="nav-item" data-tab="incidents" id="nav-incidents">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>Crash & Incidents</span>
+        </button>
+        <button class="nav-item" data-tab="releases" id="nav-releases">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="8 12 12 16 16 12"/><line x1="12" y1="8" x2="12" y2="16"/></svg>
+          <span>Release Updates</span>
+        </button>
+
+        <div class="nav-section-label">AI ENGINE & TELEMETRY</div>
+        <button class="nav-item" data-tab="llm" id="nav-llm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2z"/><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="2"/></svg>
+          <span>LLM Gateway</span>
+          <span class="nav-badge highlight">Active</span>
+        </button>
+        <button class="nav-item" data-tab="config" id="nav-config">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Remote Config</span>
+        </button>
+        <button class="nav-item" data-tab="push" id="nav-push">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span>Push Dispatcher</span>
+          <span class="nav-badge alert" id="badgeActiveNotices">0</span>
+        </button>
+        <button class="nav-item" data-tab="analytics" id="nav-analytics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>AI Analytics</span>
+        </button>
+
+        <div class="nav-section-label">COMMERCE & CONTENT (16 MODULES)</div>
+        <button class="nav-item" data-tab="content-cms" id="nav-content-cms">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span>Content CMS (#2)</span>
+        </button>
+        <button class="nav-item" data-tab="orders" id="nav-orders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Orders & Booking (#7)</span>
+        </button>
+        <button class="nav-item" data-tab="coupons" id="nav-coupons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <span>Coupons & Promo (#12)</span>
+        </button>
+        <button class="nav-item" data-tab="partners" id="nav-partners">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Partners & Vendors (#13)</span>
+        </button>
+        <button class="nav-item" data-tab="moderation" id="nav-moderation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Content Moderation (#14)</span>
+        </button>
+        <button class="nav-item" data-tab="reports" id="nav-reports">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Reports & Exports (#5)</span>
+        </button>
+
+
+        <div class="nav-section-label">GOVERNANCE & SYSTEM</div>
+        <button class="nav-item" data-tab="deployment-docs" id="nav-deployment-docs">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span>Deployment & DevOps</span>
+          <span class="nav-badge highlight" style="background: var(--blue-dim); color: var(--blue);">5 Docs</span>
+        </button>
+        <button class="nav-item" data-tab="security" id="nav-security">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Security & Tamper</span>
+        </button>
+        <button class="nav-item" data-tab="audit" id="nav-audit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Audit Logs</span>
+        </button>
+        <button class="nav-item" data-tab="profile" id="nav-profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Admin Profile</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="admin-pill" onclick="switchTab('profile')">
+          <div class="admin-avatar">AD</div>
+          <div class="admin-info">
+            <span class="admin-name" id="sidebarAdminName">Administrator</span>
+            <span class="admin-role" id="sidebarAdminRole">OWNER</span>
+          </div>
+          <svg class="admin-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-wrapper">
+      <!-- TOP NAVBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 class="page-title" id="pageTitle">Dashboard & Commercial Metrics</h1>
+          <span class="page-subtitle" id="pageSubtitle">Real-time revenue, licensing, and security telemetry</span>
+        </div>
+
+        <div class="topbar-right">
+          <div class="auth-bar" title="Administrative Access Key">
+            <div class="input-with-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="adminKeyInput" placeholder="Enter Admin Secret / API Key" value="">
+            </div>
+            <button class="btn btn-secondary btn-xs" id="btnSaveKey" onclick="saveAdminKey()">Connect</button>
+          </div>
+
+          <div class="refresh-controls">
+            <select id="metricsDateRange" class="select-sm" onchange="changeMetricsDateRange(this.value)" style="font-weight: 500;" title="Historical Analytics Period">
+              <option value="today">Today</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="30d" selected>Last 30 Days</option>
+              <option value="ytd">Year to Date (YTD)</option>
+              <option value="all">All Time</option>
+            </select>
+            <select id="autoRefreshInterval" class="select-sm" onchange="updateRefreshInterval()">
+              <option value="0">Auto-refresh: Off</option>
+              <option value="10" selected>Every 10s</option>
+              <option value="30">Every 30s</option>
+              <option value="60">Every 60s</option>
+            </select>
+            <button class="btn btn-secondary btn-icon" id="btnManualRefresh" onclick="refreshCurrentTab()" title="Refresh Now">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </button>
+          </div>
+
+          <div class="topbar-actions">
+            <button class="btn btn-secondary btn-icon" onclick="openCmdPalette()" title="Command Palette (Ctrl+K)" data-tooltip="Command Palette (Ctrl+K)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+            <button class="btn btn-secondary btn-icon" id="themeToggleBtn" onclick="toggleTheme()" title="Switch Light / Dark Theme">
+              <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+              <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="triggerSeedDemo()" title="Seed comprehensive demo records across all 16 modules" style="background: linear-gradient(135deg, #2563EB, #8B5CF6); border: none; white-space: nowrap;">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>Seed Demo Data</span>
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="exportData('users')" title="Export CSV" style="white-space: nowrap;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Export CSV</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT SECTIONS -->
+      <main class="content-body">
+        <!-- 1. DASHBOARD TAB -->
+        <section id="tab-overview" class="tab-pane active">
+          <!-- METRIC CARDS (6-CARD BALANCED GRID) -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Monthly Recurring (MRR)</span>
+                <span class="metric-tag tag-up" id="deltaMrr">+4.2%</span>
+              </div>
+              <div class="metric-value" id="valMrr">₹0</div>
+              <div class="metric-footer">
+                <span class="metric-trend up" id="valArr">ARR: ₹0</span>
+                <span class="metric-sub">Active subscriptions</span>
+              </div>
+              <svg class="metric-sparkline" viewBox="0 0 80 24" fill="none"><path d="M0 20 Q 20 22, 35 12 T 60 8 T 80 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Gross Profit Margin</span>
+                <span class="metric-tag tag-up" id="deltaGrossMargin">+1.8%</span>
+              </div>
+              <div class="metric-value" id="valGrossMargin">84.5%</div>
+              <div class="metric-footer">
+                <span class="metric-trend up" id="valNetMargin">Net: 78.3%</span>
+                <span class="metric-sub" id="valAiCost">AI Cost: ₹0.00</span>
+              </div>
+              <svg class="metric-sparkline" viewBox="0 0 80 24" fill="none"><path d="M0 16 Q 25 18, 45 10 T 80 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Lifetime Sales</span>
+                <span class="metric-tag tag-up" id="deltaLifetime">+6.5%</span>
+              </div>
+              <div class="metric-value" id="valLifetime">₹0</div>
+              <div class="metric-footer">
+                <span class="metric-trend up" id="valToday">Today: ₹0</span>
+                <span class="metric-sub" id="valMonth">This month: ₹0</span>
+              </div>
+              <svg class="metric-sparkline" viewBox="0 0 80 24" fill="none"><path d="M0 22 Q 20 16, 40 14 T 80 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Registered Customers</span>
+                <span class="metric-tag tag-up" id="deltaUsers">+12.0%</span>
+              </div>
+              <div class="metric-value" id="valUsers">0</div>
+              <div class="metric-footer">
+                <span class="metric-trend up" id="valConversion">Conversion: 0%</span>
+                <span class="metric-sub" id="valChurn">Churn: 0%</span>
+              </div>
+              <svg class="metric-sparkline" viewBox="0 0 80 24" fill="none"><path d="M0 18 Q 30 20, 50 11 T 80 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Active Bound Devices</span>
+                <span class="metric-tag tag-neutral" id="deltaDevices">Live</span>
+              </div>
+              <div class="metric-value" id="valDevices">0</div>
+              <div class="metric-footer">
+                <span class="metric-trend" id="valTransfers">0 Transfers</span>
+                <span class="metric-sub">Single-PC licenses</span>
+              </div>
+              <svg class="metric-sparkline" viewBox="0 0 80 24" fill="none"><path d="M0 14 Q 25 16, 50 12 T 80 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Security & Tamper</span>
+                <span class="metric-tag tag-neutral" id="deltaTamper">Nominal</span>
+              </div>
+              <div class="metric-value" id="valTamper">0</div>
+              <div class="metric-footer">
+                <span class="metric-trend down" id="valFailedPayments">0 Failed Payments</span>
+                <span class="metric-sub">Tamper events</span>
+              </div>
+              <svg class="metric-sparkline" viewBox="0 0 80 24" fill="none"><path d="M0 10 Q 25 12, 50 14 T 80 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+
+          <!-- QUICK ACTIONS & EXECUTIVE CONTROLS -->
+          <div class="panel-card quick-actions-toolbar" style="margin-bottom: 1.25rem; padding: 0.85rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="dashboardMaintToggle" onchange="toggleQuickMaintenance(this.checked)">
+                  <span class="toggle-slider"></span>
+                </label>
+                <div style="display: flex; flex-direction: column;">
+                  <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-emphasis);">Emergency Maintenance Mode</span>
+                  <span style="font-size: 0.7rem; color: var(--text-muted);" id="maintStatusText">System operating normally</span>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <button class="btn btn-secondary btn-sm" onclick="seedDemoDataset()" style="font-weight: 500;" title="Load realistic sample data to verify all metrics">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Load Demo Data
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="switchTab('push')" style="font-weight: 500;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                Instant Client Broadcast
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="exportFinancialLedger()" style="font-weight: 500;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Export Financial Ledger
+              </button>
+            </div>
+          </div>
+
+          <!-- REVENUE & GROWTH VELOCITY CHART PANEL -->
+          <div class="panel-card" style="margin-bottom: 1.25rem; padding: 1.25rem 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+              <div>
+                <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--text-emphasis); margin: 0 0 0.2rem 0;">Revenue & MRR Growth Trajectory</h3>
+                <span style="font-size: 0.72rem; color: var(--text-muted);">Real-time historical revenue telemetry and 30-day velocity curve</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.74rem; color: var(--text-secondary);">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background: #6366f1; display: inline-block;"></span>
+                  <span>Gross MRR</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.74rem; color: var(--text-secondary);">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                  <span>Net Revenue</span>
+                </div>
+                <span class="badge badge-emerald" style="font-size: 0.68rem;">+18.4% MoM</span>
+              </div>
+            </div>
+            <div id="revenueChartContainer" style="position: relative; width: 100%; height: 160px;">
+              <!-- Interactive SVG Trend Chart injected via JS -->
+            </div>
+          </div>
+
+          <!-- CHARTS & DISTRIBUTION ROW -->
+          <div class="dashboard-row" style="margin-bottom: 1.25rem;">
+            <div class="dashboard-panel plan-distribution-panel">
+              <div class="panel-header">
+                <h3>Commercial Plan Tier Distribution</h3>
+                <span class="panel-badge">Live Subscriptions</span>
+              </div>
+              <div class="tier-bars-list" id="tierDistributionBars">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <div class="dashboard-panel recent-activity-panel">
+              <div class="panel-header">
+                <h3>Live Activity Feed</h3>
+                <button class="btn btn-link btn-xs" onclick="switchTab('activity')">View Full Stream →</button>
+              </div>
+              <div class="mini-activity-list" id="miniActivityList">
+                <div class="empty-state">Loading real-time events...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FLEET & FEATURE UTILIZATION ROW -->
+          <div class="dashboard-row">
+            <div class="dashboard-panel client-fleet-panel">
+              <div class="panel-header">
+                <h3>Client Fleet & Platform Split</h3>
+                <span class="panel-badge" id="onlineFleetBadge">Active Instances</span>
+              </div>
+              <div class="tier-bars-list" id="fleetDistributionBars">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <div class="dashboard-panel feature-utilization-panel">
+              <div class="panel-header" style="gap: 0.5rem; flex-wrap: wrap;">
+                <h3>Feature Utilization Index</h3>
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <input type="text" id="featureSearchInput" placeholder="Filter features..." oninput="filterFeatureUtilization(this.value)" class="form-control" style="font-size: 0.72rem; padding: 0.2rem 0.5rem; width: 130px; height: 26px; border-radius: var(--radius-sm);">
+                  <span class="panel-badge">Telemetry</span>
+                </div>
+              </div>
+              <div class="tier-bars-list" id="featureUtilizationBars">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. USERS TAB -->
+        <section id="tab-users" class="tab-pane">
+          <div class="panel-card">
+            <div class="table-toolbar">
+              <div class="toolbar-search" data-tooltip="Quick search (Ctrl+K)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon" style="width:15px;height:15px;max-width:15px;max-height:15px;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="userSearchInput" placeholder="Search by email, name, user ID..." oninput="debounceUserSearch()">
+                <kbd class="kbd-shortcut">Ctrl K</kbd>
+              </div>
+              <div class="toolbar-filters">
+                <select id="userPlanFilter" class="select-sm" onchange="loadUsers()">
+                  <option value="">All Plan Tiers</option>
+                  <option value="STARTER">Starter (Free · 30m daily)</option>
+                  <option value="BASIC">Launch (₹149/mo)</option>
+                  <option value="PRO">Growth (₹299/mo)</option>
+                  <option value="PRO_PLUS">Scale (₹599/mo)</option>
+                  <option value="ANNUAL_PRO">Annual Plan (₹2,999/yr)</option>
+                </select>
+                <select id="userStatusFilter" class="select-sm" onchange="loadUsers()">
+                  <option value="">All Account Statuses</option>
+                  <option value="ACTIVE">Active</option>
+                  <option value="SUSPENDED">Suspended</option>
+                  <option value="BANNED">Banned</option>
+                </select>
+                <button class="btn btn-secondary btn-sm" onclick="exportData('users')">Export CSV</button>
+                <button class="btn btn-primary btn-sm" onclick="openCreateUserModal()">+ Create User</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="sortable" id="th-users-display_name" onclick="sortTable('users', 'display_name')" data-tooltip="Sort by Name">User & Identity <span class="sort-icon">↕</span></th>
+                    <th class="sortable" id="th-users-plan" onclick="sortTable('users', 'plan')" data-tooltip="Sort by Tier">Plan Tier <span class="sort-icon">↕</span></th>
+                    <th class="sortable" id="th-users-status" onclick="sortTable('users', 'status')" data-tooltip="Sort by Status">Status <span class="sort-icon">↕</span></th>
+                    <th>Bound Hardware PC</th>
+                    <th class="sortable" id="th-users-subscription_credits" onclick="sortTable('users', 'subscription_credits')" data-tooltip="Sort by Credits">Credits (Sub / Add-on) <span class="sort-icon">↕</span></th>
+                    <th class="sortable" id="th-users-created_at" onclick="sortTable('users', 'created_at')" data-tooltip="Sort by Date">Registered <span class="sort-icon">↕</span></th>
+                    <th style="text-align: right;">Administrative Control</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <tr><td colspan="7" class="loading-cell">Loading registered users...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-pagination" id="usersPagination">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. PAYMENTS RECORD TAB -->
+        <section id="tab-payments" class="tab-pane">
+          <!-- FINANCIAL HIGHLIGHT CARDS -->
+          <div class="financial-summary-grid">
+            <div class="financial-card">
+              <span class="fin-title">TOTAL REVENUE RECORDED</span>
+              <span class="fin-val" id="finTotalVolume">₹0</span>
+              <span class="fin-sub">All verified successful orders</span>
+            </div>
+            <div class="financial-card">
+              <span class="fin-title">SUCCESSFUL TRANSACTIONS</span>
+              <span class="fin-val text-green" id="finVerifiedCount">0</span>
+              <span class="fin-sub">Verified Razorpay captures</span>
+            </div>
+            <div class="financial-card">
+              <span class="fin-title">FAILED / DECLINED</span>
+              <span class="fin-val text-red" id="finFailedCount">0</span>
+              <span class="fin-sub">Payment gateway rejections</span>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="table-toolbar">
+              <div class="toolbar-search" data-tooltip="Quick search (Ctrl+K)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon" style="width:15px;height:15px;max-width:15px;max-height:15px;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="paymentSearchInput" placeholder="Search payment ID, order ID, email, user ID..." oninput="debouncePaymentSearch()">
+                <kbd class="kbd-shortcut">Ctrl K</kbd>
+              </div>
+              <div class="toolbar-filters">
+                <select id="paymentStatusFilter" class="select-sm" onchange="loadPayments()">
+                  <option value="">All Statuses</option>
+                  <option value="VERIFIED">Verified / Captured</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="FAILED">Failed / Declined</option>
+                </select>
+                <select id="paymentPlanFilter" class="select-sm" onchange="loadPayments()">
+                  <option value="">All Plans / Packs</option>
+                  <option value="BASIC">Basic</option>
+                  <option value="PREMIUM">Premium</option>
+                  <option value="PRO">Pro</option>
+                  <option value="PRO_PLUS">Pro Plus</option>
+                  <option value="ANNUAL_PRO">Annual Pro</option>
+                  <option value="LIFETIME">Lifetime</option>
+                  <option value="STARTER_PACK">Starter Pack (+500)</option>
+                  <option value="POWER_PACK">Power Pack (+1200)</option>
+                  <option value="PRO_PACK">Pro Pack (+3000)</option>
+                </select>
+                <button class="btn btn-secondary btn-sm" onclick="exportData('payments')">Export Payments CSV</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="sortable" id="th-payments-payment_id" onclick="sortTable('payments', 'payment_id')" data-tooltip="Sort by Payment ID">Payment ID & Order <span class="sort-icon">↕</span></th>
+                    <th class="sortable" id="th-payments-user_name" onclick="sortTable('payments', 'user_name')" data-tooltip="Sort by Customer Name">Customer <span class="sort-icon">↕</span></th>
+                    <th class="sortable" id="th-payments-plan" onclick="sortTable('payments', 'plan')" data-tooltip="Sort by Plan Tier">Item / Plan <span class="sort-icon">↕</span></th>
+                    <th class="sortable" id="th-payments-amount" onclick="sortTable('payments', 'amount')" data-tooltip="Sort by Amount">Amount <span class="sort-icon">↕</span></th>
+                    <th>Gateway Provider</th>
+                    <th class="sortable" id="th-payments-status" onclick="sortTable('payments', 'status')" data-tooltip="Sort by Status">Status <span class="sort-icon">↕</span></th>
+                    <th class="sortable" id="th-payments-created_at" onclick="sortTable('payments', 'created_at')" data-tooltip="Sort by Date">Verified Timestamp <span class="sort-icon">↕</span></th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="paymentsTableBody">
+                  <tr><td colspan="8" class="loading-cell">Loading payments ledger...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-pagination" id="paymentsPagination">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. LIVE USER ACTIVITY TAB -->
+        <section id="tab-activity" class="tab-pane">
+          <div class="panel-card">
+            <div class="table-toolbar">
+              <div class="toolbar-search" data-tooltip="Quick search (Ctrl+K)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon" style="width:15px;height:15px;max-width:15px;max-height:15px;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="activitySearchInput" placeholder="Filter by user ID, event, feature..." oninput="debounceActivitySearch()">
+                <kbd class="kbd-shortcut">Ctrl K</kbd>
+              </div>
+              <div class="toolbar-filters">
+                <select id="activityEventFilter" class="select-sm" onchange="loadActivity()">
+                  <option value="">All Event Streams</option>
+                  <option value="LOGIN">Logins</option>
+                  <option value="DEVICE_ACTIVATED">Device Activations</option>
+                  <option value="LICENSE_REFRESH">License Refreshes</option>
+                  <option value="USE">AI Credit Usages</option>
+                  <option value="TAMPER_DETECTED">Security Tamper Events</option>
+                </select>
+                <button class="btn btn-secondary btn-sm" onclick="loadActivity()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                  <span>Refresh Stream</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="activity-stream" id="activityStreamContainer">
+              <div class="loading-cell">Loading real-time user activity telemetry...</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. SUPPORT TICKETS TAB -->
+        <section id="tab-tickets" class="tab-pane">
+          <div class="panel-card">
+            <div class="table-toolbar">
+              <div class="toolbar-filters">
+                <select id="ticketStatusFilter" class="select-sm" onchange="loadTickets()">
+                  <option value="">All Ticket Statuses</option>
+                  <option value="OPEN">Open</option>
+                  <option value="IN_PROGRESS">In Progress</option>
+                  <option value="RESOLVED">Resolved</option>
+                  <option value="CLOSED">Closed</option>
+                </select>
+                <select id="ticketCategoryFilter" class="select-sm" onchange="loadTickets()">
+                  <option value="">All Categories</option>
+                  <option value="LOGIN">Login</option>
+                  <option value="PAYMENT">Payment</option>
+                  <option value="DEVICE_ACTIVATION">Device Activation</option>
+                  <option value="APP_CRASH">App Crash</option>
+                  <option value="VOICE">Voice Engine</option>
+                  <option value="AI">AI Processing</option>
+                </select>
+                <button class="btn btn-secondary btn-sm" onclick="exportData('tickets')">Export Tickets CSV</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ticket #</th>
+                    <th>Customer</th>
+                    <th>Category</th>
+                    <th>Subject</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="ticketsTableBody">
+                  <tr><td colspan="8" class="loading-cell">Loading support tickets...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. CRASH INCIDENTS TAB -->
+        <section id="tab-incidents" class="tab-pane">
+          <div class="panel-card">
+            <div class="table-toolbar">
+              <h3 style="font-size: 1rem; color: #fff;">Automated Incident & Crash Analytics</h3>
+              <button class="btn btn-secondary btn-sm" onclick="loadIncidents()">Refresh Incidents</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Incident ID</th>
+                    <th>Severity</th>
+                    <th>Title & Culprit Subsystem</th>
+                    <th>Impact (Crashes / Users)</th>
+                    <th>Status</th>
+                    <th>Fixed in Version</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="incidentsTableBody">
+                  <tr><td colspan="7" class="loading-cell">Loading crash incidents...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. RELEASES TAB -->
+        <section id="tab-releases" class="tab-pane">
+          <div class="panel-card">
+            <div class="table-toolbar">
+              <div>
+                <h3 style="font-size: 1rem; color: #fff;">Desktop App Releases & Rollout Engine</h3>
+                <span style="font-size: 0.8rem; color: var(--text-dim);">Manage auto-update channels, staged rollout %, and cryptographic release signatures.</span>
+              </div>
+              <div class="toolbar-actions" style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-sm" onclick="loadReleases()">Refresh</button>
+                <button class="btn btn-primary btn-sm" onclick="openRegisterReleaseModal()">+ Register Release</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Version & Build</th>
+                    <th>Channel</th>
+                    <th>Status</th>
+                    <th>Rollout %</th>
+                    <th>Mandatory Security</th>
+                    <th>SHA-256 Checksum</th>
+                    <th>Released At</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="releasesTableBody">
+                  <tr><td colspan="8" class="loading-cell">Loading releases...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. SECURITY & AUDIT TAB -->
+        <section id="tab-security" class="tab-pane">
+          <div class="metrics-grid" style="margin-bottom: 1.25rem;">
+            <div class="metric-card">
+              <span class="metric-label">TAMPER EVENTS DETECTED</span>
+              <span class="metric-value text-red" id="secTotalEvents">0</span>
+              <span class="metric-sub">Debugger attach & file hooks</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">SUSPICIOUS HARDWARE</span>
+              <span class="metric-value text-amber" id="secFlaggedDevices">0</span>
+              <span class="metric-sub">Flagged / Review Required</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">SECURITY GUARD</span>
+              <span class="metric-value text-green" id="secShieldStatus">SHIELDED</span>
+              <span class="metric-sub">RSA-2048 & Bcrypt Active</span>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3>Tamper Alerts & Suspicious Hardware Signatures</h3>
+              <button class="btn btn-secondary btn-sm" onclick="loadSecurity()">Scan Security State</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>User ID</th>
+                    <th>Device ID</th>
+                    <th>Event Type</th>
+                    <th>Telemetry Details</th>
+                  </tr>
+                </thead>
+                <tbody id="tamperTableBody">
+                  <tr><td colspan="5" class="loading-cell">Loading security events...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="tab-audit" class="tab-pane">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3>Administrative Intervention Audit Trail</h3>
+              <button class="btn btn-secondary btn-sm" onclick="loadAudit()">Refresh Audit Log</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Administrator</th>
+                    <th>Action</th>
+                    <th>Target User</th>
+                    <th>Intervention Details</th>
+                  </tr>
+                </thead>
+                <tbody id="auditTableBody">
+                  <tr><td colspan="5" class="loading-cell">Loading audit logs...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 9. ADMIN PROFILE TAB -->
+        <section id="tab-profile" class="tab-pane">
+          <div class="profile-layout">
+            <div class="profile-card">
+              <div class="profile-avatar-large">AD</div>
+              <h2 id="profileDisplayName">Administrator</h2>
+              <span class="profile-email" id="profileEmail">admin@charlie.local</span>
+              <div class="profile-badges">
+                <span class="badge badge-owner" id="profileRoleBadge">OWNER</span>
+                <span class="badge badge-active" id="profileStatusBadge">ACTIVE</span>
+              </div>
+
+              <div class="profile-meta-list">
+                <div class="profile-meta-item">
+                  <span class="meta-label">ADMIN ID:</span>
+                  <span class="meta-val font-mono" id="profileId">-</span>
+                </div>
+                <div class="profile-meta-item">
+                  <span class="meta-label">ACCOUNT CREATED:</span>
+                  <span class="meta-val" id="profileCreated">-</span>
+                </div>
+                <div class="profile-meta-item">
+                  <span class="meta-label">LAST ACTIVE LOGIN:</span>
+                  <span class="meta-val" id="profileLastLogin">-</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-forms-column">
+              <!-- UPDATE PROFILE FORM -->
+              <div class="panel-card">
+                <h3 class="card-heading">Update Admin Information</h3>
+                <form id="profileForm" onsubmit="handleUpdateProfile(event)">
+                  <div class="form-group">
+                    <label>Display Name</label>
+                    <input type="text" id="inputProfileName" class="form-control" placeholder="e.g. Lead Administrator">
+                  </div>
+                  <div class="form-group">
+                    <label>New Password (Optional)</label>
+                    <input type="password" id="inputProfilePassword" class="form-control" placeholder="Leave blank to keep unchanged">
+                  </div>
+                  <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="inputProfilePasswordConfirm" class="form-control" placeholder="Confirm new password">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+                </form>
+              </div>
+
+              <!-- PRIVILEGES & CREDENTIALS -->
+              <div class="panel-card">
+                <h3 class="card-heading">Assigned Role Privileges (RBAC)</h3>
+                <div class="privilege-tags" id="profilePermissionsContainer">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+
+              <!-- SYSTEM HEALTH TELEMETRY -->
+              <div class="panel-card">
+                <h3 class="card-heading">Server Infrastructure Health</h3>
+                <div class="system-health-grid" id="systemHealthDetails">
+                  <div class="health-item">
+                    <span class="health-label">Database Connection</span>
+                    <span class="health-val text-green" id="healthDbStatus">Checking...</span>
+                  </div>
+                  <div class="health-item">
+                    <span class="health-label">RSA Keypair Authority</span>
+                    <span class="health-val text-green" id="healthRsaStatus">Checking...</span>
+                  </div>
+                  <div class="health-item">
+                    <span class="health-label">Disk Storage Free</span>
+                    <span class="health-val text-cyan" id="healthDiskStatus">Checking...</span>
+                  </div>
+                  <div class="health-item">
+                    <span class="health-label">Database Latency</span>
+                    <span class="health-val" id="healthLatencyStatus">Checking...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10. LLM GATEWAY TAB -->
+        <section id="tab-llm" class="tab-pane">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Active Provider</span>
+              </div>
+              <div class="metric-value" id="kpiLlmProvider">Google Gemini</div>
+              <div class="metric-footer">
+                <span class="metric-sub" id="kpiLlmModel">gemini-1.5-flash</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Fallback Routing</span>
+              </div>
+              <div class="metric-value" id="kpiLlmFallback">Groq LPU</div>
+              <div class="metric-footer">
+                <span class="metric-sub" id="kpiLlmFallbackModel">llama-3.3-70b-versatile</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Total AI Tokens Telemetry</span>
+              </div>
+              <div class="metric-value" id="kpiLlmTotalTokens">0</div>
+              <div class="metric-footer">
+                <span class="metric-sub"><span id="kpiLlmInTokens">0</span> in / <span id="kpiLlmOutTokens">0</span> out</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Est. Provider Cost</span>
+              </div>
+              <div class="metric-value" id="kpiLlmCostInr">₹0.00</div>
+              <div class="metric-footer">
+                <span class="metric-sub" id="kpiLlmCostUsd">≈ $0.00 USD</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-row" style="margin-top: 1.25rem;">
+            <!-- LLM ROUTING FORM -->
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <h3>Provider Switch & Model Routing</h3>
+              </div>
+              <form id="llmRoutingForm" onsubmit="handleSaveLLM(event)">
+                <div class="form-group">
+                  <label>Primary Inference Provider</label>
+                  <select id="llmPrimaryProvider" class="form-control" onchange="handleProviderChange()">
+                    <option value="gemini">Google Gemini</option>
+                    <option value="groq">Groq LPU</option>
+                    <option value="ollama">Ollama Neural (Local)</option>
+                    <option value="openai">OpenAI Direct</option>
+                    <option value="anthropic">Anthropic Claude</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Active Model Identifier</label>
+                  <input type="text" id="llmActiveModel" class="form-control" list="modelSuggestions" value="gemini-1.5-flash">
+                  <datalist id="modelSuggestions">
+                    <option value="gemini-1.5-flash">
+                    <option value="gemini-1.5-pro">
+                    <option value="gemini-2.0-flash">
+                    <option value="llama-3.3-70b-versatile">
+                    <option value="mixtral-8x7b-32768">
+                    <option value="llama3:latest">
+                    <option value="gpt-4o-mini">
+                    <option value="gpt-4o">
+                    <option value="claude-3-5-sonnet">
+                  </datalist>
+                </div>
+                <div class="form-group">
+                  <label>Failover Fallback Provider</label>
+                  <select id="llmFallbackProvider" class="form-control">
+                    <option value="groq">Groq LPU</option>
+                    <option value="gemini">Google Gemini</option>
+                    <option value="ollama">Ollama Local Neural</option>
+                    <option value="openai">OpenAI Direct</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Fallback Model Identifier</label>
+                  <input type="text" id="llmFallbackModel" class="form-control" value="llama-3.3-70b-versatile">
+                </div>
+                <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label>Temperature (<span id="tempVal">0.7</span>)</label>
+                    <input type="range" id="llmTemperature" min="0.0" max="1.5" step="0.05" value="0.7" class="form-control" style="padding:0;" oninput="document.getElementById('tempVal').innerText=this.value">
+                  </div>
+                  <div class="form-group">
+                    <label>Max Output Tokens</label>
+                    <input type="number" id="llmMaxTokens" class="form-control" value="4096">
+                  </div>
+                </div>
+                <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label>Rate Limit (Tokens/Min)</label>
+                    <input type="number" id="llmRateLimit" class="form-control" value="120000">
+                  </div>
+                  <div class="form-group" style="display:flex; align-items:center; justify-content:space-between; margin-top:1.6rem; padding-top:0.5rem;">
+                    <label for="llmStream" style="margin:0; font-size:0.78rem; font-weight:500; cursor:pointer;">Stream Responses</label>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="llmStream" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 1.25rem;">Save Routing Changes</button>
+              </form>
+            </div>
+
+            <!-- PROVIDER HEALTH & METRICS -->
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <h3>Provider Status & Latency</h3>
+              </div>
+              <div id="llmProvidersMatrix" style="display:flex; flex-direction:column; gap:0.5rem;">
+                <!-- Populated dynamically via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT TOKEN TELEMETRY STREAM -->
+          <div class="panel-card" style="margin-top: 1.25rem;">
+            <div class="table-toolbar">
+              <div>
+                <h3 style="font-size: 0.9rem; font-weight: 600; color: var(--text-emphasis);">Token Telemetry Stream</h3>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Real-time log of AI model inference events</span>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>User ID</th>
+                    <th>Feature</th>
+                    <th>Provider</th>
+                    <th>Model</th>
+                    <th>Total Tokens</th>
+                    <th>Est. Cost</th>
+                  </tr>
+                </thead>
+                <tbody id="llmTelemetryTableBody">
+                  <tr><td colspan="7" class="loading-cell">Loading token telemetry stream...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11. REMOTE CONFIG TAB -->
+        <section id="tab-config" class="tab-pane">
+          <form id="remoteConfigForm" onsubmit="handleSaveRemoteConfig(event)">
+            <div class="dashboard-row">
+              <!-- FEATURE FLAGS -->
+              <div class="dashboard-panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Remote Feature Flags</h3>
+                    <div style="color:var(--text-muted); font-size:0.75rem; margin-top:0.15rem;">Runtime capability toggles across desktop clients</div>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-sm">Save Config</button>
+                </div>
+                <div id="featureFlagsList">
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <span class="setting-title">Study Cards & Spaced Repetition</span>
+                      <span class="setting-desc">AI deck generation and interactive review engine</span>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="flag_study_cards" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <span class="setting-title">Real-Time Voice & Audio Loop</span>
+                      <span class="setting-desc">Low-latency duplex voice conversation mode</span>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="flag_voice_mode" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <span class="setting-title">Screen Vision & OCR Analysis</span>
+                      <span class="setting-desc">Multimodal desktop screen reading and OCR</span>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="flag_vision_mode" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <span class="setting-title">Autonomous Desktop Tools</span>
+                      <span class="setting-desc">Automated app launches, files, and system workflows</span>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="flag_autonomous_tools" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <span class="setting-title">Live Web Search & Retrieval</span>
+                      <span class="setting-desc">Real-time web browsing and facts extraction</span>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="flag_web_search" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <span class="setting-title">Offline Local Neural Fallback</span>
+                      <span class="setting-desc">Permits offline fallback to Ollama when unmetered</span>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="flag_offline_fallback" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SYSTEM PROMPT & KILL SWITCHES -->
+              <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                <!-- EMERGENCY KILL SWITCHES -->
+                <div class="dashboard-panel">
+                  <div class="panel-header">
+                    <div>
+                      <h3>Emergency Kill Switches</h3>
+                      <div style="color:var(--text-muted); font-size:0.75rem; margin-top:0.15rem;">Safety overrides & circuit breakers</div>
+                    </div>
+                    <span class="panel-badge">Overrides</span>
+                  </div>
+                  <div>
+                    <div class="setting-item">
+                      <div class="setting-info">
+                        <span class="setting-title">Global AI Emergency Kill Switch</span>
+                        <span class="setting-desc">Instantly halts all remote AI requests server-wide</span>
+                      </div>
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="kill_emergency_ai">
+                        <span class="toggle-slider"></span>
+                      </label>
+                    </div>
+                    <div class="setting-item">
+                      <div class="setting-info">
+                        <span class="setting-title">System Maintenance Mode</span>
+                        <span class="setting-desc">Signals maintenance mode during sync requests</span>
+                      </div>
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="kill_maintenance">
+                        <span class="toggle-slider"></span>
+                      </label>
+                    </div>
+                    <div class="setting-item">
+                      <div class="setting-info">
+                        <span class="setting-title">Enforce Hardware Binding Verification</span>
+                        <span class="setting-desc">Rejects queries from unbound or untrusted device hashes</span>
+                      </div>
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="kill_block_unverified" checked>
+                        <span class="toggle-slider"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DYNAMIC PROMPT INJECTION -->
+                <div class="dashboard-panel">
+                  <div class="panel-header">
+                    <h3>System Prompt & Safety Guardrails</h3>
+                  </div>
+                  <div class="form-group">
+                    <label>System Prompt Release Version</label>
+                    <input type="text" id="promptVersion" class="form-control" value="v2.5.0">
+                  </div>
+                  <div class="form-group">
+                    <label>Master System Prompt Directive</label>
+                    <textarea id="promptSystemText" class="form-control" rows="3" style="resize:vertical; font-family:var(--font-mono); font-size:0.8rem;">You are CHARLIE, an advanced high-speed desktop neural intelligence assistant. Deliver precise, secure, and structured responses.</textarea>
+                  </div>
+                  <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                      <label>Guardrails Strictness</label>
+                      <select id="promptGuardrails" class="form-control">
+                        <option value="standard">Standard Safety</option>
+                        <option value="strict">Strict Enterprise</option>
+                        <option value="relaxed">Relaxed / Developer</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Max Context Turns</label>
+                      <input type="number" id="promptMaxTurns" class="form-control" value="25">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- 12. PUSH DISPATCHER TAB -->
+        <section id="tab-push" class="tab-pane">
+          <div class="dashboard-row">
+            <!-- DISPATCH FORM -->
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <h3>Dispatch In-App Notification</h3>
+              </div>
+              <form id="pushDispatchForm" onsubmit="handleDispatchBroadcast(event)">
+                <div class="form-group">
+                  <label>Notification Headline / Title</label>
+                  <input type="text" id="pushTitle" class="form-control" placeholder="e.g. Scheduled Maintenance Notice" required>
+                </div>
+                <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label>Urgency Level</label>
+                    <select id="pushLevel" class="form-control">
+                      <option value="INFO">INFO (Notice)</option>
+                      <option value="WARNING">WARNING (Advisory)</option>
+                      <option value="URGENT">URGENT (Action Required)</option>
+                      <option value="MAINTENANCE">MAINTENANCE (Outage Alert)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Target Audience</label>
+                    <select id="pushTarget" class="form-control">
+                      <option value="ALL">All Clients</option>
+                      <option value="STARTER">Free / Starter Tier</option>
+                      <option value="PRO">Active Subscriptions</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Duration / Expiration</label>
+                  <select id="pushExpires" class="form-control">
+                    <option value="24">Expires in 24 hours</option>
+                    <option value="48" selected>Expires in 48 hours</option>
+                    <option value="168">Expires in 7 days</option>
+                    <option value="0">Indefinite</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Notification Body Message</label>
+                  <textarea id="pushMessage" class="form-control" rows="4" placeholder="Enter notification message..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Broadcast to Clients</button>
+              </form>
+            </div>
+
+            <!-- ACTIVE BROADCASTS LIST -->
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <h3>Broadcast Dispatches</h3>
+                <button class="btn btn-secondary btn-xs" onclick="loadBroadcasts()">Refresh</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Notice</th>
+                      <th>Level</th>
+                      <th>Target</th>
+                      <th>Dispatched</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="broadcastsTableBody">
+                    <tr><td colspan="5" class="loading-cell">Loading broadcast notices...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 13. AI ANALYTICS TAB -->
+        <section id="tab-analytics" class="tab-pane">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Average Token Throughput</span>
+              </div>
+              <div class="metric-value"><span id="anaThroughputAvg">68.4</span> <span style="font-size: 0.9rem; font-weight: 400; color: var(--text-muted);">tok/s</span></div>
+              <div class="metric-footer">
+                <span class="metric-sub">Peak: <span id="anaThroughputPeak">124.0</span> tok/s</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Input / Output Token Ratio</span>
+              </div>
+              <div class="metric-value" id="anaRatio">1 : 2.7</div>
+              <div class="metric-footer">
+                <span class="metric-sub">Completion efficiency</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Streaming Delivery Health</span>
+              </div>
+              <div class="metric-value" id="anaStreamingEfficiency">99.4%</div>
+              <div class="metric-footer">
+                <span class="metric-sub">Sub-300ms first token</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Inference Success Rate</span>
+              </div>
+              <div class="metric-value" id="anaSuccessRate">99.88%</div>
+              <div class="metric-footer">
+                <span class="metric-sub">0.12% failover triggers</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-row" style="margin-top: 1.25rem;">
+            <!-- PROMPT CATEGORIES -->
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <h3>User Prompt Categories</h3>
+                <span class="panel-badge">Intent Distribution</span>
+              </div>
+              <div id="analyticsCategoriesList" style="display:flex; flex-direction:column; gap:0.85rem;">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- LATENCY BENCHMARKS -->
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <h3>Provider Latency Benchmarks</h3>
+                <span class="panel-badge">Response Times</span>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Inference Engine</th>
+                      <th>Median (p50)</th>
+                      <th>95th %ile</th>
+                      <th>99th %ile</th>
+                    </tr>
+                  </thead>
+                  <tbody id="analyticsLatencyTableBody">
+                    <!-- Injected via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DEPLOYMENT & DEVOPS TAB -->
+        <section id="tab-deployment-docs" class="tab-pane">
+          <div class="panel-header-actions" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-emphasis); margin: 0 0 0.25rem 0;">Deployment Architecture & Verification</h2>
+              <p style="font-size: 0.85rem; color: var(--text-dim); margin: 0;">Verified deployment specifications, environment configs, build recipes, rollbacks, and pre-release audits.</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span id="deployDocsUpdated" style="font-size: 0.75rem; color: var(--text-dim); font-family: var(--font-mono);">Source: /deployment/*.md</span>
+              <button class="btn btn-secondary btn-sm" onclick="loadDeploymentDocs()" title="Reload deployment docs">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          <!-- SUB-NAVIGATION PILLS -->
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem; overflow-x: auto;">
+            <button class="btn btn-sm btn-primary deploy-doc-btn" data-doc="environments" onclick="selectDeploymentDoc('environments')">
+              environments.md
+            </button>
+            <button class="btn btn-sm btn-secondary deploy-doc-btn" data-doc="build" onclick="selectDeploymentDoc('build')">
+              build.md
+            </button>
+            <button class="btn btn-sm btn-secondary deploy-doc-btn" data-doc="deployment" onclick="selectDeploymentDoc('deployment')">
+              deployment.md
+            </button>
+            <button class="btn btn-sm btn-secondary deploy-doc-btn" data-doc="rollback" onclick="selectDeploymentDoc('rollback')">
+              rollback.md
+            </button>
+            <button class="btn btn-sm btn-secondary deploy-doc-btn" data-doc="release-checklist" onclick="selectDeploymentDoc('release-checklist')">
+              release-checklist.md
+            </button>
+          </div>
+
+          <!-- DOCUMENT VIEWER CARD -->
+          <div class="card" style="padding: 1.5rem; min-height: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="badge badge-emerald" id="deployDocStatusBadge">VERIFIED TRUTH</span>
+                <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; color: var(--text-main);" id="deployDocFileName">environments.md</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="copyActiveDeployDoc()" title="Copy Markdown to Clipboard">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy Markdown
+              </button>
+            </div>
+
+            <!-- PRE FORMATTED MARKDOWN CONTAINER -->
+            <div id="deployDocContent" style="white-space: pre-wrap; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.6; color: var(--text-main); background: var(--bg-input); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); overflow-x: auto; max-height: 700px; overflow-y: auto;">
+              Loading verified deployment specifications...
+            </div>
+          </div>
+        </section>
+
+        <!-- 16 FOUNDER MODULES TABS -->
+
+        <!-- MODULE 2: CONTENT CMS -->
+        <section id="tab-content-cms" class="tab-pane">
+          <div class="panel-header">
+            <div class="panel-title-wrap">
+              <h3>Content Management System (Module #2)</h3>
+              <span class="panel-subtitle">Publish dynamic banners, categories, announcements without new app builds</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-primary btn-sm" onclick="showCreateContentModal()">+ New Content Item</button>
+            </div>
+          </div>
+          <div class="data-table-wrap" style="margin-top: 1rem;">
+            <table class="data-table" id="contentTable">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Updated</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="contentTableBody">
+                <tr><td colspan="5" style="text-align: center; padding: 2rem;">Loading CMS items...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- MODULE 7: ORDERS & BOOKING -->
+        <section id="tab-orders" class="tab-pane">
+          <div class="panel-header">
+            <div class="panel-title-wrap">
+              <h3>Orders & Booking Management (Module #7)</h3>
+              <span class="panel-subtitle">Track orders, manage disputes, trigger overrides and manual fulfillments</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-secondary btn-sm" onclick="loadOrders()">Refresh Orders</button>
+            </div>
+          </div>
+          <div class="data-table-wrap" style="margin-top: 1rem;">
+            <table class="data-table" id="ordersTable">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>User ID</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                <tr><td colspan="7" style="text-align: center; padding: 2rem;">Loading orders...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- MODULE 12: COUPONS & DISCOUNTS -->
+        <section id="tab-coupons" class="tab-pane">
+          <div class="panel-header">
+            <div class="panel-title-wrap">
+              <h3>Coupons & Discount Management (Module #12)</h3>
+              <span class="panel-subtitle">Generate promotional coupon codes, discounts, usage limits, and expiration</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-primary btn-sm" onclick="showCreateCouponModal()">+ Create Coupon</button>
+            </div>
+          </div>
+          <div class="data-table-wrap" style="margin-top: 1rem;">
+            <table class="data-table" id="couponsTable">
+              <thead>
+                <tr>
+                  <th>Coupon Code</th>
+                  <th>Discount</th>
+                  <th>Redemptions</th>
+                  <th>Status</th>
+                  <th>Expires</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="couponsTableBody">
+                <tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading coupons...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- MODULE 13: PARTNERS & VENDORS -->
+        <section id="tab-partners" class="tab-pane">
+          <div class="panel-header">
+            <div class="panel-title-wrap">
+              <h3>Vendor & Partner Management (Module #13)</h3>
+              <span class="panel-subtitle">Partner onboarding, referral codes, commission tracking, and payouts</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-primary btn-sm" onclick="showCreatePartnerModal()">+ Onboard Partner</button>
+            </div>
+          </div>
+          <div class="data-table-wrap" style="margin-top: 1rem;">
+            <table class="data-table" id="partnersTable">
+              <thead>
+                <tr>
+                  <th>Partner Name</th>
+                  <th>Referral Code</th>
+                  <th>Commission</th>
+                  <th>Total Sales</th>
+                  <th>Payouts</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="partnersTableBody">
+                <tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading partners...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- MODULE 14: CONTENT MODERATION -->
+        <section id="tab-moderation" class="tab-pane">
+          <div class="panel-header">
+            <div class="panel-title-wrap">
+              <h3>Content Moderation Tools (Module #14)</h3>
+              <span class="panel-subtitle">User prompt review queue, flagged outputs, and enforcement actions</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-secondary btn-sm" onclick="loadModeration()">Refresh Queue</button>
+            </div>
+          </div>
+          <div class="data-table-wrap" style="margin-top: 1rem;">
+            <table class="data-table" id="moderationTable">
+              <thead>
+                <tr>
+                  <th>Flag ID</th>
+                  <th>User ID</th>
+                  <th>Reason</th>
+                  <th>Content Snippet</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="moderationTableBody">
+                <tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading moderation queue...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- MODULE 5: REPORTS & EXPORTS -->
+        <section id="tab-reports" class="tab-pane">
+          <div class="panel-header">
+            <div class="panel-title-wrap">
+              <h3>Pre-Built Reports & Exports (Module #5)</h3>
+              <span class="panel-subtitle">Instant downloadable CSV/JSON packages for founders, investors, and finance</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 1.5rem;">
+            <div class="metric-card" style="padding: 1.5rem;">
+              <h4 style="margin-bottom: 0.5rem; color: var(--text-bright);">Revenue & Payments Ledger</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Complete transactional history with order IDs, payment gateways, and tax breakdown.</p>
+              <button class="btn btn-primary btn-sm" onclick="exportData('payments')">Download Payments CSV</button>
+            </div>
+            <div class="metric-card" style="padding: 1.5rem;">
+              <h4 style="margin-bottom: 0.5rem; color: var(--text-bright);">User Directory & Subscriptions</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Registered users, tier statuses, bound hardware fingerprints, and credit balances.</p>
+              <button class="btn btn-primary btn-sm" onclick="exportData('users')">Download Users CSV</button>
+            </div>
+            <div class="metric-card" style="padding: 1.5rem;">
+              <h4 style="margin-bottom: 0.5rem; color: var(--text-bright);">Telemetry & AI Activity Log</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Chronological stream of prompt volume, token velocity, and hardware sessions.</p>
+              <button class="btn btn-primary btn-sm" onclick="exportData('activity')">Download Activity CSV</button>
+            </div>
+            <div class="metric-card" style="padding: 1.5rem;">
+              <h4 style="margin-bottom: 0.5rem; color: var(--text-bright);">Founder 16-Module Audit Report</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Live system health verification across all 16 Founder Modules.</p>
+              <button class="btn btn-secondary btn-sm" onclick="loadFounderAudit()">Generate Audit Status</button>
+            </div>
+          </div>
+          <div id="founderAuditResults" style="margin-top: 1.5rem; display: none;" class="data-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>#</th><th>Module Name</th><th>Status</th><th>API Authority</th></tr></thead>
+              <tbody id="founderAuditBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- USER DETAIL & INSPECTION MODAL -->
+  <div id="userModal" class="modal-overlay">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 id="modalUserTitle">User Account Inspection</h3>
+          <span class="modal-subtitle" id="modalUserSubtitle">User ID: -</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('userModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="modalUserBody">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKET REPLY MODAL -->
+  <div id="ticketModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalTicketTitle">Reply to Support Ticket</h3>
+        <button class="modal-close" onclick="closeModal('ticketModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="modalTicketBody">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE USER MODAL -->
+  <div id="createUserModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalCreateUserTitle">Provision New User Account</h3>
+        <button class="modal-close" onclick="closeModal('createUserModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="createUserForm" onsubmit="submitCreateUser(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="form-group">
+            <label>Customer Email</label>
+            <input type="email" id="newCustomerEmail" class="form-control" required placeholder="user@example.com">
+          </div>
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" id="newCustomerName" class="form-control" placeholder="Full Name or Alias" value="CHARLIE User">
+          </div>
+          <div class="form-group">
+            <label>Temporary Password</label>
+            <input type="password" id="newCustomerPassword" class="form-control" required minlength="6" placeholder="At least 6 characters">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Initial Commercial Plan</label>
+              <select id="newCustomerPlan" class="form-control select-sm">
+                <option value="STARTER">STARTER (Free)</option>
+                <option value="BASIC">BASIC (₹99)</option>
+                <option value="PREMIUM" selected>PREMIUM (₹199)</option>
+                <option value="ADVANCED">ADVANCED (₹299)</option>
+                <option value="LIFETIME">LIFETIME (₹999)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Validity (Days)</label>
+              <input type="number" id="newCustomerDays" class="form-control" value="30" min="1" max="3650">
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('createUserModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnCreateUserSubmit">Create Customer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER RELEASE MODAL -->
+  <div id="registerReleaseModal" class="modal-overlay">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3>Publish Signed Desktop Release</h3>
+        <button class="modal-close" onclick="closeModal('registerReleaseModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="registerReleaseForm" onsubmit="submitRegisterRelease(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Version (SemVer)</label>
+              <input type="text" id="relVersion" class="form-control font-mono" required placeholder="1.0.1" pattern="^\d+\.\d+\.\d+$">
+            </div>
+            <div class="form-group">
+              <label>Build Number</label>
+              <input type="number" id="relBuildNumber" class="form-control font-mono" value="101" required>
+            </div>
+            <div class="form-group">
+              <label>Channel</label>
+              <select id="relChannel" class="form-control select-sm">
+                <option value="STABLE" selected>STABLE</option>
+                <option value="BETA">BETA</option>
+                <option value="INTERNAL">INTERNAL</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Binary Download URL</label>
+            <input type="url" id="relDownloadUrl" class="form-control font-mono" required placeholder="https://releases.charlie-ai.com/installers/Charlie-Setup-1.0.1.exe">
+          </div>
+
+          <div class="form-group">
+            <label>SHA-256 Checksum (64 Hex chars)</label>
+            <input type="text" id="relSha256" class="form-control font-mono" required minlength="64" maxlength="64" placeholder="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Initial Rollout %</label>
+              <input type="number" id="relRollout" class="form-control font-mono" value="100" min="0" max="100">
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; padding-top: 1.5rem;">
+              <input type="checkbox" id="relMandatory" style="accent-color: var(--primary); width: 18px; height: 18px;">
+              <label for="relMandatory" style="margin: 0; cursor: pointer;">Mandatory</label>
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; padding-top: 1.5rem;">
+              <input type="checkbox" id="relSecurityUpdate" style="accent-color: var(--red); width: 18px; height: 18px;">
+              <label for="relSecurityUpdate" style="margin: 0; cursor: pointer;">Security Hotfix</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Release Notes / Changelog</label>
+            <textarea id="relNotes" class="form-control" rows="3" placeholder="Summary of improvements, fixes, or security patches..."></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('registerReleaseModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnRegisterReleaseSubmit">Publish & Sign Release</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLLOUT MODAL -->
+  <div id="rolloutModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Adjust Staged Rollout</h3>
+        <button class="modal-close" onclick="closeModal('rolloutModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="rolloutForm" onsubmit="submitRolloutChange(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+          <input type="hidden" id="rolloutVersion">
+          <div class="form-group">
+            <label id="lblRolloutTarget">Target Release: v1.0.0</label>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.5rem;">Control what percentage of client devices receive this update when checking update endpoints.</p>
+            <input type="number" id="rolloutPercentageInput" class="form-control font-mono" min="0" max="100" required>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('rolloutModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Update Rollout %</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE COUPON MODAL -->
+  <div id="createCouponModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Create Promotional Coupon (Module #12)</h3>
+        <button class="modal-close" onclick="closeModal('createCouponModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="createCouponForm" onsubmit="submitCreateCoupon(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="form-group">
+            <label>Promo Code (Uppercase)</label>
+            <input type="text" id="couponCodeInput" class="form-control font-mono" required placeholder="e.g. FOUNDER50" style="text-transform: uppercase;">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Discount %</label>
+              <input type="number" id="couponDiscountInput" class="form-control font-mono" value="20" min="1" max="100" required>
+            </div>
+            <div class="form-group">
+              <label>Max Redemptions</label>
+              <input type="number" id="couponMaxUsesInput" class="form-control font-mono" value="200" min="1" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Validity Duration (Days)</label>
+            <input type="number" id="couponDaysInput" class="form-control font-mono" value="60" min="1" max="365">
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('createCouponModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Publish Coupon</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONBOARD PARTNER MODAL -->
+  <div id="createPartnerModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Onboard Vendor / Partner (Module #13)</h3>
+        <button class="modal-close" onclick="closeModal('createPartnerModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="createPartnerForm" onsubmit="submitCreatePartner(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="form-group">
+            <label>Partner / Agency Name</label>
+            <input type="text" id="partnerNameInput" class="form-control" required placeholder="e.g. Media Agency Hub">
+          </div>
+          <div class="form-group">
+            <label>Billing & Payout Email</label>
+            <input type="email" id="partnerEmailInput" class="form-control" required placeholder="partner@agency.com">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Referral Code</label>
+              <input type="text" id="partnerCodeInput" class="form-control font-mono" required placeholder="AGENCY_VIP" style="text-transform: uppercase;">
+            </div>
+            <div class="form-group">
+              <label>Commission %</label>
+              <input type="number" id="partnerCommissionInput" class="form-control font-mono" value="15" min="1" max="80" required>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('createPartnerModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Register Partner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE CMS CONTENT MODAL -->
+  <div id="createContentModal" class="modal-overlay">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3>Publish Dynamic Content (Module #2)</h3>
+        <button class="modal-close" onclick="closeModal('createContentModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="createContentForm" onsubmit="submitCreateContent(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Content Title / Headline</label>
+              <input type="text" id="contentTitleInput" class="form-control" required placeholder="e.g. Festive Upgrade Special: 40% Off">
+            </div>
+            <div class="form-group">
+              <label>Item Type</label>
+              <select id="contentTypeInput" class="form-control select-sm">
+                <option value="BANNER" selected>BANNER (Hero carousel)</option>
+                <option value="CATEGORY">CATEGORY (Feature directory)</option>
+                <option value="PROMO">PROMO (In-app popup)</option>
+                <option value="ANNOUNCEMENT">ANNOUNCEMENT (Status bar)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>JSON / Markdown Payload</label>
+            <textarea id="contentJsonInput" class="form-control font-mono" rows="4" placeholder='{"cta": "Upgrade Now", "theme": "gradient-blue", "url": "/checkout"}'></textarea>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('createContentModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Push Live to Clients</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFUND PAYMENT MODAL -->
+  <div id="refundPaymentModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Process Transaction Refund (Module #3)</h3>
+        <button class="modal-close" onclick="closeModal('refundPaymentModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="refundPaymentForm" onsubmit="submitRefundPayment(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+          <input type="hidden" id="refundPaymentId">
+          <div class="form-group">
+            <label id="lblRefundTarget">Payment ID: -</label>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.5rem;">Mark transaction as refunded in authoritative ledger and record audit log.</p>
+          </div>
+          <div class="form-group">
+            <label>Reason for Refund</label>
+            <input type="text" id="refundReasonInput" class="form-control" required placeholder="Customer request / double-charge">
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('refundPaymentModal')">Cancel</button>
+            <button type="submit" class="btn btn-danger">Confirm Refund</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK COMMAND PALETTE (CTRL+K) -->
+  <div id="cmdPaletteModal" class="cmd-palette-backdrop" onclick="handleCmdBackdropClick(event)">
+    <div class="cmd-palette-card">
+      <div class="cmd-input-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="cmdPaletteInput" class="cmd-input" placeholder="Type a command or jump to module..." oninput="filterCmdPalette(this.value)" onkeydown="handleCmdKeydown(event)" autocomplete="off">
+        <kbd class="cmd-shortcut-badge">ESC</kbd>
+      </div>
+      <ul id="cmdPaletteList" class="cmd-list"></ul>
+      <div class="cmd-footer">
+        <span>Navigation: <kbd class="cmd-shortcut-badge">↑</kbd> <kbd class="cmd-shortcut-badge">↓</kbd> to select</span>
+        <span>Action: <kbd class="cmd-shortcut-badge">↵ Enter</kbd> to execute</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="app.js?v=3.9"></script>
+</body>
+</html>

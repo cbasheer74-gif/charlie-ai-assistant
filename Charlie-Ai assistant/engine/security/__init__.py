@@ -1,4 +1,4 @@
-"""engine/security/__init__.py — Public Exports for JARVIS Phase 9 SecurityCore."""
+"""engine/security/__init__.py — Public Exports for CHARLIE SecurityCore."""
 
 from engine.security.audit_engine import AuditEngine, ExternalActionLedger
 from engine.security.backup_recovery import BackupManager, RecoveryManager

@@ -153,11 +153,7 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
         cards_row.setSpacing(14)
 
         current_plan = self.engine.get_account().plan
-        # Only show lifetime card if user already has legacy lifetime
-        if current_plan == PlanTier.LIFETIME:
-            plans = self.engine.plan_registry.list_plans()
-        else:
-            plans = self.engine.plan_registry.list_public_plans()
+        plans = self.engine.plan_registry.list_plans()
 
         for p in plans:
             card = self._create_plan_card(p, is_current=(p.tier == current_plan))
@@ -184,23 +180,23 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
         card.setMinimumWidth(200)
         card.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
 
-        is_popular = (plan.badge == "MOST POPULAR")
-        is_annual = (plan.tier == PlanTier.ANNUAL_PRO)
-        is_pro_plus = (plan.tier == PlanTier.PRO_PLUS)
+        is_popular = (plan.tier == PlanTier.PRO or plan.badge == "MOST POPULAR")
+        is_annual = (plan.tier == PlanTier.ANNUAL_PRO or (plan.badge and "SAVE" in plan.badge))
+        is_scale = (plan.tier == PlanTier.PRO_PLUS or plan.badge == "BEST VALUE")
         is_lifetime = (plan.tier == PlanTier.LIFETIME)
 
         if is_popular:
             border_col = "#6366f1"
-            bg_col = "#151c2c"
+            bg_col = "#0f1422"
             border_w = "2px"
         elif is_annual:
-            border_col = "#06b6d4"
-            bg_col = "#0e1a26"
-            border_w = "2px"
-        elif is_pro_plus:
             border_col = "#10b981"
-            bg_col = "#0e1d20"
-            border_w = "1px"
+            bg_col = "#091a18"
+            border_w = "2px"
+        elif is_scale:
+            border_col = "#f59e0b"
+            bg_col = "#17130b"
+            border_w = "2px"
         elif is_lifetime:
             border_col = "#f59e0b"
             bg_col = "#1f1910"
@@ -225,20 +221,20 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
 
         layout = QVBoxLayout(card)
         layout.setContentsMargins(12, 12, 12, 12)
-        layout.setSpacing(8)
+        layout.setSpacing(6)
 
-        # Badge row
+        # 1. Badge row
         if plan.badge:
             badge = QLabel(plan.badge)
             if is_popular:
                 badge_bg = "qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #6366f1, stop:1 #8aa4ff)"
                 badge_color = "#ffffff"
             elif is_annual:
-                badge_bg = "qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #06b6d4, stop:1 #3b82f6)"
+                badge_bg = "qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #059669, stop:1 #10b981)"
                 badge_color = "#ffffff"
-            elif is_pro_plus:
-                badge_bg = "#10b981"
-                badge_color = "#ffffff"
+            elif is_scale:
+                badge_bg = "#f59e0b"
+                badge_color = "#0f172a"
             elif is_lifetime:
                 badge_bg = "#f59e0b"
                 badge_color = "#0f172a"
@@ -263,34 +259,67 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
             spacer.setFixedHeight(22)
             layout.addWidget(spacer)
 
-        # Plan Name
-        name_lbl = QLabel(plan.name.upper())
-        name_lbl.setFont(QFont("Segoe UI", 13, QFont.Weight.Bold))
-        name_lbl.setStyleSheet("color: #f1f5f9; letter-spacing: 0.5px;")
+        # 2. Plan Name
+        if is_annual:
+            name_text = "<span style='color: #2dd4bf; font-weight: 800; font-size: 15px;'>Annual Plan</span>"
+        elif is_popular:
+            name_text = f"<span style='color: #ffffff; font-weight: 800; font-size: 15px;'>{plan.name}</span>"
+        else:
+            name_text = f"<span style='color: #f1f5f9; font-weight: 800; font-size: 15px;'>{plan.name}</span>"
+        name_lbl = QLabel(name_text)
+        name_lbl.setTextFormat(Qt.TextFormat.RichText)
         layout.addWidget(name_lbl)
 
-        # Price
-        if plan.tier == PlanTier.ANNUAL_PRO:
+        # 3. Tagline (under name, matching Image 2)
+        tagline_color = "#2dd4bf" if is_annual else ("#38bdf8" if is_scale else ("#818cf8" if is_popular else "#94a3b8"))
+        tagline_lbl = QLabel(plan.tagline)
+        tagline_lbl.setStyleSheet(f"color: {tagline_color}; font-size: 11px; font-weight: 500;")
+        layout.addWidget(tagline_lbl)
+
+        # 4. Price
+        if is_annual:
             price_html = (
-                "<span style='font-size: 24px; font-weight: 800; color: #ffffff;'>₹2,999</span>"
-                " <span style='font-size: 12px; color: #94a3b8; font-weight: 500;'>/yr</span><br/>"
-                "<span style='font-size: 11px; text-decoration: line-through; color: #64748b;'>₹3,588</span> "
-                "<span style='font-size: 11px; color: #10b981; font-weight: 700;'>Save ₹589 (~16.4%)</span>"
+                "<span style='font-size: 26px; font-weight: 900; color: #ffffff;'>₹2,999</span>"
+                " <span style='font-size: 12px; color: #94a3b8; font-weight: 500;'>/ year</span><br/>"
+                "<span style='font-size: 11px; text-decoration: line-through; color: #64748b;'>₹3,588/yr</span> "
+                "<span style='font-size: 11px; color: #10b981; font-weight: 700;'>Save ₹589/year (-16.4%)</span>"
+            )
+        elif plan.tier == PlanTier.STARTER or plan.price_inr == 0:
+            price_html = (
+                "<span style='font-size: 26px; font-weight: 900; color: #ffffff;'>FREE</span>"
+                " <span style='font-size: 12px; color: #94a3b8; font-weight: 500;'>/ forever</span>"
             )
         else:
-            price_val = f"₹{plan.price_inr}" if plan.price_inr > 0 else "FREE"
-            cycle_txt = "/mo" if plan.is_recurring else (" one-time" if plan.price_inr > 0 else "")
-            price_html = f"<span style='font-size: 24px; font-weight: 800; color: #ffffff;'>{price_val}</span>"
-            if cycle_txt:
-                price_html += f" <span style='font-size: 12px; color: #94a3b8; font-weight: 500;'>{cycle_txt}</span>"
+            cycle_txt = "/ month" if plan.is_recurring else " one-time"
+            price_html = (
+                f"<span style='font-size: 26px; font-weight: 900; color: #ffffff;'>₹{plan.price_inr}</span>"
+                f" <span style='font-size: 12px; color: #94a3b8; font-weight: 500;'>{cycle_txt}</span>"
+            )
         price_lbl = QLabel(price_html)
         price_lbl.setTextFormat(Qt.TextFormat.RichText)
         layout.addWidget(price_lbl)
 
-        # Tagline
-        tagline_lbl = QLabel(plan.tagline)
-        tagline_lbl.setStyleSheet("color: #8aa4ff; font-size: 11px; font-weight: 600;")
-        layout.addWidget(tagline_lbl)
+        # 5. Allowance subtitle (matching Image 2)
+        allowance_text = getattr(plan, "allowance", None)
+        if not allowance_text:
+            if plan.tier == PlanTier.STARTER:
+                allowance_text = "30 Min Talking / Day · 15 Msgs"
+            elif plan.tier == PlanTier.BASIC:
+                allowance_text = "500 Credits / Month"
+            elif plan.tier == PlanTier.PRO:
+                allowance_text = "1,500 Credits / Month"
+            elif plan.tier == PlanTier.PRO_PLUS:
+                allowance_text = "4,000 Credits / Month"
+            elif is_annual:
+                allowance_text = "Effective ≈₹250/mo · 1,800 credits/mo (+300 Bonus/mo)"
+
+        if allowance_text:
+            allow_color = "#10b981" if (is_annual or is_scale) else "#06b6d4"
+            allow_size = "11px" if is_annual else "12px"
+            allow_lbl = QLabel(allowance_text)
+            allow_lbl.setStyleSheet(f"color: {allow_color}; font-size: {allow_size}; font-weight: 600; margin-bottom: 2px;")
+            allow_lbl.setWordWrap(True)
+            layout.addWidget(allow_lbl)
 
         # Separator line
         sep = QFrame()
@@ -298,9 +327,24 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
         sep.setStyleSheet("background: #252e3d; border: none; margin: 4px 0;")
         layout.addWidget(sep)
 
-        # Benefits List (No boxes, clean list)
-        for b in plan.benefits[:6]:
-            b_lbl = QLabel(f"<span style='color: #34d399; font-weight: bold;'>✓</span> {b}")
+        # 6. Benefits List (matching Image 2)
+        max_benefits = 8 if is_annual else 6
+        for b in plan.benefits[:max_benefits]:
+            if is_annual:
+                if "(" in b and ")" in b:
+                    main_part, sub_part = b.split("(", 1)
+                    sub_part = sub_part.rstrip(")")
+                    b_html = (
+                        f"<span style='color: #06b6d4; font-weight: bold;'>★</span> "
+                        f"<strong>{main_part.strip()}</strong><br/>"
+                        f"<span style='color: #64748b; font-size: 10px; margin-left: 12px;'>{sub_part.strip()}</span>"
+                    )
+                else:
+                    b_html = f"<span style='color: #06b6d4; font-weight: bold;'>★</span> <strong>{b}</strong>"
+            else:
+                b_html = f"<span style='color: #34d399; font-weight: bold;'>✓</span> {b}"
+
+            b_lbl = QLabel(b_html)
             b_lbl.setTextFormat(Qt.TextFormat.RichText)
             b_lbl.setWordWrap(True)
             b_lbl.setStyleSheet("color: #cbd5e1; font-size: 11px; line-height: 1.3;")
@@ -308,7 +352,7 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
 
         layout.addStretch()
 
-        # Action Button
+        # 7. Action Button
         if is_current:
             btn = QPushButton("✓ Current Plan")
             btn.setEnabled(False)
@@ -324,7 +368,12 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
                 }
             """)
         else:
-            action_text = "Start Free" if plan.tier == PlanTier.STARTER else f"Get {plan.name}"
+            if plan.tier == PlanTier.STARTER:
+                action_text = "Start Free"
+            elif is_annual:
+                action_text = "Get Annual Plan (Save ₹589)"
+            else:
+                action_text = f"Get {plan.name}"
             btn = QPushButton(action_text)
             btn.setFixedHeight(36)
             btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -345,7 +394,7 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
             elif is_annual:
                 btn.setStyleSheet("""
                     QPushButton {
-                        background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #06b6d4, stop:1 #3b82f6);
+                        background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #059669, stop:1 #10b981);
                         color: #ffffff;
                         border: none;
                         border-radius: 6px;
@@ -353,21 +402,22 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
                         font-size: 12px;
                     }
                     QPushButton:hover {
-                        background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #0891b2, stop:1 #2563eb);
+                        background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #047857, stop:1 #059669);
                     }
                 """)
-            elif is_lifetime:
+            elif is_scale or is_lifetime:
                 btn.setStyleSheet("""
                     QPushButton {
-                        background: #f59e0b;
-                        color: #0f172a;
-                        border: none;
+                        background: #1e2638;
+                        color: #f59e0b;
+                        border: 1px solid #f59e0b;
                         border-radius: 6px;
-                        font-weight: 800;
+                        font-weight: 700;
                         font-size: 12px;
                     }
                     QPushButton:hover {
-                        background: #fbbf24;
+                        background: #f59e0b;
+                        color: #0f172a;
                     }
                 """)
             else:
@@ -394,7 +444,7 @@ class PricingOverlay(QFrame if PYQT_AVAILABLE else object):
     def _create_comparison_table(self) -> QTableWidget:
         rows = self.engine.pricing_ui_mgr.get_comparison_table()
         table = QTableWidget(len(rows), 6)
-        table.setHorizontalHeaderLabels(["Feature", "Starter", "Basic", "Pro", "Pro+", "Annual Pro"])
+        table.setHorizontalHeaderLabels(["Feature", "Starter", "Launch", "Growth", "Scale", "Annual Plan"])
         table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         table.verticalHeader().setVisible(False)
         table.setShowGrid(True)
@@ -557,7 +607,7 @@ class StarterUsageIndicatorWidget(QFrame if PYQT_AVAILABLE else object):
         layout.setContentsMargins(6, 0, 6, 0)
         layout.setSpacing(8)
 
-        self.label = QLabel("Starter · 10:00 left")
+        self.label = QLabel("Starter · 30:00 left")
         layout.addWidget(self.label)
 
         self.upgrade_btn = QPushButton("Upgrade")

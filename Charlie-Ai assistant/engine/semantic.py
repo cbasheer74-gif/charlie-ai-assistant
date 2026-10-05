@@ -7,6 +7,7 @@ project relevance, and reuse frequency.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import re
@@ -14,6 +15,12 @@ from datetime import datetime, timezone
 from typing import List, Optional, Tuple
 
 _DIM = 64  # Compact dense vector dimension for local fallback
+
+
+def deterministic_bucket(text: str, dim: int) -> int:
+    """Deterministic feature bucket index across processes and platforms."""
+    digest = hashlib.blake2b(text.encode("utf-8"), digest_size=8).digest()
+    return int.from_bytes(digest, "big") % dim
 
 
 def _clean_tokens(text: str) -> List[str]:
@@ -33,11 +40,11 @@ def local_dense_embedding(text: str, dim: int = _DIM) -> List[float]:
     vec = [0.0] * dim
     for i, token in enumerate(tokens):
         # 1-gram
-        h1 = hash(token) % dim
+        h1 = deterministic_bucket(token, dim)
         vec[h1] += 1.0
         # 2-gram if available
         if i > 0:
-            h2 = hash(f"{tokens[i-1]}_{token}") % dim
+            h2 = deterministic_bucket(f"{tokens[i-1]}_{token}", dim)
             vec[h2] += 1.5
 
     # L2 normalize

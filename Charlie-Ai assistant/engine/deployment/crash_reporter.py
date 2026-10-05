@@ -143,7 +143,7 @@ class CrashReportingManager:
         clean_stack = SecretRedactor.sanitize_text(stack_trace)
         sig = CrashSignatureGenerator.generate(type(error).__name__, clean_stack, component)
 
-        crash_id = f"JARVIS-CRASH-{uuid.uuid4().hex[:6].upper()}"
+        crash_id = f"CHARLIE-CRASH-{uuid.uuid4().hex[:6].upper()}"
         now = datetime.now(timezone.utc).isoformat()
         dev_ref = SecretRedactor.sanitize_text(device_id)[:12]
 
@@ -322,3 +322,37 @@ class CrashReportingManager:
                     removed += 1
 
         return removed
+
+
+# Singleton & Global Exception Hook
+_global_reporter: Optional[CrashReporter] = None
+
+
+def get_crash_reporter() -> CrashReporter:
+    global _global_reporter
+    if _global_reporter is None:
+        _global_reporter = CrashReporter()
+    return _global_reporter
+
+
+def install_global_crash_hook() -> None:
+    """Hooks sys.excepthook to automatically capture, redact, and persist any uncaught crash."""
+    original_hook = sys.excepthook
+
+    def _charlie_excepthook(exc_type, exc_value, exc_traceback):
+        try:
+            import traceback
+            tb_str = "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+            get_crash_reporter().record_crash(
+                component="GlobalUncaught",
+                error=exc_value,
+                stack_trace=tb_str,
+                error_level=ErrorLevel.CRITICAL,
+            )
+        except Exception:
+            pass
+        if original_hook and original_hook != _charlie_excepthook:
+            original_hook(exc_type, exc_value, exc_traceback)
+
+    sys.excepthook = _charlie_excepthook
+

@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Context & Token Budget Managers, Cost Tracker & Semantic Compressor
+CHARLIE Phase 11: Context & Token Budget Managers, Cost Tracker & Semantic Compressor
 Prevents token waste, prioritizes context streams, compacts logs, and enforces budgets.
 """
 
@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .models import TokenUsageRecord
 
-logger = logging.getLogger("jarvis.ai.budget")
+logger = logging.getLogger("charlie.ai.budget")
 
 
 class ContextBudgetManager:

@@ -1,0 +1,336 @@
+- generic [ref=f3e3]:
+  - banner [ref=f3e4]:
+    - generic [ref=f3e16]:
+      - generic [ref=f3e17]: LEKHTRA
+      - generic [ref=f3e18]: Business Billing
+    - button "Search invoices, customers, products and records (Ctrl+K)" [ref=f3e20] [cursor=pointer]:
+      - generic [ref=f3e21]: Search ledger records, entities, invoices (⌘K)...
+      - generic [ref=f3e26]:
+        - generic [ref=f3e27]: Ctrl K
+        - button "Activate voice assistant" [ref=f3e28]
+    - generic [ref=f3e32]:
+      - generic [ref=f3e33]:
+        - button "Open calculator" [ref=f3e34] [cursor=pointer]
+        - button "Keyboard shortcuts" [ref=f3e37] [cursor=pointer]
+      - button "Cloud Synced" [ref=f3e41] [cursor=pointer]
+      - button "Notifications" [ref=f3e48] [cursor=pointer]
+      - button "Quick create record menu" [ref=f3e53] [cursor=pointer]:
+        - generic [ref=f3e55]: Issue Record
+      - button "Select Language" [ref=f3e59] [cursor=pointer]:
+        - generic [ref=f3e63]: English
+      - button "B" [ref=f3e67] [cursor=pointer]
+  - generic [ref=f3e71]:
+    - navigation "Main sidebar navigation" [ref=f3e72]:
+      - generic [ref=f3e73]:
+        - generic [ref=f3e74]:
+          - button "BR Basheer Retail Pvt Ltd Main Branch • Maharashtra" [ref=f3e75] [cursor=pointer]:
+            - generic [ref=f3e76]:
+              - generic [ref=f3e77]: BR
+              - generic [ref=f3e78]:
+                - generic [ref=f3e79]: Basheer Retail Pvt Ltd
+                - generic [ref=f3e80]: Main Branch • Maharashtra
+          - button "Collapse sidebar" [ref=f3e83] [cursor=pointer]
+        - button "Create new invoice" [ref=f3e87] [cursor=pointer]:
+          - generic [ref=f3e89]: Create Invoice
+        - menu "Sidebar main navigation" [ref=f3e90]:
+          - generic [ref=f3e91]:
+            - generic [ref=f3e92]: OVERVIEW
+            - menuitem "Dashboard" [ref=f3e94] [cursor=pointer]
+          - generic [ref=f3e102]:
+            - generic [ref=f3e103]: SALES
+            - generic [ref=f3e104]:
+              - menuitem "Invoices" [ref=f3e105] [cursor=pointer]
+              - menuitem "Customer & Lead Directory" [ref=f3e112] [cursor=pointer]
+              - menuitem "Products & Items" [ref=f3e120] [cursor=pointer]
+              - menuitem "Payments Received" [ref=f3e127] [cursor=pointer]
+              - menuitem "Outstanding Due PRO" [ref=f3e132] [cursor=pointer]:
+                - generic [ref=f3e133]: Outstanding Due
+                - generic [ref=f3e138]: PRO
+          - generic [ref=f3e140]:
+            - generic [ref=f3e141]: PURCHASES
+            - generic [ref=f3e142]:
+              - menuitem "Vendor Bills" [ref=f3e143] [cursor=pointer]
+              - menuitem "Vendor Directory" [ref=f3e150] [cursor=pointer]
+          - generic [ref=f3e158]:
+            - generic [ref=f3e159]: ACCOUNTING & BANKING
+            - generic [ref=f3e160]:
+              - menuitem "Bank Accounts & Feeds" [ref=f3e161] [cursor=pointer]
+              - menuitem "GST Control Tower" [ref=f3e166] [cursor=pointer]
+              - menuitem "Financial Reports (P&L) PRO" [ref=f3e173] [cursor=pointer]:
+                - generic [ref=f3e174]: Financial Reports (P&L)
+                - generic [ref=f3e178]: PRO
+              - menuitem "Analytics & Forecast" [ref=f3e180] [cursor=pointer]
+          - generic [ref=f3e185]:
+            - generic [ref=f3e186]: WORKSPACE & SETTINGS
+            - generic [ref=f3e187]:
+              - menuitem "Settings" [ref=f3e188] [cursor=pointer]
+              - menuitem "Integrations & API" [ref=f3e194] [cursor=pointer]
+        - button "BC Basheer Chaudhary Owner • Simple" [ref=f3e201] [cursor=pointer]:
+          - generic [ref=f3e202]:
+            - generic [ref=f3e203]: BC
+            - generic [ref=f3e204]:
+              - generic [ref=f3e205]: Basheer Chaudhary
+              - generic [ref=f3e206]:
+                - generic [ref=f3e207]: Owner
+                - generic [ref=f3e208]: •
+                - generic [ref=f3e209]: Simple
+    - main [ref=f3e214]:
+      - generic [ref=f3e215]:
+        - generic [ref=f3e216]:
+          - generic [ref=f3e217]:
+            - generic [ref=f3e218]:
+              - generic [ref=f3e219]: Sales
+              - generic [ref=f3e222]: Invoices
+            - heading "Invoices" [level=1] [ref=f3e223]
+            - paragraph [ref=f3e224]: Create, manage and track all your sales invoices. Send to customers via WhatsApp, Email or PDF.
+          - generic [ref=f3e226]:
+            - generic [ref=f3e229]: INVOICE
+            - generic [ref=f3e242]: PDF
+          - generic [ref=f3e243]:
+            - button "Import" [ref=f3e244] [cursor=pointer]
+            - button "Export" [ref=f3e249] [cursor=pointer]
+            - generic [ref=f3e255]:
+              - button "Create Invoice" [ref=f3e256] [cursor=pointer]
+              - button "More Invoicing Tools & Registers" [ref=f3e259] [cursor=pointer]
+        - generic [ref=f3e262]:
+          - generic [ref=f3e263]:
+            - generic [ref=f3e277]:
+              - text: Total Invoices
+              - generic [ref=f3e278]: "0"
+              - generic [ref=f3e279]: 12% from last month
+            - button "View Details" [ref=f3e285] [cursor=pointer]
+          - generic [ref=f3e289]:
+            - generic [ref=f3e304]:
+              - text: Total Sales (₹)
+              - generic [ref=f3e305]: ₹0.00
+              - generic [ref=f3e306]: 8% from last month
+            - button "View Details" [ref=f3e312] [cursor=pointer]
+          - generic [ref=f3e316]:
+            - generic [ref=f3e317]:
+              - generic [ref=f3e318]: 52%
+              - generic [ref=f3e328]:
+                - text: Paid Amount (₹)
+                - generic [ref=f3e329]: ₹0.00
+                - generic [ref=f3e330]: 52% of total
+            - button "View Details" [ref=f3e332] [cursor=pointer]
+          - generic [ref=f3e336]:
+            - generic [ref=f3e337]:
+              - generic [ref=f3e338]: 48%
+              - generic [ref=f3e348]:
+                - text: Outstanding (₹)
+                - generic [ref=f3e349]: ₹0.00
+                - generic [ref=f3e350]: 48% of total
+            - button "View Details" [ref=f3e352] [cursor=pointer]
+        - generic [ref=f3e356]:
+          - generic [ref=f3e357]:
+            - generic [ref=f3e358]:
+              - heading "Invoice Trend" [level=3] [ref=f3e359]
+              - generic [ref=f3e360]:
+                - generic [ref=f3e361]: Total Invoices
+                - generic [ref=f3e364]: Paid
+                - generic [ref=f3e367]: Overdue
+              - combobox [ref=f3e370] [cursor=pointer]:
+                - option "Last 6 Months" [selected]
+                - option "This Year"
+                - option "All Time"
+            - generic [ref=f3e371]:
+              - generic [ref=f3e372]:
+                - generic [ref=f3e373]: 40L
+                - generic [ref=f3e374]: 30L
+                - generic [ref=f3e375]: 20L
+                - generic [ref=f3e376]: 10L
+                - generic [ref=f3e377]:
+                  - 'generic "Total: ₹1260000" [ref=f3e378] [cursor=pointer]'
+                  - 'generic "Paid: ₹840000" [ref=f3e379] [cursor=pointer]'
+                  - 'generic "Overdue: ₹450000" [ref=f3e380] [cursor=pointer]'
+                - generic [ref=f3e381]:
+                  - 'generic "Total: ₹1800000" [ref=f3e382] [cursor=pointer]'
+                  - 'generic "Paid: ₹1050000" [ref=f3e383] [cursor=pointer]'
+                  - 'generic "Overdue: ₹540000" [ref=f3e384] [cursor=pointer]'
+                - generic [ref=f3e385]:
+                  - 'generic "Total: ₹2400000" [ref=f3e386] [cursor=pointer]'
+                  - 'generic "Paid: ₹1440000" [ref=f3e387] [cursor=pointer]'
+                  - 'generic "Overdue: ₹660000" [ref=f3e388] [cursor=pointer]'
+                - generic [ref=f3e389]:
+                  - 'generic "Total: ₹2850000" [ref=f3e390] [cursor=pointer]'
+                  - 'generic "Paid: ₹2040000" [ref=f3e391] [cursor=pointer]'
+                  - 'generic "Overdue: ₹840000" [ref=f3e392] [cursor=pointer]'
+                - generic [ref=f3e393]:
+                  - 'generic "Total: ₹2160000" [ref=f3e394] [cursor=pointer]'
+                  - 'generic "Paid: ₹1560000" [ref=f3e395] [cursor=pointer]'
+                  - 'generic "Overdue: ₹600000" [ref=f3e396] [cursor=pointer]'
+                - generic [ref=f3e397]:
+                  - 'generic "Total: ₹2640000" [ref=f3e398] [cursor=pointer]'
+                  - 'generic "Paid: ₹1920000" [ref=f3e399] [cursor=pointer]'
+                  - 'generic "Overdue: ₹750000" [ref=f3e400] [cursor=pointer]'
+              - generic [ref=f3e401]:
+                - generic [ref=f3e402]: Jan
+                - generic [ref=f3e403]: Feb
+                - generic [ref=f3e404]: Mar
+                - generic [ref=f3e405]: Apr
+                - generic [ref=f3e406]: May
+                - generic [ref=f3e407]: Jun
+          - generic [ref=f3e408]:
+            - heading "Invoice Status" [level=3] [ref=f3e409]
+            - generic [ref=f3e410]:
+              - generic [ref=f3e419]:
+                - generic [ref=f3e420]: "35"
+                - generic [ref=f3e421]: Invoices
+              - generic [ref=f3e422]:
+                - generic [ref=f3e423] [cursor=pointer]:
+                  - generic [ref=f3e424]: Paid
+                  - generic [ref=f3e427]: 15 (43%)
+                - generic [ref=f3e428] [cursor=pointer]:
+                  - generic [ref=f3e429]: Overdue
+                  - generic [ref=f3e432]: 5 (14%)
+                - generic [ref=f3e433] [cursor=pointer]:
+                  - generic [ref=f3e434]: Partial
+                  - generic [ref=f3e437]: 5 (14%)
+                - generic [ref=f3e438] [cursor=pointer]:
+                  - generic [ref=f3e439]: Draft
+                  - generic [ref=f3e442]: 7 (20%)
+                - generic [ref=f3e443] [cursor=pointer]:
+                  - generic [ref=f3e444]: Cancelled
+                  - generic [ref=f3e447]: 3 (9%)
+          - generic [ref=f3e448]:
+            - generic [ref=f3e449]:
+              - heading "Top Customers" [level=3] [ref=f3e450]
+              - button "View All" [ref=f3e451] [cursor=pointer]
+            - generic [ref=f3e452]:
+              - generic [ref=f3e453] [cursor=pointer]:
+                - generic [ref=f3e454]:
+                  - generic [ref=f3e455]: "1"
+                  - generic [ref=f3e456]: AC
+                  - generic [ref=f3e457]:
+                    - generic [ref=f3e458]: Acme Corporation
+                    - generic [ref=f3e459]: 12 invoices
+                - generic [ref=f3e460]: ₹7,85,000
+              - generic [ref=f3e461] [cursor=pointer]:
+                - generic [ref=f3e462]:
+                  - generic [ref=f3e463]: "2"
+                  - generic [ref=f3e464]: CS
+                  - generic [ref=f3e465]:
+                    - generic [ref=f3e466]: CyberDyne Systems
+                    - generic [ref=f3e467]: 8 invoices
+                - generic [ref=f3e468]: ₹5,42,300
+              - generic [ref=f3e469] [cursor=pointer]:
+                - generic [ref=f3e470]:
+                  - generic [ref=f3e471]: "3"
+                  - generic [ref=f3e472]: CT
+                  - generic [ref=f3e473]:
+                    - generic [ref=f3e474]: CloudScale Technologies
+                    - generic [ref=f3e475]: 4 invoices
+                - generic [ref=f3e476]: ₹3,58,720
+              - generic [ref=f3e477] [cursor=pointer]:
+                - generic [ref=f3e478]:
+                  - generic [ref=f3e479]: "4"
+                  - generic [ref=f3e480]: TC
+                  - generic [ref=f3e481]:
+                    - generic [ref=f3e482]: Tata Consultancy Services
+                    - generic [ref=f3e483]: 6 invoices
+                - generic [ref=f3e484]: ₹2,67,500
+              - generic [ref=f3e485] [cursor=pointer]:
+                - generic [ref=f3e486]:
+                  - generic [ref=f3e487]: "5"
+                  - generic [ref=f3e488]: RR
+                  - generic [ref=f3e489]:
+                    - generic [ref=f3e490]: Reliance Retail Ltd
+                    - generic [ref=f3e491]: 5 invoices
+                - generic [ref=f3e492]: ₹2,35,400
+        - generic [ref=f3e493]:
+          - generic [ref=f3e494]:
+            - generic [ref=f3e495]:
+              - button "All Invoices 0" [ref=f3e496] [cursor=pointer]:
+                - generic [ref=f3e497]: All Invoices
+                - generic [ref=f3e498]: "0"
+              - button "Paid 0" [ref=f3e499] [cursor=pointer]:
+                - generic [ref=f3e500]: Paid
+                - generic [ref=f3e501]: "0"
+              - button "Partial 0" [ref=f3e502] [cursor=pointer]:
+                - generic [ref=f3e503]: Partial
+                - generic [ref=f3e504]: "0"
+              - button "Overdue 0" [ref=f3e505] [cursor=pointer]:
+                - generic [ref=f3e506]: Overdue
+                - generic [ref=f3e507]: "0"
+              - button "Draft 0" [ref=f3e508] [cursor=pointer]:
+                - generic [ref=f3e509]: Draft
+                - generic [ref=f3e510]: "0"
+              - button "Cancelled 3" [ref=f3e511] [cursor=pointer]:
+                - generic [ref=f3e512]: Cancelled
+                - generic [ref=f3e513]: "3"
+            - button "Advanced Filters" [ref=f3e514] [cursor=pointer]
+          - generic [ref=f3e517]:
+            - 'textbox "Search by invoice #, customer, GSTIN..." [ref=f3e522]'
+            - generic [ref=f3e523]:
+              - button "01 Jun 2026 - 30 Jun 2026" [ref=f3e525] [cursor=pointer]
+              - combobox [ref=f3e531] [cursor=pointer]:
+                - option "All Status" [selected]
+                - option "Paid"
+                - option "Overdue"
+                - option "Partial"
+                - option "Draft"
+                - option "Cancelled"
+              - combobox [ref=f3e532] [cursor=pointer]:
+                - option "👤 All Customers" [selected]
+              - button "More Filters" [ref=f3e533] [cursor=pointer]
+          - table [ref=f3e539]:
+            - rowgroup [ref=f3e540]:
+              - row [ref=f3e541]:
+                - columnheader [ref=f3e542]:
+                  - checkbox [ref=f3e543] [cursor=pointer]
+                - columnheader [ref=f3e544]
+                - 'columnheader "Invoice #" [ref=f3e545]'
+                - columnheader "Customer" [ref=f3e546]
+                - columnheader "Date / Due Date" [ref=f3e547]
+                - columnheader "Total (₹)" [ref=f3e548]
+                - columnheader "Paid (₹)" [ref=f3e549]
+                - columnheader "Balance (₹)" [ref=f3e550]
+                - columnheader "Status" [ref=f3e551]
+                - columnheader "Payment" [ref=f3e552]
+                - columnheader "Actions" [ref=f3e553]
+            - rowgroup [ref=f3e554]:
+              - row [ref=f3e555]:
+                - cell [ref=f3e556]:
+                  - status "No invoices yet" [ref=f3e557]:
+                    - paragraph [ref=f3e562]: No invoices yet
+                    - paragraph [ref=f3e563]: Create your first sales invoice to track collections and GST compliance.
+                    - button "Create Invoice" [ref=f3e565] [cursor=pointer]
+          - generic [ref=f3e569]:
+            - generic [ref=f3e570]: Showing 0 to 0 of 0 invoices
+            - generic [ref=f3e571]:
+              - generic [ref=f3e572]:
+                - button "Previous Page" [disabled]
+                - button "1" [ref=f3e574] [cursor=pointer]
+                - button "Next Page" [disabled]
+              - combobox [ref=f3e575] [cursor=pointer]:
+                - option "8 per page" [selected]
+                - option "10 per page"
+                - option "15 per page"
+                - option "25 per page"
+                - option "All"
+  - dialog "Ask LEKHTRA Voice Assistant" [ref=f3e576]:
+    - generic [ref=f3e577]:
+      - generic [ref=f3e583]:
+        - generic [ref=f3e584]:
+          - heading "Ask LEKHTRA" [level=2] [ref=f3e585]
+          - generic [ref=f3e586]: AI Chat
+        - paragraph [ref=f3e587]: Billing & Accounts Assistant
+      - generic [ref=f3e588]:
+        - button "Clear Conversation History" [ref=f3e589] [cursor=pointer]
+        - button "Close" [ref=f3e593] [cursor=pointer]
+    - generic [ref=f3e598]:
+      - heading "How can I assist you today?" [level=4] [ref=f3e603]
+      - paragraph [ref=f3e604]: Ask any question about your invoices, pending payments, stock balances, or GST reports.
+      - generic [ref=f3e605]:
+        - button "\"Mera kitna payment lena baaki hai?\"" [ref=f3e606] [cursor=pointer]
+        - button "\"Show overdue invoices\"" [ref=f3e610] [cursor=pointer]
+        - button "\"Invoice 1048 dikhao\"" [ref=f3e614] [cursor=pointer]
+        - button "\"Aaj kitna payment aaya?\"" [ref=f3e618] [cursor=pointer]
+        - button "\"Low stock dikhao\"" [ref=f3e622] [cursor=pointer]
+    - generic [ref=f3e627]:
+      - generic "Upload Bill or Receipt for OCR Analysis" [ref=f3e628] [cursor=pointer]
+      - generic [ref=f3e632]:
+        - textbox "Ask LEKHTRA or type a command..." [ref=f3e633]
+        - button "Send" [disabled] [ref=f3e634]
+  - button "Ask LEKHTRA Assistant" [ref=f3e638] [cursor=pointer]:
+    - generic [ref=f3e643]: Ask LEKHTRA

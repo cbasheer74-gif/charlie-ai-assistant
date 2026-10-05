@@ -6,10 +6,11 @@ All endpoints require authenticated user (JWT Bearer).
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from licensing_server.config import config
 from licensing_server.database import UserDB, get_db
 from licensing_server.middleware.auth_middleware import get_current_user
 from licensing_server.middleware.rate_limiter import limit_activation, limit_transfer
@@ -50,6 +51,12 @@ def activate_device(
     user: UserDB = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    if config.REQUIRE_EMAIL_VERIFICATION and not getattr(user, "email_verified", False):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Email verification required before activating a device. Check your inbox or request a new verification link.",
+        )
+
     limit_activation(request)
     ok, msg, data = license_service.activate_device(
         db=db,
@@ -73,6 +80,12 @@ def transfer_license(
     user: UserDB = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    if config.REQUIRE_EMAIL_VERIFICATION and not getattr(user, "email_verified", False):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Email verification required before transferring a device. Check your inbox or request a new verification link.",
+        )
+
     limit_transfer(request)
     ok, msg, data = license_service.transfer_license(
         db=db,

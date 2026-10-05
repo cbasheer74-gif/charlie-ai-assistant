@@ -1,5 +1,5 @@
 """
-engine/commercial/licensing_client.py — HTTPS client for communicating with the JARVIS licensing server.
+engine/commercial/licensing_client.py — HTTPS client for communicating with the CHARLIE licensing server.
 
 Handles: auth, device activation, license transfer, entitlement refresh.
 Stores tokens securely via keyring/DPAPI.
@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Tuple
 
-logger = logging.getLogger("jarvis.commercial.licensing_client")
+logger = logging.getLogger("charlie.commercial.licensing_client")
 
 # Default licensing server URL — override via config
 DEFAULT_SERVER_URL = "http://localhost:8400"
@@ -46,11 +46,13 @@ class ActivationResult:
 
 
 class LicensingClient:
-    """Desktop client for the JARVIS licensing server API."""
+    """Desktop client for the CHARLIE licensing server API."""
 
     def __init__(self, server_url: Optional[str] = None, data_dir: Optional[Path] = None):
         self.server_url = (server_url or DEFAULT_SERVER_URL).rstrip("/")
-        self.data_dir = data_dir or (Path.home() / ".jarvis" / "licensing")
+        legacy_dir = Path.home() / ".jarvis" / "licensing"
+        charlie_dir = Path.home() / ".charlie" / "licensing"
+        self.data_dir = data_dir or (legacy_dir if (legacy_dir.exists() and not charlie_dir.exists()) else charlie_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self._tokens_file = self.data_dir / "session_tokens.json"
         self._access_token: Optional[str] = None
@@ -59,7 +61,7 @@ class LicensingClient:
 
     # ── Auth ─────────────────────────────────────────────────────────────────
 
-    def register(self, email: str, password: str, display_name: str = "JARVIS User") -> AuthResult:
+    def register(self, email: str, password: str, display_name: str = "CHARLIE User") -> AuthResult:
         """Register a new account."""
         data = self._post("/auth/register", {
             "email": email,
@@ -242,6 +244,34 @@ class LicensingClient:
         if not data or not data.get("success"):
             return None
         return data.get("data")
+
+    # ── Remote Config & Push Notices ──────────────────────────────────────────
+
+    def fetch_remote_config(self) -> Optional[dict]:
+        """Fetch remote configuration, feature flags, and emergency kill switches."""
+        return self._get("/admin/api/public/remote-config")
+
+    def fetch_active_broadcasts(self) -> list:
+        """Fetch active in-app notices, update broadcasts, and maintenance alerts."""
+        res = self._get("/admin/api/public/broadcasts")
+        if isinstance(res, list):
+            return res
+        return []
+
+    def is_feature_enabled(self, feature_name: str, default: bool = True) -> bool:
+        """Check if a specific feature flag is permitted by remote authority."""
+        cfg = self.fetch_remote_config()
+        if not cfg or "feature_flags" not in cfg:
+            return default
+        return cfg["feature_flags"].get(feature_name, default)
+
+    def is_kill_switch_active(self) -> bool:
+        """Check if global emergency AI kill switch or maintenance mode is active."""
+        cfg = self.fetch_remote_config()
+        if not cfg or "kill_switches" not in cfg:
+            return False
+        kills = cfg["kill_switches"]
+        return bool(kills.get("emergency_ai_kill_switch", False) or kills.get("maintenance_mode", False))
 
     # ── HTTP Helpers ─────────────────────────────────────────────────────────
 

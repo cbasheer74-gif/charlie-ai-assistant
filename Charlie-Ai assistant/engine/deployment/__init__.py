@@ -1,5 +1,5 @@
 """
-JARVIS Phase 14: Deployment Platform Package
+CHARLIE Phase 14: Deployment Platform Package
 """
 
 from engine.deployment.models import (
@@ -20,6 +20,7 @@ from engine.deployment.models import (
 )
 from engine.deployment.paths import DeploymentPathManager, PortManager
 from engine.deployment.runtime import (
+    CharlieUserAgent,
     CrashManager,
     JarvisUserAgent,
     SingleInstanceManager,
@@ -64,6 +65,7 @@ __all__ = [
     "DeploymentPathManager",
     "PortManager",
     "CrashManager",
+    "CharlieUserAgent",
     "JarvisUserAgent",
     "SingleInstanceManager",
     "StartupManager",

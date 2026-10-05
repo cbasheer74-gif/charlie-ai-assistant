@@ -1,5 +1,5 @@
 """
-JARVIS Phase 11: Modular Prompt Compiler & Response Validator
+CHARLIE Phase 11: Modular Prompt Compiler & Response Validator
 Builds domain-scoped prompts without monolithic bloat, and validates structured outputs before execution.
 """
 
@@ -10,7 +10,7 @@ import logging
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
-logger = logging.getLogger("jarvis.ai.compiler")
+logger = logging.getLogger("charlie.ai.compiler")
 
 
 class PromptCompiler:

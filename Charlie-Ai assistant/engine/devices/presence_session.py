@@ -1,5 +1,5 @@
 """
-JARVIS Phase 10: Presence, Session & Offline Queue Management
+CHARLIE Phase 10: Presence, Session & Offline Queue Management
 Tracks device heartbeats, manages mobile sessions, and queues safe commands with TTL when offline.
 """
 
@@ -14,7 +14,7 @@ from typing import Dict, List, Optional, Tuple
 from .identity_registry import DeviceRegistry
 from .models import DeviceIdentity, PresenceStatus, RemoteCommandEnvelope, RemoteSession, TrustState
 
-logger = logging.getLogger("jarvis.devices.presence")
+logger = logging.getLogger("charlie.devices.presence")
 
 
 class MobileSessionManager:

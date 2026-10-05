@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "stars": 25,
+  "guard": {
+    "enabled": true,
+    "parent_pin": "1234",
+    "filter_level": "strict",
+    "daily_limit_minutes": 45,
+    "used_minutes_today": 0,
+    "last_active_date": "2026-09-22"
+  },
+  "math_quest": {
+    "level": "easy",
+    "current_question": null,
+    "current_answer": null,
+    "streak": 1,
+    "best_streak": 1,
+    "total_correct": 1
+  },
+  "story": {
+    "active": true,
+    "theme": "space",
+    "chapter": 1,
+    "history": [
+      "Once upon a time, a curious little robot named Pip lived on a friendly moon surrounded by sparkling stardust..."
+    ]
+  },
+  "drawing": {
+    "active": false,
+    "subject": "cat",
+    "step_index": 4,
+    "total_steps": 4,
+    "completed_drawings": [
+      "cat"
+    ]
+  }
+}

@@ -3,7 +3,7 @@ engine/deployment/update_installer.py — Controlled updater process and install
 
 Ensures:
   1. No termination of unrelated apps (Filmora, Excel, browser remain untouched).
-  2. Safe shutdown of JARVIS before binary modification.
+  2. Safe shutdown of CHARLIE before binary modification.
   3. Re-verification of package integrity prior to execution.
   4. No Windows reboots without explicit user approval.
 """
@@ -21,7 +21,7 @@ from typing import Any, Dict, Optional, Tuple
 from engine.deployment.paths import DeploymentPathManager
 from engine.deployment.update_rollback import ChecksumVerifier, SignatureVerifier
 
-logger = logging.getLogger("jarvis.deployment.update_installer")
+logger = logging.getLogger("charlie.deployment.update_installer")
 
 
 class UpdateInstaller:

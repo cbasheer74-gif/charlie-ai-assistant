@@ -1,0 +1,8 @@
+{
+  "category": "CRITICAL",
+  "title": "High System Load Alert",
+  "message": "System usage elevated: CPU 38%, RAM 97% (top process: System Idle Process).",
+  "suggested_action": "Inspect system processes",
+  "action_tool": "system_monitor",
+  "created_at": 1791027636.966337
+}

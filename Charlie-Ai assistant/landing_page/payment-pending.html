@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Awaiting Confirmation &middot; CHARLIE Workspace</title>
+  <meta name="description" content="Your payment is being confirmed with your financial institution.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 32px 20px;
+      background: #06080D;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 50%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #E2E8F0;
+    }
+    .status-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #0B0F19;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 45px rgba(245, 158, 11, 0.1);
+      text-align: center;
+    }
+    .pending-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(245, 158, 11, 0.15);
+      border: 2px solid #F59E0B;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: #F59E0B;
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.97); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      70% { transform: scale(1.03); box-shadow: 0 0 0 14px rgba(245, 158, 11, 0); }
+      100% { transform: scale(0.97); }
+    }
+    h1 { font-size: 28px; font-weight: 800; color: #FFFFFF; margin-bottom: 10px; }
+    p.lead { font-size: 15px; color: #94A3B8; line-height: 1.6; margin-bottom: 28px; }
+    .status-badge {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid #F59E0B;
+      color: #FBBF24;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .nav-bar { display: flex; justify-content: space-between; align-items: center; max-width: 860px; margin: 0 auto; width: 100%; }
+    .brand-link { color: #00E5FF; text-decoration: none; font-weight: 700; font-size: 18px; }
+    .btn-portal {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #E2E8F0;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-portal:hover { background: rgba(255, 255, 255, 0.09); }
+  </style>
+</head>
+<body>
+  <div class="nav-bar">
+    <a href="index.html" class="brand-link">CHARLIE Desktop</a>
+    <a href="index.html" style="color: #94A3B8; text-decoration: none; font-size: 14px;">Home</a>
+  </div>
+
+  <main class="status-container">
+    <div class="pending-icon-wrap">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+    </div>
+
+    <div class="status-badge" id="status-pill">Awaiting Bank Webhook</div>
+    <h1>Payment In Progress</h1>
+    <p class="lead">Your transaction is being confirmed with your financial institution. Once verified, your license entitlement activates automatically.</p>
+
+    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; text-align: left; margin-bottom: 28px; font-size: 14px;">
+      <div style="display: flex; justify-content: space-between; padding-bottom: 8px;">
+        <span style="color:#94A3B8;">Estimated verification time:</span>
+        <span style="color:#FBBF24; font-weight:600;">1 &ndash; 3 minutes</span>
+      </div>
+      <div style="color: #94A3B8; font-size: 13px; line-height: 1.5;">
+        You will receive a confirmation email upon gateway capture. You can safely close this window or monitor status in your Customer Portal.
+      </div>
+    </div>
+
+    <a href="login.html" class="btn-portal">Check Status in Customer Portal &rarr;</a>
+  </main>
+
+  <footer style="text-align: center; color: #64748B; font-size: 13px;">
+    &copy; 2026 CHARLIE Desktop Assistant &bull; Webhook Synchronization Service
+  </footer>
+</body>
+</html>

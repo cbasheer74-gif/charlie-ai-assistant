@@ -1,0 +1,10 @@
+{
+  "version": "1.2.4",
+  "build_number": 109,
+  "release_date": "2026-10-05T00:00:00Z",
+  "installer": "Charlie-AI-Desktop-1.2.4-Setup.exe",
+  "download_url": "https://github.com/cbasheer74-gif/charlie-ai-assistant/releases/download/v1.2.4/Charlie-AI-Desktop-1.2.4-Setup.exe",
+  "sha256": "d4d99628fa47f416da2c17a9ce3d3d24c9549e2c68bf97e1080dcbb70d62acbf",
+  "mandatory": false,
+  "notes": "Initial public production release of Charlie AI Desktop with hardened runtime data and DPAPI vault."
+}

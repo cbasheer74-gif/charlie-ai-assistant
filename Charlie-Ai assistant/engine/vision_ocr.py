@@ -134,7 +134,8 @@ def save_screenshot(
 ) -> Path:
     """Save screenshot to memory/screenshots directory and return its path."""
     img = capture_screen_image(region)
-    dest_dir = _app_dir() / "memory" / "screenshots"
+    from core.app_paths import get_memory_dir
+    dest_dir = get_memory_dir() / "screenshots"
     dest_dir.mkdir(parents=True, exist_ok=True)
 
     name = filename or f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"

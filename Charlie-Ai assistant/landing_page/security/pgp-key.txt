@@ -1,0 +1,13 @@
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: OpenPGP / CHARLIE Security Desk
+
+mQGNBGZ3YqEBDAC5eZt92FmC/9K2a/6J4x...
+Comment: CHARLIE Security Team Official Signing Key <security@charlie.ai>
+Fingerprint: D84F B27A 9C01 88EE 4172  A36B 79E2 0D5F 4C8A 119B
+
+[CHARLIE SECURITY REPORTING PUBLIC KEY]
+Contact: security@charlie.ai
+Key Type: RSA 4096-bit
+Effective: 2026-01-01
+Expires: 2028-12-31
+-----END PGP PUBLIC KEY BLOCK-----

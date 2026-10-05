@@ -60,7 +60,7 @@ def _adapter_for(tool_name: str) -> str:
         return "CodingAdapter"
     if "video" in low:
         return "VideoAdapter"
-    return "JarvisActionAdapter"
+    return "CharlieActionAdapter"
 
 
 def is_recording() -> bool:

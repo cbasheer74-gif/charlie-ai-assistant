@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "check_battery": true,
+  "check_resources": true,
+  "check_tasks": true,
+  "check_briefing": true,
+  "check_wellness": true,
+  "check_clutter": true,
+  "voice_alerts": false,
+  "poll_interval_sec": 30
+}

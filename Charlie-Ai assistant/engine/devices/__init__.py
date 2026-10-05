@@ -1,5 +1,5 @@
 """
-JARVIS Phase 10: Multi-Device Package
+CHARLIE Phase 10: Multi-Device Package
 Exposes device orchestration, identity, pairing, gateway, presence, sync, and handoff modules.
 """
 
