@@ -215,10 +215,10 @@ function initDownloadHandlers() {
     document.body.classList.add('modal-open');
     document.documentElement.classList.add('modal-open');
 
-    const name = filename || 'CHARLIE-Setup.exe';
+    const name = filename || 'Charlie-AI-Desktop-1.2.4-Setup.exe';
 
     if (filenameDisplay) {
-      filenameDisplay.innerHTML = `Downloading <strong>${name}</strong> (192 MB)`;
+      filenameDisplay.innerHTML = `Downloading <strong>${name}</strong> (v1.2.4)`;
     }
 
     if (progressBar) progressBar.style.width = '0%';
@@ -247,7 +247,7 @@ function initDownloadHandlers() {
   // Hook all download buttons
   downloadBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
-      const file = btn.getAttribute('data-file') || 'CHARLIE-Setup.exe';
+      const file = btn.getAttribute('data-file') || 'Charlie-AI-Desktop-1.2.4-Setup.exe';
       const targetHref = btn.getAttribute('href');
 
       // Trigger modal
@@ -257,7 +257,7 @@ function initDownloadHandlers() {
       if (!targetHref || targetHref.startsWith('#')) {
         e.preventDefault();
         const a = document.createElement('a');
-        a.href = 'downloads/' + file;
+        a.href = 'https://github.com/cbasheer74-gif/charlie-ai-assistant/releases/download/v1.2.4/' + file;
         a.download = file;
         document.body.appendChild(a);
         a.click();
